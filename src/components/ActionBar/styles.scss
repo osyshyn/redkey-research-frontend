@@ -1,0 +1,30 @@
+@use "../../assets/styles/variables" as *;
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+}
+
+.action-bar-title h1 {
+  font-family: $font-family-satoshi;
+  font-size: 32px;
+  font-weight: $font-weight-bold;
+  line-height: 48px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: $text-color-light;
+}
+
+.action-bar-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.action-bar-buttons {
+  display: flex;
+  gap: 14px;
+}

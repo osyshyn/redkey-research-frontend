@@ -1,0 +1,124 @@
+@use "../../assets/styles/variables" as *;
+
+.file-upload {
+  border: 1.5px dashed $border-gray-dark;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &.dragging {
+    background-color: #f0f8ff;
+    border-color: $dark-red-color;
+  }
+
+  .file-upload-label {
+    font-family: $font-family-satoshi;
+    font-style: normal;
+    font-weight: $font-weight-medium;
+    font-size: 16px;
+    line-height: 22px;
+    color: $text-light-accent;
+  }
+
+  .upload-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .file-upload-text {
+    font-family: $font-family-satoshi;
+    font-size: 16px;
+    font-weight: $font-weight-normal;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: $text-light-accent;
+  }
+}
+
+.add-file-label {
+  font-family: $font-family-satoshi;
+  font-style: normal;
+  font-weight: $font-weight-medium;
+  font-size: 16px;
+  line-height: 22px;
+  color: $text-light-accent;
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+
+.progress-bar {
+  position: relative;
+  height: 4px;
+  width: 100%;
+  background-color: $secondary-background;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: $dark-red-color;
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-bar-and-title-wrapper {
+  border: 1px solid $primary-background;
+  gap: 9px;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.uploaded-file-size {
+  font-family: $font-family-satoshi;
+  font-size: 10px;
+  font-weight: $font-weight-normal;
+  line-height: 15px;
+  color: #6d6d6d;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.percentage {
+  font-family: $font-family-satoshi;
+  font-size: 10px;
+  font-weight: $font-weight-bold;
+  line-height: 15px;
+  letter-spacing: 0.01em;
+  color: $primary-color;
+}
+
+.file-name {
+  font-family: $font-family-satoshi;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  line-height: 21px;
+  color: $primary-color;
+}
+
+.uploaded-file-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.file-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+}
+
+.close-icon {
+  width: 12px;
+  height: 12px;
+  margin-left: auto;
+  cursor: pointer;
+}

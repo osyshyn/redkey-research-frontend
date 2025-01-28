@@ -1,0 +1,57 @@
+@use './assets/styles/variables' as *;
+
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.woff2") format("woff2"),
+    url("/fonts/Satoshi-Regular.woff") format("woff"),
+    url("/fonts/Satoshi-Regular.ttf") format("truetype");
+  font-weight: $font-weight-normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Medium.woff2") format("woff2"),
+    url("/fonts/Satoshi-Medium.woff") format("woff"),
+    url("/fonts/Satoshi-Medium.ttf") format("truetype");
+  font-weight: $font-weight-medium;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Bold.woff2") format("woff2"),
+    url("/fonts/Satoshi-Bold.woff") format("woff"),
+    url("/fonts/Satoshi-Bold.ttf") format("truetype");
+  font-weight: $font-weight-bold;
+  font-style: normal;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: $font-family-satoshi;
+  background-color: $highlight-background;
+  color: $text-light-accent;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}

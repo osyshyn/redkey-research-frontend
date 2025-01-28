@@ -1,0 +1,78 @@
+@use "../../../assets/styles/variables" as *;
+
+.folder-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 360px;
+  height: 54px;
+  padding: 13px 20px;
+  gap: 15px;
+  background-color: $primary-background;
+  border-radius: 12px 12px 0 0;
+  transition: width 0.7s ease, border-radius 0.7s ease;
+
+  .folder-expandable-element {
+    display: inline-flex;
+    gap: 15px;
+    cursor: pointer;
+
+    img {
+      gap: 15px;
+    }
+
+    .title {
+      font-family: $font-family-satoshi;
+      font-size: 18px;
+      font-weight: $font-weight-medium;
+      line-height: 27px;
+      text-align: left;
+      color: $text-light-accent;
+    }
+  }
+
+  .items-amount {
+    font-family: $font-family-satoshi;
+    font-size: 14px;
+    font-weight: $font-weight-normal;
+    line-height: 21px;
+    color: $secondary-color;
+  }
+
+  .status {
+    font-family: $font-family-satoshi;
+    font-size: 12px;
+    font-weight: $font-weight-medium;
+    line-height: 18px;
+    border-radius: 20px;
+    padding: 3px 10px;
+    gap: 5px;
+    cursor: pointer;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+
+    &.active {
+      color: $status-active-green;
+      background-color: rgba(37, 122, 0, 0.2);
+    }
+    &.closed {
+      color: $text-light-neutral;
+      background-color: $background-dark-light;
+    }
+    &.reject {
+      color: #ff8b8b;
+      background-color: rgba(231, 0, 0, 0.2);
+    }
+  }
+
+  .more-icon {
+    cursor: pointer;
+  }
+
+  &.closed {
+    width: 100%;
+    border-radius: $border-radius-medium;
+  }
+}

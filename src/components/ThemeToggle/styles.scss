@@ -1,0 +1,45 @@
+@use "../../assets/styles/variables" as *;
+
+.theme-toggle {
+  position: relative;
+  width: 46px;
+  height: 27px;
+  border-radius: 16px;
+  cursor: pointer;
+  background: $primary-color;
+  transition: background 0.3s ease;
+
+  &.dark {
+    background: #4d4d4d;
+  }
+
+  .toggle-circle {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: 2.5px;
+    left: 3px;
+    background: $text-color-light;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease, background 0.3s ease;
+
+    .light-icon {
+      width: 13px;
+      height: 13px;
+      filter: invert(1) brightness(1.2);
+    }
+  }
+
+  &.dark .toggle-circle {
+    left: 22px;
+    background: #1c1c1c;
+
+    .dark-icon {
+      width: 13px;
+      height: 13px;
+    }
+  }
+}

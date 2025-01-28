@@ -1,0 +1,62 @@
+@use "../../assets/styles/variables" as *;
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  gap: 40px;
+  margin: 0 auto;
+  background-color: $highlight-background;
+  color: $text-color-light;
+  height: 100vh;
+  margin: 0 auto;
+  width: 450px;
+
+  .logo-big {
+    height: 72px;
+  }
+
+  .title {
+    font-family: $font-family-satoshi;
+    font-size: 36px;
+    font-weight: $font-weight-bold;
+    line-height: 54px;
+    text-align: center;
+    color: $text-color-light;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: -24px;
+  }
+
+  .login-continue-button-wrapper {
+    margin-top: 40px;
+  }
+
+  .login-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    .help-text,
+    .support-text {
+      font-family: $font-family-satoshi;
+      font-size: 16px;
+      font-weight: $font-weight-normal;
+      line-height: 24px;
+      color: $text-light-neutral;
+
+      .text-red {
+        color: $bright-red-color;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+@use "../../assets/styles/variables" as *;
+
+.search-and-filter-panel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 230px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid $secondary-background;
+  border-radius: $border-radius-small;
+  background: transparent;
+  font-size: 14px;
+  color: $text-light-accent;
+  outline: none;
+  font-family: $font-family-satoshi;
+  font-size: 16px;
+  font-weight: $font-weight-normal;
+  line-height: 24px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+
+.search-input::placeholder {
+  color: $secondary-color;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-button {
+  padding: 13px;
+  border: none;
+  background-color: transparent;
+  border-radius: $border-radius-small;
+  cursor: pointer;
+  border: 1px solid $secondary-background;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.filter-icon {
+  width: 22px;
+  height: 22px;
+}
