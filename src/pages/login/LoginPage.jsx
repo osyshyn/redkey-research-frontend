@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, selectAuth } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
@@ -13,7 +13,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { status, error } = useSelector(selectAuth);
+
+  useEffect(() => {
+    if (status === "succeeded") {
+      navigate("/admin/portal");
+    }
+  }, [status, navigate]);
 
   const handleLogin = () => {
     dispatch(loginUser({ email, password }));
