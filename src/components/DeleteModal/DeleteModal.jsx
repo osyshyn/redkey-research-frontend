@@ -1,7 +1,7 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import closeIcon from "../../assets/icons/close-icon.svg";
 import deleteDangerIcon from "../../assets/icons/delete-danger-icon.svg";
-
 import "./styles.scss";
 
 const DeleteModal = ({
@@ -11,9 +11,11 @@ const DeleteModal = ({
   deleteButtonTitle,
   onDelete,
 }) => {
-  if (!isOpen) return null;
+  const modalRoot = document.getElementById("modal-root");
 
-  return (
+  if (!isOpen || !modalRoot) return null;
+
+  return createPortal(
     <div className="delete-modal-overlay" onClick={onClose}>
       <div
         className="delete-modal-container"
@@ -50,7 +52,8 @@ const DeleteModal = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    modalRoot
   );
 };
 

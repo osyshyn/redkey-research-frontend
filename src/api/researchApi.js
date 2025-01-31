@@ -1,5 +1,15 @@
 import axiosInstance from "./index";
 
+export const getFoldersAPI = async () => {
+  try {
+    const response = await axiosInstance.get("/admin/getFolders");
+    return response;
+  } catch (error) {
+    console.error("Error fetching folders:", error);
+    throw error;
+  }
+};
+
 export const createFolderAPI = async (folderName) => {
   try {
     const response = await axiosInstance.post("/admin/createFolder", {
@@ -12,12 +22,15 @@ export const createFolderAPI = async (folderName) => {
   }
 };
 
-export const getFoldersAPI = async () => {
+export const changeFolderStatusAPI = async (folderInfo) => {
   try {
-    const response = await axiosInstance.get("/admin/getFolders");
+    const response = await axiosInstance.post(
+      "admin/changeFolderStatus",
+      folderInfo
+    );
     return response;
   } catch (error) {
-    console.error("Error fetching folders:", error);
+    console.error("Error changing folder status:", error);
     throw error;
   }
 };
@@ -54,6 +67,18 @@ export const createResearchAPI = async (researchData) => {
     return response;
   } catch (error) {
     console.error("Error creating research:", error);
+    throw error;
+  }
+};
+
+export const deleteResearchAPI = async (researchIdArray) => {
+  try {
+    const response = await axiosInstance.post("admin/deleteResearch", {
+      ids: researchIdArray,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting research:", error);
     throw error;
   }
 };

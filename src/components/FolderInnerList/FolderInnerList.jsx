@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { deleteResearch } from "../../store/slices/researchSlice";
+
+import CustomButton from "../CustomButton/CustomButton";
+import DeleteModal from "../DeleteModal/DeleteModal";
+import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
+
 import moreIcon from "../../assets/icons/more-icon.svg";
 import folderIcon from "../../assets/icons/folder-icon.svg";
 import downloadIcon from "../../assets/icons/download-icon.svg";
+import downloadLightGreyIcon from "../../assets/icons/download-icon-light-grey.svg";
 import deleteLightRedIcon from "../../assets/icons/delete-icon-light-red.svg";
+import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
 import closeIcon from "../../assets/icons/close-icon.svg";
-import CustomButton from "../CustomButton/CustomButton";
 
 import "./styles.scss";
 
 const FolderInnerList = ({ tableData, handleViewClick }) => {
   const [selectedItems, setSelectedItems] = useState([]);
+  const [dropdownData, setDropdownData] = useState(null);
+  const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteType, setDeleteType] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
+
+  const dropdownRef = useRef(null);
+  const parentContainerRef = useRef(null);
+
+  const dispatch = useDispatch();
 
   const handleCheckboxChange = (index) => {
     const newSelectedItems = [...selectedItems];
@@ -26,10 +46,57 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
     setSelectedItems([]);
   };
 
+  const handleMoreClick = (e, item, index) => {
+    const position = e.target.getBoundingClientRect();
+    const parentPosition = parentContainerRef.current.getBoundingClientRect();
+
+    const relativeTop = position.top - parentPosition.top - 8;
+    const relativeLeft = position.left - parentPosition.left - 150;
+
+    if (activeDropdownIndex === index) {
+      setActiveDropdownIndex(null);
+    } else {
+      setActiveDropdownIndex(index);
+      setDropdownData({
+        position: {
+          top: relativeTop,
+          left: relativeLeft,
+        },
+        options: [
+          {
+            optionName: "Download",
+            icon: downloadLightGreyIcon,
+            onOptionClick: () => console.log("Download", item),
+          },
+          {
+            optionName: "Delete",
+            icon: deleteIconRed,
+            onOptionClick: () => {
+              setDeleteType("single");
+              setItemToDelete(item);
+              setIsDeleteModalOpen(true);
+            },
+          },
+        ],
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setActiveDropdownIndex(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <>
       {tableData.length > 0 ? (
-        <div className="folder-inner-list">
+        <div className="folder-inner-list" ref={parentContainerRef}>
           <table className="folder-table">
             <thead>
               <tr>
@@ -67,14 +134,19 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
                         </button>
                         <button
                           className="research-button delete"
-                          onClick={() => {}}
+                          onClick={() => {
+                            if (selectedItems.length > 0) {
+                              setDeleteType("multiple");
+                              setIsDeleteModalOpen(true);
+                            }
+                          }}
                         >
                           <img
                             src={deleteLightRedIcon}
                             alt="Delete all"
                             className="button-icon delete"
                           />
-                          Delete researchs
+                          Delete researches
                         </button>
                       </div>
                     </div>
@@ -104,9 +176,8 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
                         <p className="research-title">{item.title}</p>
                         <p className="published-date">
                           Published on{" "}
-                          {(item.created_at
-                            ? new Date(item.created_at)
-                            : new Date(Date.now())
+                          {new Date(
+                            item.created_at || Date.now()
                           ).toLocaleDateString("en-US")}
                         </p>
                       </div>
@@ -130,7 +201,11 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
                       >
                         View
                       </div>
-                      <img src={moreIcon} className="more-icon" />
+                      <img
+                        src={moreIcon}
+                        className="more-icon"
+                        onClick={(e) => handleMoreClick(e, item, index)}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -154,6 +229,46 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
           </div>
         </div>
       )}
+
+      {dropdownData && activeDropdownIndex !== null && (
+        <div ref={dropdownRef}>
+          <DropdownModalWrapper
+            position={dropdownData.position}
+            options={dropdownData.options}
+          />
+        </div>
+      )}
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        itemToDelete={
+          deleteType === "single"
+            ? "the research"
+            : selectedItems.length > 1
+            ? "the researches"
+            : "the research"
+        }
+        deleteButtonTitle={
+          deleteType === "single"
+            ? "Delete research"
+            : selectedItems.length > 1
+            ? "Delete researches"
+            : "Delete research"
+        }
+        onDelete={() => {
+          if (deleteType === "single") {
+            dispatch(deleteResearch([itemToDelete.id]));
+          } else {
+            const researchIds = selectedItems.map(
+              (index) => tableData[index].id
+            );
+            clearSelectedItems();
+            dispatch(deleteResearch(researchIds));
+          }
+          setIsDeleteModalOpen(false);
+        }}
+      />
     </>
   );
 };

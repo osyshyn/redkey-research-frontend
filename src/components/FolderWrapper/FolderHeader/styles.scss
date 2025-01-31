@@ -61,9 +61,13 @@
       color: $text-light-neutral;
       background-color: $background-dark-light;
     }
-    &.reject {
+    &.rejected {
       color: #ff8b8b;
       background-color: rgba(231, 0, 0, 0.2);
+    }
+    &.watchlist {
+      color: #00c5ff;
+      background-color: rgba(33, 88, 205, 0.2);
     }
   }
 

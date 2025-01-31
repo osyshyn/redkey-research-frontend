@@ -1,10 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  createFolderAPI,
   getFoldersAPI,
+  createFolderAPI,
+  changeFolderStatusAPI,
   deleteFolderAPI,
   createResearchAPI,
+  deleteResearchAPI,
 } from "../../api/researchApi";
+
+export const getFolders = createAsyncThunk(
+  "research/getFolders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getFoldersAPI();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const createFolder = createAsyncThunk(
   "research/createFolder",
@@ -18,11 +32,11 @@ export const createFolder = createAsyncThunk(
   }
 );
 
-export const getFolders = createAsyncThunk(
-  "research/getFolders",
-  async (_, { rejectWithValue }) => {
+export const changeFolderStatus = createAsyncThunk(
+  "research/changeFolderStatus",
+  async (folderInfo, { rejectWithValue }) => {
     try {
-      const response = await getFoldersAPI();
+      const response = await changeFolderStatusAPI(folderInfo);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -56,6 +70,18 @@ export const createResearch = createAsyncThunk(
   }
 );
 
+export const deleteResearch = createAsyncThunk(
+  "research/deleteResearch",
+  async (researchIdArray, { rejectWithValue }) => {
+    try {
+      await deleteResearchAPI(researchIdArray);
+      return researchIdArray;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   folders: [],
   // research: [],
@@ -71,6 +97,18 @@ const researchSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
+      .addCase(getFolders.pending, (state) => {
+        state.foldersStatus = "loading";
+      })
+      .addCase(getFolders.fulfilled, (state, action) => {
+        state.foldersStatus = "succeeded";
+        state.folders = action.payload;
+      })
+      .addCase(getFolders.rejected, (state, action) => {
+        state.foldersStatus = "failed";
+        state.error = action.payload;
+      })
+
       .addCase(createFolder.pending, (state) => {
         state.foldersStatus = "loading";
       })
@@ -83,14 +121,23 @@ const researchSlice = createSlice({
         state.error = action.payload;
       })
 
-      .addCase(getFolders.pending, (state) => {
+      .addCase(changeFolderStatus.pending, (state) => {
         state.foldersStatus = "loading";
       })
-      .addCase(getFolders.fulfilled, (state, action) => {
+
+      .addCase(changeFolderStatus.fulfilled, (state, action) => {
         state.foldersStatus = "succeeded";
-        state.folders = action.payload;
+        const { id, status } = action.payload;
+        const updatedFolders = state.folders.map((folder) => {
+          if (folder.id === id) {
+            return { ...folder, status };
+          }
+          return folder;
+        });
+        state.folders = updatedFolders;
       })
-      .addCase(getFolders.rejected, (state, action) => {
+
+      .addCase(changeFolderStatus.rejected, (state, action) => {
         state.foldersStatus = "failed";
         state.error = action.payload;
       })
@@ -131,6 +178,31 @@ const researchSlice = createSlice({
       })
 
       .addCase(createResearch.rejected, (state, action) => {
+        state.researchStatus = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(deleteResearch.pending, (state) => {
+        state.researchStatus = "loading";
+      })
+
+      .addCase(deleteResearch.fulfilled, (state, action) => {
+        state.researchStatus = "succeeded";
+        const researchIdsToDelete = action.payload;
+        state.folders = state.folders.map((folder) => {
+          if (folder.research && folder.research.length > 0) {
+            return {
+              ...folder,
+              research: folder.research.filter(
+                (research) => !researchIdsToDelete.includes(research.id)
+              ),
+            };
+          }
+          return folder;
+        });
+      })
+
+      .addCase(deleteResearch.rejected, (state, action) => {
         state.researchStatus = "failed";
         state.error = action.payload;
       });

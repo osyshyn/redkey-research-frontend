@@ -3,11 +3,29 @@ import { useDispatch } from "react-redux";
 import FolderHeader from "./FolderHeader/FolderHeader";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
 import DeleteModal from "../DeleteModal/DeleteModal";
-import { deleteFolder } from "../../store/slices/researchSlice";
+import {
+  deleteFolder,
+  changeFolderStatus,
+} from "../../store/slices/researchSlice";
 import settingsIconDropdown from "../../assets/icons/settings-icon-dropdown.svg";
 import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
 
 import "./styles.scss";
+
+const FOLDER_STATUSES = {
+  ACTIVE: 1,
+  CLOSED: 2,
+  REJECTED: 3,
+  WATCHLIST: 4,
+};
+
+const getStatusName = (statusValue) => {
+  return (
+    Object.keys(FOLDER_STATUSES)
+      .find((key) => FOLDER_STATUSES[key] === statusValue)
+      ?.toLowerCase() || "unknown"
+  );
+};
 
 const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
   const [isFolderOpen, setIsFolderOpen] = useState(true);
@@ -15,14 +33,17 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
   const [dropdownPosition, setDropdownPosition] = useState(null);
   const [statusDropdownPosition, setStatusDropdownPosition] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
-
   const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] = useState(false);
 
-  const statuses = ["active", "closed", "reject"];
+  const statusOptions = [
+    { value: FOLDER_STATUSES.ACTIVE, label: "active" },
+    { value: FOLDER_STATUSES.CLOSED, label: "closed" },
+    { value: FOLDER_STATUSES.REJECTED, label: "rejected" },
+    { value: FOLDER_STATUSES.WATCHLIST, label: "watchlist" },
+  ];
 
   const folderMoreIconRef = useRef(null);
   const statusDropdownRef = useRef(null);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -47,10 +68,7 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeDropdown]);
 
   const handleFolderToggle = () => {
@@ -64,7 +82,6 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
       top: position.bottom + scrollTop,
       left: position.left,
     });
-
     setActiveDropdown(
       activeDropdown === "folderMoreIcon" ? null : "folderMoreIcon"
     );
@@ -78,7 +95,6 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
       top: position.bottom + scrollTop,
       left: position.left,
     });
-
     setActiveDropdown("status");
   };
 
@@ -86,17 +102,23 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
     dispatch(deleteFolder(folderId));
   };
 
-  const handleChangeStatus = (status) => {
-    setCurrentStatus(status);
+  const handleChangeStatus = (newStatus, folderId) => {
+    const folderInfo = {
+      id: folderId,
+      status: newStatus,
+    };
+
+    dispatch(changeFolderStatus(folderInfo));
+    setCurrentStatus(newStatus);
     setActiveDropdown(null);
     setStatusDropdownPosition(null);
   };
 
-  const statusOptions = statuses
-    .filter((status) => status !== currentStatus)
+  const filteredStatusOptions = statusOptions
+    .filter((status) => status.value !== currentStatus)
     .map((status) => ({
-      statusName: status,
-      onOptionClick: () => handleChangeStatus(title, status),
+      statusName: status.label,
+      onOptionClick: () => handleChangeStatus(status.value, folderId),
     }));
 
   return (
@@ -104,12 +126,13 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
       <FolderHeader
         title={title}
         itemsAmount={itemsAmount}
-        currentStatus={currentStatus}
+        currentStatus={getStatusName(currentStatus)}
         onFolderToggle={handleFolderToggle}
         onMoreClick={handleMoreClick}
         isFolderOpen={isFolderOpen}
         folderMoreIconRef={folderMoreIconRef}
       />
+
       <div className={`folder-contents ${isFolderOpen ? "open" : "closed"}`}>
         {isFolderOpen && children}
       </div>
@@ -138,7 +161,7 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
         <div ref={statusDropdownRef}>
           <DropdownModalWrapper
             position={statusDropdownPosition}
-            options={statusOptions}
+            options={filteredStatusOptions}
           />
         </div>
       )}
@@ -146,8 +169,8 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
       <DeleteModal
         isOpen={isDeleteFolderModalOpen}
         onClose={() => setIsDeleteFolderModalOpen(false)}
-        itemToDelete={"the folder"}
-        deleteButtonTitle={"Delete folder"}
+        itemToDelete="the folder"
+        deleteButtonTitle="Delete folder"
         onDelete={handleDeleteFolder}
       />
     </div>
