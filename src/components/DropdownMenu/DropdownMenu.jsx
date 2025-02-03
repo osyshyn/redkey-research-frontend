@@ -6,24 +6,25 @@ import logOutIcon from "../../assets/icons/log-out-icon.svg";
 
 import "./styles.scss";
 
-const DropdownMenu = forwardRef(({ isOpen }, ref) => {
-  if (!isOpen) return null;
+const DropdownMenu = forwardRef(
+  ({ isOpen, onProfileClick, onLogoutClick }, ref) => {
+    if (!isOpen) return null;
 
-  return (
-    <div className="dropdown-menu" ref={ref}>
-      <div className="menu-header">
-        <span>Settings</span>
-        <ThemeToggle />
-      </div>
-      <div className="menu-item">
-        <img
-          src={settingsIcon}
-          alt="Profile Icon"
-          className="dropdown-menu-icon"
-        />
-        <span>Profile</span>
-      </div>
-      {/* <div className="menu-item">
+    return (
+      <div className="dropdown-menu" ref={ref}>
+        <div className="menu-header">
+          <span>Settings</span>
+          <ThemeToggle />
+        </div>
+        <div className="menu-item" onClick={onProfileClick}>
+          <img
+            src={settingsIcon}
+            alt="Profile Icon"
+            className="dropdown-menu-icon"
+          />
+          <span>Profile</span>
+        </div>
+        {/* <div className="menu-item">
         <img
           src={lightModeSunIcon}
           alt="Light Mode Icon"
@@ -31,18 +32,19 @@ const DropdownMenu = forwardRef(({ isOpen }, ref) => {
         />
         <span>Light Mode</span>
       </div> */}
-      <hr className="menu-divider" />
-      <div className="menu-item">
-        <img
-          src={logOutIcon}
-          alt="Log Out Icon"
-          className="dropdown-menu-icon"
-        />
-        <span>Log Out</span>
+        <hr className="menu-divider" />
+        <div className="menu-item" onClick={onLogoutClick}>
+          <img
+            src={logOutIcon}
+            alt="Log Out Icon"
+            className="dropdown-menu-icon"
+          />
+          <span>Log Out</span>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 DropdownMenu.displayName = "DropdownMenu";
 

@@ -1,57 +1,150 @@
 import React, { useState } from "react";
+import CustomModal from "../../CustomModal/CustomModal";
+import CustomDropdown from "../../CustomDropdown/CustomDropdown";
+import CustomButton from "../../CustomButton/CustomButton";
+import CustomDatePicker from "../../CustomDatePicker/CustomDatePicker";
+import closeIconGrey from "../../../assets/icons/close-icon-grey.svg";
 
-const FilterModal = ({ isOpen, onClose, onSave }) => {
-  const [filters, setFilters] = useState({
-    status: "",
-    dateRange: "",
-  });
+import "./styles.scss";
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+const FilterModal = ({ isOpen, onClose, onApply }) => {
+  const [additionalFilters, setAdditionalFilters] = useState([]);
+
+  const dropdownOptions = [
+    { label: "Companies", value: "companies" },
+    { label: "Status", value: "status" },
+    { label: "Due date", value: "due_date" },
+  ];
+
+  const statusOptions = [
+    { label: "Active", value: "1" },
+    { label: "Closed", value: "2" },
+    { label: "Rejected", value: "3" },
+    { label: "Watchlist", value: "4" },
+  ];
+
+  const companiesOptions = [
+    { label: "Company A", value: "companyA" },
+    { label: "Company B", value: "companyB" },
+    { label: "Company C", value: "companyC" },
+  ];
+
+  console.log(additionalFilters);
+
+  const addFilter = () => {
+    if (additionalFilters.length < 3) {
+      setAdditionalFilters([...additionalFilters, { type: null, value: null }]);
+    }
   };
 
-  const handleSave = () => {
-    onSave(filters);
+  const removeFilter = (index) => {
+    const newFilters = [...additionalFilters];
+    newFilters.splice(index, 1);
+    setAdditionalFilters(newFilters);
   };
 
-  if (!isOpen) return null;
+  const handleFilterTypeChange = (index, option) => {
+    const newFilters = [...additionalFilters];
+    newFilters[index] = { type: option, value: null };
+    setAdditionalFilters(newFilters);
+  };
+
+  const handleFilterValueChange = (index, value) => {
+    const newFilters = [...additionalFilters];
+    newFilters[index].value = value;
+    setAdditionalFilters(newFilters);
+  };
+
+  const handleClearAll = () => {
+    const newFilters = additionalFilters.map((filter) => ({
+      ...filter,
+      value: null,
+    }));
+    setAdditionalFilters(newFilters);
+  };
+
+  const isApplyDisabled = additionalFilters.some(
+    (filter) => !filter.type || !filter.value
+  );
 
   return (
-    <div className="filter-modal">
-      <div className="modal-content">
-        <h3>Filter Options</h3>
-        <div className="filter-group">
-          <label>
-            Status:
-            <select
-              name="status"
-              value={filters.status}
-              onChange={handleInputChange}
-            >
-              <option value="">All</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </label>
+    <CustomModal isOpen={isOpen} onClose={onClose} modalTitle="Filters">
+      {additionalFilters.length > 0 && (
+        <div className="filter-modal-clear-all">
+          <p className="clear-all" onClick={handleClearAll}>
+            Clear all
+          </p>
         </div>
-        <div className="filter-group">
-          <label>
-            Date Range:
-            <input
-              type="date"
-              name="dateRange"
-              value={filters.dateRange}
-              onChange={handleInputChange}
-            />
-          </label>
-        </div>
-        <div className="modal-actions">
-          <button onClick={onClose}>Cancel</button>
-          <button onClick={handleSave}>Save</button>
+      )}
+
+      <div className="filter-modal-body">
+        <div className="all-filters">
+          {additionalFilters.map((filter, index) => (
+            <div key={index} className="filter-option">
+              <CustomDropdown
+                label={`Filter ${index + 1}`}
+                placeholder="Select filter type"
+                options={dropdownOptions}
+                value={filter.type}
+                onChange={(option) => handleFilterTypeChange(index, option)}
+                showLabel="hide-label"
+              />
+
+              {filter.type && filter.type.value === "due_date" ? (
+                <CustomDatePicker
+                  label={`Filter ${index + 1}`}
+                  placeholder="Select due date"
+                  value={filter.value}
+                  onChange={(date) => handleFilterValueChange(index, date)}
+                />
+              ) : (
+                <CustomDropdown
+                  label={`Filter ${index + 1}`}
+                  placeholder="Select filter value"
+                  options={
+                    filter.type
+                      ? filter.type.value === "status"
+                        ? statusOptions
+                        : filter.type.value === "companies"
+                        ? companiesOptions
+                        : []
+                      : []
+                  }
+                  value={filter.value}
+                  onChange={(option) => handleFilterValueChange(index, option)}
+                  showLabel="hide-label"
+                />
+              )}
+
+              <img
+                src={closeIconGrey}
+                alt="Delete filter option"
+                className="delete-filter-option-icon"
+                onClick={() => removeFilter(index)}
+              />
+            </div>
+          ))}
+          {additionalFilters.length < 3 && (
+            <p className="add-filter-button" onClick={addFilter}>
+              + Add filter
+            </p>
+          )}
         </div>
       </div>
-    </div>
+
+      {additionalFilters.length > 0 && (
+        <div className="filter-modal-footer">
+          <div>
+            <CustomButton
+              label="Apply Filters"
+              style="red-shadow"
+              onClick={() => onApply(additionalFilters)}
+              disabled={isApplyDisabled}
+            />
+          </div>
+        </div>
+      )}
+    </CustomModal>
   );
 };
 

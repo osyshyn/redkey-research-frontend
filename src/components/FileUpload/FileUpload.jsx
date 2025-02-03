@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   uploadFile,
@@ -12,14 +12,21 @@ import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
 
-const FileUpload = () => {
+const FileUpload = ({ existingFile }) => {
   const dispatch = useDispatch();
   const currentFileId = useSelector((state) => state.upload.currentFileId);
 
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState(existingFile || null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [fileUploaded, setFileUploaded] = useState(false);
+  const [isFileUploaded, setIsFileUploaded] = useState(!!existingFile);
+
+  useEffect(() => {
+    if (existingFile) {
+      setUploadedFile(existingFile);
+      setIsFileUploaded(true);
+    }
+  }, [existingFile]);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -65,11 +72,10 @@ const FileUpload = () => {
       setUploadedFile({
         name: file.name,
         content: reader.result,
-        size: formatFileSize(file.size),
+        size: file.size,
       });
       setUploadProgress(100);
-      setFileUploaded(true);
-      console.log(file);
+      setIsFileUploaded(true);
 
       dispatch(uploadFile(file)).then((response) => {
         if (response.payload?.id) {
@@ -94,13 +100,14 @@ const FileUpload = () => {
   const handleRemoveFile = () => {
     dispatch(deleteFile(currentFileId));
     dispatch(resetCurrentFileId());
-    setFileUploaded(false);
+    setIsFileUploaded(false);
+    setUploadedFile(null);
   };
 
   return (
     <div>
       <p className="add-file-label">Add file</p>
-      {!fileUploaded && (
+      {!isFileUploaded && (
         <div
           className={`file-upload ${isDragging ? "dragging" : ""}`}
           onDragOver={handleDragOver}
@@ -126,13 +133,16 @@ const FileUpload = () => {
         </div>
       )}
 
-      {fileUploaded && (
+      {isFileUploaded && uploadedFile && (
         <div className="progress-bar-and-title-wrapper">
           <div className="uploaded-file-info">
             <img src={fileIcon} alt="File Icon" className="file-icon" />
             <p className="file-name">
-              {uploadedFile.name}
-              <span className="uploaded-file-size">({uploadedFile.size})</span>
+              {uploadedFile.name}{" "}
+              <span className="uploaded-file-size">
+                {" "}
+                ({formatFileSize(uploadedFile.size)})
+              </span>
             </p>
             <img
               src={closeIcon}
@@ -141,15 +151,17 @@ const FileUpload = () => {
               onClick={handleRemoveFile}
             />
           </div>
-          <div className="progress-container">
-            <div className="progress-bar">
-              <div
-                className="progress-bar-fill"
-                style={{ width: `${uploadProgress}%` }}
-              ></div>
+          {!existingFile && (
+            <div className="progress-container">
+              <div className="progress-bar">
+                <div
+                  className="progress-bar-fill"
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+              </div>
+              <span className="percentage">{uploadProgress}%</span>
             </div>
-            <span className="percentage">{uploadProgress}%</span>
-          </div>
+          )}
         </div>
       )}
     </div>

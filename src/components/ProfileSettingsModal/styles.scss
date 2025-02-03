@@ -1,0 +1,23 @@
+@use "../../assets/styles/variables" as *;
+
+.change-password-link {
+  cursor: pointer;
+  text-align: end;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-family: $font-family-satoshi;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  line-height: 21px;
+  color: $delete-red-color;
+}
+
+.password-error-message,
+.profile-data-error-message {
+  color: $delete-red-color;
+  font-family: $font-family-satoshi;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  line-height: 21px;
+  margin-top: 5px;
+}

@@ -4,7 +4,7 @@ import eyeClosedIcon from "../../assets/icons/eye-closed-icon.svg";
 
 import "./styles.scss";
 
-const CustomInput = ({ label, placeholder, onChange, value, type = "text", ...props }) => {
+const CustomInput = ({ label, placeholder, onChange, value, type = "text", showLabel = '', ...props }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -15,7 +15,7 @@ const CustomInput = ({ label, placeholder, onChange, value, type = "text", ...pr
 
   return (
     <div className="custom-input">
-      {label && <label className="custom-input-label">{label}</label>}
+      {label && <label className={`custom-input-label ${showLabel}`}>{label}</label>}
       <div className="custom-input-wrapper">
         <input
           className={`custom-input-field ${isPasswordType ? "custom-input-password" : ""}`}
@@ -23,6 +23,7 @@ const CustomInput = ({ label, placeholder, onChange, value, type = "text", ...pr
           onChange={onChange}
           value={value}
           type={isPasswordType && isPasswordVisible ? "text" : type}
+          autoComplete="off"
           {...props}
         />
         {isPasswordType && (

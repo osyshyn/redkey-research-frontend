@@ -1,11 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { deleteResearch } from "../../store/slices/researchSlice";
+import {
+  createResearch,
+  updateResearch,
+  deleteResearch,
+} from "../../store/slices/researchSlice";
 
 import CustomButton from "../CustomButton/CustomButton";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
+import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearchModals";
 
 import moreIcon from "../../assets/icons/more-icon.svg";
 import folderIcon from "../../assets/icons/folder-icon.svg";
@@ -17,19 +28,34 @@ import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
 
-const FolderInnerList = ({ tableData, handleViewClick }) => {
+const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [dropdownData, setDropdownData] = useState(null);
   const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
+  const [editingResearch, setEditingResearch] = useState(null);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteType, setDeleteType] = useState(null);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [isUploadResearchModalOpen, setIsUploadResearchModalOpen] =
+    useState(false);
 
   const dropdownRef = useRef(null);
   const parentContainerRef = useRef(null);
 
   const dispatch = useDispatch();
+  const folders = useSelector((state) => state.research.folders);
+
+  console.log(folders, tableData);
+
+  const folderOptions = useMemo(
+    () =>
+      folders.map((folder) => ({
+        value: folder.id,
+        label: folder.name,
+      })),
+    [folders]
+  );
 
   const handleCheckboxChange = (index) => {
     const newSelectedItems = [...selectedItems];
@@ -50,7 +76,7 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
     const position = e.target.getBoundingClientRect();
     const parentPosition = parentContainerRef.current.getBoundingClientRect();
 
-    const relativeTop = position.top - parentPosition.top - 8;
+    const relativeTop = position.top - parentPosition.top - 80;
     const relativeLeft = position.left - parentPosition.left - 150;
 
     if (activeDropdownIndex === index) {
@@ -66,7 +92,7 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
           {
             optionName: "Download",
             icon: downloadLightGreyIcon,
-            onOptionClick: () => console.log("Download", item),
+            onOptionClick: () => handleDownload(item),
           },
           {
             optionName: "Delete",
@@ -80,6 +106,75 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
         ],
       });
     }
+  };
+
+  const handleSaveResearchData = useCallback(
+    (researchData) => {
+      dispatch(createResearch(researchData));
+    },
+    [dispatch]
+  );
+
+  const handleUpdateResearchData = useCallback(
+    (researchData) => {
+      console.log(researchData);
+
+      dispatch(updateResearch(researchData));
+    },
+    [dispatch]
+  );
+
+  const handleDownload = (item) => {
+    const fileUrl = `${import.meta.env.VITE_API_URL}/${item.file.path}`;
+
+    if (!fileUrl) {
+      console.error("PDF file URL not found");
+      return;
+    }
+
+    fetch(fileUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("File download failed");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = item.title + ".pdf";
+        link.click();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleDownloadAll = (items) => {
+    items.forEach((item) => {
+      const fileUrl = `${import.meta.env.VITE_API_URL}/${item.file.path}`;
+
+      if (fileUrl) {
+        fetch(fileUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("File download failed");
+            }
+            return response.blob();
+          })
+          .then((blob) => {
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = item.title + ".pdf";
+            link.click();
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        console.error(`File for ${item.title} not found`);
+      }
+    });
   };
 
   useEffect(() => {
@@ -98,15 +193,18 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
       {tableData.length > 0 ? (
         <div className="folder-inner-list" ref={parentContainerRef}>
           <table className="folder-table">
-            <thead>
-              <tr>
-                <th className="folder-table-header">Research</th>
-                <th className="folder-table-header">Type</th>
-                <th className="folder-table-header">Responsible</th>
-                <th className="folder-table-header">Date</th>
-                <th className="folder-table-header"></th>
-              </tr>
-            </thead>
+            {selectedItems.length === 0 && (
+              <thead>
+                <tr>
+                  <th className="folder-table-header">Research</th>
+                  <th className="folder-table-header">Type</th>
+                  <th className="folder-table-header">Responsible</th>
+                  <th className="folder-table-header">Date</th>
+                  <th className="folder-table-header"></th>
+                </tr>
+              </thead>
+            )}
+
             <tbody>
               {selectedItems.length > 0 && (
                 <tr className="selected-actions-panel">
@@ -124,7 +222,14 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
                         </p>
                       </div>
                       <div className="research-buttons-wrapper">
-                        <button className="research-button download-all">
+                        <button
+                          className="research-button download-all"
+                          onClick={() =>
+                            handleDownloadAll(
+                              selectedItems.map((index) => tableData[index])
+                            )
+                          }
+                        >
                           <img
                             src={downloadIcon}
                             alt="Download all"
@@ -194,7 +299,15 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
                   </td>
                   <td className="table-data-item">
                     <div className="actions-column">
-                      <div className="admin-portal-action-btn">Edit</div>
+                      <div
+                        className="admin-portal-action-btn"
+                        onClick={() => {
+                          setEditingResearch({ ...item, currentFolder });
+                          setIsUploadResearchModalOpen(true);
+                        }}
+                      >
+                        Edit
+                      </div>
                       <div
                         className="admin-portal-action-btn"
                         onClick={() => handleViewClick(item)}
@@ -224,7 +337,7 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
             <CustomButton
               label={"Add research"}
               style={"red-shadow"}
-              onClick={() => {}}
+              onClick={() => setIsUploadResearchModalOpen(true)}
             />
           </div>
         </div>
@@ -268,6 +381,18 @@ const FolderInnerList = ({ tableData, handleViewClick }) => {
           }
           setIsDeleteModalOpen(false);
         }}
+      />
+
+      <FolderAndResearchModals
+        isUploadResearchModalOpen={isUploadResearchModalOpen}
+        onCloseUploadResearchModal={() => {
+          setIsUploadResearchModalOpen(false);
+          setEditingResearch(null);
+        }}
+        folderOptions={folderOptions}
+        onSaveResearchData={handleSaveResearchData}
+        onUpdateResearchData={handleUpdateResearchData}
+        editingResearch={editingResearch}
       />
     </>
   );

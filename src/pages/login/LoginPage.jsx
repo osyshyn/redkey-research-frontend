@@ -22,8 +22,17 @@ const LoginPage = () => {
     }
   }, [status, navigate]);
 
-  const handleLogin = () => {
-    dispatch(loginUser({ email, password }));
+  // const handleLogin = () => {
+  //   dispatch(loginUser({ email, password }));
+  // };
+
+  const handleLogin = async () => {
+    try {
+      await dispatch(loginUser({ email, password })).unwrap();
+      navigate("/admin/portal");
+    } catch (err) {
+      console.error("Login error:", err);
+    }
   };
 
   return (

@@ -17,7 +17,8 @@
 
   .selected-actions-panel {
     position: sticky;
-    top: 44px;
+    top: 0;
+    // top: 44px;
     background: $primary-background;
     z-index: 2;
     width: 100%;
@@ -68,7 +69,7 @@
     font-size: 14px;
     font-weight: $font-weight-bold;
     line-height: 21px;
-    padding: 12px 20px;
+    padding: 16.5px 20px;
     text-align: left;
   }
 

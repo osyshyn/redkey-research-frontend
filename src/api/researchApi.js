@@ -64,9 +64,36 @@ export const createResearchAPI = async (researchData) => {
       },
     });
 
+    console.log('RESP',response);
+    
     return response;
   } catch (error) {
     console.error("Error creating research:", error);
+    throw error;
+  }
+};
+
+export const updateResearchAPI = async (updateResearchData) => {
+  try {
+    const response = await axiosInstance.post("admin/updateResearch", {
+      id: updateResearchData.id,
+      title: updateResearchData.title || "Default Title",
+      company: {
+        id: updateResearchData.companyId,
+      },
+      firm: {
+        id: updateResearchData.firmId || 1,
+      },
+      publication_date: updateResearchData.date || new Date().toISOString(),
+      report_type: updateResearchData.reportType || 1,
+      file: {
+        id: updateResearchData.fileId,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error updating research:", error);
     throw error;
   }
 };

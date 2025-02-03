@@ -5,6 +5,7 @@ import {
   changeFolderStatusAPI,
   deleteFolderAPI,
   createResearchAPI,
+  updateResearchAPI,
   deleteResearchAPI,
 } from "../../api/researchApi";
 
@@ -62,6 +63,20 @@ export const createResearch = createAsyncThunk(
     try {
       const response = await createResearchAPI(researchData);
       console.log("research/createResearch", response);
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateResearch = createAsyncThunk(
+  "research/updateResearch",
+  async (updateResearchData, { rejectWithValue }) => {
+    try {
+      const response = await updateResearchAPI(updateResearchData);
+      console.log("research/updateResearch", response);
 
       return response.data;
     } catch (error) {
@@ -163,6 +178,7 @@ const researchSlice = createSlice({
       .addCase(createResearch.fulfilled, (state, action) => {
         state.researchStatus = "succeeded";
         const newResearch = action.payload;
+        console.log("newResearch", newResearch);
 
         const updatedFolders = state.folders.map((folder) => {
           if (folder.id === newResearch.company.id) {
@@ -178,6 +194,37 @@ const researchSlice = createSlice({
       })
 
       .addCase(createResearch.rejected, (state, action) => {
+        state.researchStatus = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(updateResearch.pending, (state) => {
+        state.researchStatus = "loading";
+      })
+
+      .addCase(updateResearch.fulfilled, (state, action) => {
+        state.researchStatus = "succeeded";
+        const updatedResearch = action.payload;
+
+        const foldersWithoutResearch = state.folders.map((folder) => ({
+          ...folder,
+          research: folder.research.filter(
+            (res) => res.id !== updatedResearch.id
+          ),
+        }));
+
+        state.folders = foldersWithoutResearch.map((folder) => {
+          if (folder.id === updatedResearch.company.id) {
+            return {
+              ...folder,
+              research: [...folder.research, updatedResearch],
+            };
+          }
+          return folder;
+        });
+      })
+
+      .addCase(updateResearch.rejected, (state, action) => {
         state.researchStatus = "failed";
         state.error = action.payload;
       })

@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { loginAPI } from "../../api/authApi";
+import {
+  loginAPI,
+  logoutAPI,
+  changePasswordAPI,
+  getProfileAPI,
+  changeProfileAPI,
+} from "../../api/authApi";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -16,6 +22,59 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      await logoutAPI();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (passwords, { rejectWithValue }) => {
+    try {
+      const data = await changePasswordAPI(passwords);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error changing password"
+      );
+    }
+  }
+);
+
+export const getProfile = createAsyncThunk(
+  "auth/getProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getProfileAPI();
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error getting profile data"
+      );
+    }
+  }
+);
+
+export const changeProfile = createAsyncThunk(
+  "auth/changeProfile",
+  async (profileData, { rejectWithValue }) => {
+    try {
+      const data = await changeProfileAPI(profileData);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error changing profile"
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -23,31 +82,85 @@ const authSlice = createSlice({
     status: "idle",
     error: null,
   },
-  reducers: {
-    logout(state) {
-      state.user = null;
-      state.status = "idle";
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
+
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload.user;
       })
+
       .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(logoutUser.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.status = "idle";
+        state.user = null;
+        state.error = null;
+      })
+
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(changePassword.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+
+      .addCase(changePassword.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+
+      .addCase(changePassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(getProfile.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+
+      .addCase(getProfile.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+        console.log("state.user", state.user);
+      })
+
+      .addCase(getProfile.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(changeProfile.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+
+      .addCase(changeProfile.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+
+      .addCase(changeProfile.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
   },
 });
-
-export const { logout } = authSlice.actions;
 
 export const selectAuth = (state) => state.auth;
 

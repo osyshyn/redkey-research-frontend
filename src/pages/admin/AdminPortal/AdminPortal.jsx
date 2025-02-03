@@ -4,6 +4,7 @@ import { getFolders } from "../../../store/slices/researchSlice";
 import Header from "../../../components/Header/Header";
 import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
 import FolderInnerList from "../../../components/FolderInnerList/FolderInnerList";
+import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
 import closeIcon from "../../../assets/icons/close-icon.svg";
 
@@ -20,10 +21,82 @@ const AdminPortal = () => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
   const dispatch = useDispatch();
 
   const { folders, status } = useSelector((state) => state.research);
+
+  // const filteredFolders = folders
+  // .map(folder => ({
+  //   ...folder,
+  //   research: folder.research.filter(item =>
+  //     item.title.toLowerCase().includes(searchValue.toLowerCase())
+  //   ),
+  // }))
+  // .filter(folder => folder.research.length > 0);
+
+  // const filteredFolders = searchValue
+  //   ? folders
+  //       .map((folder) => ({
+  //         ...folder,
+  //         research: folder.research.filter((item) =>
+  //           item.title.toLowerCase().includes(searchValue.toLowerCase())
+  //         ),
+  //       }))
+  //       .filter((folder) => folder.research.length > 0)
+  //   : folders;
+
+  console.log("selectedFilters", selectedFilters);
+
+  const filteredFolders = searchValue
+    ? folders
+        .filter((folder) => {
+          const statusFilters = selectedFilters
+            .filter((f) => f.type.value === "status")
+            .map((f) => String(f.value.value));
+
+          if (statusFilters.length === 0) return true;
+
+          return statusFilters.includes(String(folder.status));
+        })
+        .map((folder) => ({
+          ...folder,
+          research: folder.research.filter((item) =>
+            item.title.toLowerCase().includes(searchValue.toLowerCase())
+          ),
+        }))
+        .filter((folder) => folder.research.length > 0)
+    : folders;
+
+  // const filteredFolders = searchValue
+  // ? folders
+  // .filter(folder => {
+  //   const statusFilter = selectedFilters.find(f => f.type.value === 'status');
+
+  //   if (!statusFilter) return true;
+
+  //   return String(folder.status) === String(statusFilter.value.value);
+  // })
+  // .map(folder => ({
+  //   ...folder,
+  //   research: searchValue
+  //     ? folder.research.filter(item =>
+  //         item.title.toLowerCase().includes(searchValue.toLowerCase())
+  //       )
+  //     : folder.research
+  // }))
+  // .filter(folder => folder.research.length > 0);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentFolders = filteredFolders.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  // const currentFolders = folders.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     if (folders.length === 0 && status !== "loading") {
@@ -31,11 +104,25 @@ const AdminPortal = () => {
     }
   }, [dispatch, folders, status]);
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  console.log(searchValue, folders);
+
+  const handleItemsPerPageChange = (newSize) => {
+    setItemsPerPage(newSize);
+    setCurrentPage(1);
+  };
+
   const handleSearchChange = (value) => {
     setSearchValue(value);
   };
 
   const handleFiltersChange = (newFilters) => {
+    console.log("newFilters", newFilters);
+    setSelectedFilters(newFilters.filter((f) => f.type.value === "status"));
+
     // no provided filers yet
   };
 
@@ -61,7 +148,7 @@ const AdminPortal = () => {
       />
       <div className="folders-and-document-container">
         <div className="folders-container">
-          {folders.map((folder, index) => (
+          {currentFolders.map((folder, index) => (
             <FolderWrapper
               key={index}
               title={folder.name}
@@ -71,6 +158,7 @@ const AdminPortal = () => {
             >
               <FolderInnerList
                 tableData={folder.research}
+                currentFolder={{ value: folder.id, label: folder.name }}
                 handleViewClick={handleViewClick}
               />
             </FolderWrapper>
@@ -99,6 +187,16 @@ const AdminPortal = () => {
             </div>
           )}
       </div>
+
+      {folders.length > 1 && currentFolders.length > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalItems={folders.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
+      )}
     </>
   );
 };
