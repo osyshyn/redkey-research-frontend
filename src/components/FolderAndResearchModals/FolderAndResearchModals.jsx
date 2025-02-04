@@ -54,6 +54,7 @@ const FolderAndResearchModals = ({
       editingResearch?.file;
     setIsSaveDisabled(!isAllFieldsFilled);
   }, [researchTitle, selectedFolder, researchDate, reportType, currentFileId]);
+  
 
   const handleSaveResearch = () => {
     const researchData = {
@@ -61,7 +62,7 @@ const FolderAndResearchModals = ({
       companyId: selectedFolder.value,
       date: researchDate,
       reportType: reportType,
-      fileId: currentFileId,
+      fileId: currentFileId || editingResearch?.file?.id,
     };
 
     if (editingResearch) {

@@ -216,7 +216,7 @@ const AdminPortal = () => {
                 onLoadSuccess={onLoadSuccess}
               >
                 {Array.from(new Array(numPages), (el, index) => (
-                  <Page key={index} pageNumber={index + 1} scale={0.6} />
+                  <Page key={index} pageNumber={index + 1} scale={0.9} />
                 ))}
               </Document>
             </div>

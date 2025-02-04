@@ -106,6 +106,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
         ],
       });
     }
+    clearSelectedItems();
   };
 
   const handleSaveResearchData = useCallback(
@@ -175,6 +176,8 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
         console.error(`File for ${item.title} not found`);
       }
     });
+
+    clearSelectedItems();
   };
 
   useEffect(() => {
@@ -304,13 +307,17 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                         onClick={() => {
                           setEditingResearch({ ...item, currentFolder });
                           setIsUploadResearchModalOpen(true);
+                          clearSelectedItems();
                         }}
                       >
                         Edit
                       </div>
                       <div
                         className="admin-portal-action-btn"
-                        onClick={() => handleViewClick(item)}
+                        onClick={() => {
+                          handleViewClick(item);
+                          clearSelectedItems();
+                        }}
                       >
                         View
                       </div>
