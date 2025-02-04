@@ -4,16 +4,21 @@ import CustomDropdown from "../../CustomDropdown/CustomDropdown";
 import CustomButton from "../../CustomButton/CustomButton";
 import CustomDatePicker from "../../CustomDatePicker/CustomDatePicker";
 import closeIconGrey from "../../../assets/icons/close-icon-grey.svg";
+import statusFilterIcon from "../../../assets/icons/status-filter-icon.svg";
+import companyFilterIcon from "../../../assets/icons/company-filter-icon.svg";
+import calendarFilterIcon from "../../../assets/icons/calendar-filter-icon.svg";
 
 import "./styles.scss";
 
-const FilterModal = ({ isOpen, onClose, onApply }) => {
+const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
   const [additionalFilters, setAdditionalFilters] = useState([]);
 
+  console.log("additionalFilters", additionalFilters, folderOptions);
+
   const dropdownOptions = [
-    { label: "Companies", value: "companies" },
-    { label: "Status", value: "status" },
-    { label: "Due date", value: "due_date" },
+    { icon: companyFilterIcon, label: "Companies", value: "companies" },
+    { icon: statusFilterIcon, label: "Status", value: "status" },
+    { icon: calendarFilterIcon, label: "Due date", value: "due_date" },
   ];
 
   const statusOptions = [
@@ -23,11 +28,11 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     { label: "Watchlist", value: "4" },
   ];
 
-  const companiesOptions = [
-    { label: "Company A", value: "companyA" },
-    { label: "Company B", value: "companyB" },
-    { label: "Company C", value: "companyC" },
-  ];
+  // const companiesOptions = [
+  //   { label: "Company A", value: "companyA" },
+  //   { label: "Company B", value: "companyB" },
+  //   { label: "Company C", value: "companyC" },
+  // ];
 
   console.log(additionalFilters);
 
@@ -50,9 +55,15 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   };
 
   const handleFilterValueChange = (index, value) => {
+    console.log("date value", value);
+
     const newFilters = [...additionalFilters];
     newFilters[index].value = value;
+    console.log(additionalFilters);
+    
     setAdditionalFilters(newFilters);
+    console.log(newFilters);
+    
   };
 
   const handleClearAll = () => {
@@ -93,9 +104,11 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
               {filter.type && filter.type.value === "due_date" ? (
                 <CustomDatePicker
                   label={`Filter ${index + 1}`}
-                  placeholder="Select due date"
+                  placeholder="Start date - end date"
                   value={filter.value}
                   onChange={(date) => handleFilterValueChange(index, date)}
+                  showLabel="date-picker-hide-label"
+                  isRange={true}
                 />
               ) : (
                 <CustomDropdown
@@ -106,7 +119,8 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                       ? filter.type.value === "status"
                         ? statusOptions
                         : filter.type.value === "companies"
-                        ? companiesOptions
+                        // ? companiesOptions
+                        ? folderOptions
                         : []
                       : []
                   }

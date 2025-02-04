@@ -3,7 +3,16 @@ import dropdownChevronIcon from "../../assets/icons/dropdown-chevron-icon.svg";
 
 import "./styles.scss";
 
-const CustomDropdown = ({ label, options, placeholder, onChange, value, showLabel = '' }) => {
+const CustomDropdown = ({
+  label,
+  options,
+  placeholder,
+  onChange,
+  value,
+  showLabel = "",
+}) => {
+  console.log("options", options);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionClick = (option) => {
@@ -13,14 +22,23 @@ const CustomDropdown = ({ label, options, placeholder, onChange, value, showLabe
 
   return (
     <div className="custom-dropdown">
-      {label && <label className={`custom-dropdown-label ${showLabel}`}>{label}</label>}
+      {label && (
+        <label className={`custom-dropdown-label ${showLabel}`}>{label}</label>
+      )}
       <div
         className="custom-dropdown-field"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span className={`${value ? "value" : "placeholder"}`}>
-          {value?.label || value || placeholder}
-        </span>
+        <div className="dropdown-icon-value-container">
+          {value?.icon && (
+           
+              <img src={value?.icon} alt="icon" className="dropdown-option-icon" />
+           
+          )}
+          <span className={`${value ? "value" : "placeholder"}`}>
+            {value?.label || value || placeholder}
+          </span>
+        </div>
         <img
           src={dropdownChevronIcon}
           alt="Dropdown Icon"

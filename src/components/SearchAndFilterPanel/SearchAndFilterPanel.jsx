@@ -6,7 +6,11 @@ import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
 
-const SearchAndFilterPanel = ({ onSearchChange, onFiltersChange }) => {
+const SearchAndFilterPanel = ({
+  onSearchChange,
+  onFiltersChange,
+  folderOptions,
+}) => {
   const [searchValue, setSearchValue] = useState("");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isSearchSubmitted, setIsSearchSubmitted] = useState(false);
@@ -77,6 +81,7 @@ const SearchAndFilterPanel = ({ onSearchChange, onFiltersChange }) => {
           isOpen={isFilterModalOpen}
           onClose={handleFilterClose}
           onApply={handleFilterSave}
+          folderOptions={folderOptions}
         />
       )}
     </div>

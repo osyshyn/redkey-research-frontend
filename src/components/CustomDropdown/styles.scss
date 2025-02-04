@@ -95,6 +95,20 @@
   }
 }
 
-.hide-label{
+.hide-label {
   display: none;
 }
+
+
+.dropdown-icon-value-container {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdown-option-icon {
+  width: 14px;
+  height: 14px;
+}
+

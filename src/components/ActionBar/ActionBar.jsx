@@ -51,6 +51,7 @@ const ActionBar = ({ onSearchChange, onFiltersChange }) => {
         <SearchAndFilterPanel
           onSearchChange={onSearchChange}
           onFiltersChange={onFiltersChange}
+          folderOptions={folderOptions}
         />
         <div className="action-bar-buttons">
           <CustomButton

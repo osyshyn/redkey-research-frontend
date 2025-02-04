@@ -34,7 +34,7 @@
 
     &:focus,
     &:hover {
-         border-color: $border-gray-dark;
+      border-color: $border-gray-dark;
     }
 
     position: relative;
@@ -113,6 +113,9 @@
   background-color: $primary-color;
   border-radius: 8px;
   color: #0e0e0f;
+  &:hover {
+    background-color: $primary-color !important;
+  }
 }
 
 .react-datepicker__day--selected,
@@ -130,6 +133,9 @@
   background-color: $primary-color;
   border-radius: 8px;
   color: #0e0e0f;
+  &:hover {
+    background-color: $primary-color !important;
+  }
 }
 
 h2.react-datepicker__current-month {
@@ -185,7 +191,7 @@ h2.react-datepicker__current-month {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
-       border-color: $border-gray-dark;
+    border-color: $border-gray-dark;
   }
 
   option {
@@ -210,4 +216,32 @@ h2.react-datepicker__current-month {
   border: 1px solid #ccc;
   border-radius: 4px;
   color: $secondary-background;
+}
+
+.date-picker-hide-label {
+  display: none;
+}
+
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__year-text--in-selecting-range {
+  background-color: #d1d1d1 !important;
+  border-radius: $border-radius-small;
+  &:hover {
+    background-color: #d1d1d1 !important;
+    border-radius: $border-radius-small;
+  }
+}
+
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+  background-color: #d1d1d1 !important;
+  border-radius: $border-radius-small;
+  &:hover {
+    background-color: #d1d1d1 !important;
+    border-radius: $border-radius-small;
+  }
 }

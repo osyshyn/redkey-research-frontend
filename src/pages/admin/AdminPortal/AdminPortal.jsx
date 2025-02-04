@@ -71,6 +71,41 @@ const AdminPortal = () => {
         .filter((folder) => folder.research.length > 0)
     : folders;
 
+  // const filteredFolders2 = folders.filter((folder) => {
+  //   selectedFilters.forEach((selectedFilter) => {
+  //     if (selectedFilter.type === 'status')
+  //   })
+  // })
+
+  const filteredFolders2 = folders.filter((folder) => {
+    return selectedFilters.every((filter) => {
+      const filterType = filter.type.value;
+      const filterValue = filter.value.value; 
+
+      
+
+      if (filterType === "status") {
+        return folder.status.toString() === filterValue.toString();
+      }
+
+      if (filterType === "companies") {
+        console.log("filterType, filterValue", filterType, filterValue);
+        return folder.id.toString() === filterValue.toString();
+      }
+
+    
+      // if (filterType === "due_date") {
+    
+      //   return true;
+      // }
+
+    
+      return true;
+    });
+  });
+
+  console.log("filteredFolders2", filteredFolders2);
+
   // const filteredFolders = searchValue
   // ? folders
   // .filter(folder => {
