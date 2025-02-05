@@ -129,8 +129,8 @@ const researchSlice = createSlice({
       })
       .addCase(createFolder.fulfilled, (state, action) => {
         state.foldersStatus = "succeeded";
-        state.folders.push(action.payload);
-        // state.folders.unshift(action.payload);
+        // state.folders.push(action.payload);
+        state.folders.unshift(action.payload);
       })
       .addCase(createFolder.rejected, (state, action) => {
         state.foldersStatus = "failed";
@@ -225,18 +225,48 @@ const researchSlice = createSlice({
       //   });
       // })
 
+      // .addCase(updateResearch.fulfilled, (state, action) => {
+      //   state.researchStatus = "succeeded";
+      //   const updatedResearch = action.payload;
+
+      //   state.folders = state.folders.map((folder) => {
+      //     const updatedResearchList = folder.research.filter(
+      //       (res) => res.id !== updatedResearch.id
+      //     );
+
+      //     return folder.id === updatedResearch.company.id
+      //       ? { ...folder, research: [updatedResearch, ...updatedResearchList] }
+      //       : { ...folder, research: updatedResearchList };
+      //   });
+      // })
+
       .addCase(updateResearch.fulfilled, (state, action) => {
         state.researchStatus = "succeeded";
         const updatedResearch = action.payload;
 
         state.folders = state.folders.map((folder) => {
-          const updatedResearchList = folder.research.filter(
-            (res) => res.id !== updatedResearch.id
-          );
-
-          return folder.id === updatedResearch.company.id
-            ? { ...folder, research: [updatedResearch, ...updatedResearchList] }
-            : { ...folder, research: updatedResearchList };
+          if (folder.id === updatedResearch.company.id) {
+            const researchIndex = folder.research.findIndex(
+              (res) => res.id === updatedResearch.id
+            );
+            if (researchIndex !== -1) {
+              const newResearch = [...folder.research];
+              newResearch[researchIndex] = updatedResearch;
+              return { ...folder, research: newResearch };
+            } else {
+              return {
+                ...folder,
+                research: [updatedResearch, ...folder.research],
+              };
+            }
+          } else {
+            return {
+              ...folder,
+              research: folder.research.filter(
+                (res) => res.id !== updatedResearch.id
+              ),
+            };
+          }
         });
       })
 
