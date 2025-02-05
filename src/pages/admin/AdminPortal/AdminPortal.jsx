@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getFolders } from "../../../store/slices/researchSlice";
+import { getFolders, createFolder } from "../../../store/slices/researchSlice";
 import Header from "../../../components/Header/Header";
 import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
 import FolderInnerList from "../../../components/FolderInnerList/FolderInnerList";
@@ -29,39 +29,38 @@ const AdminPortal = () => {
 
   const { folders, status } = useSelector((state) => state.research);
 
-  // const filteredFolders = folders
-  // .map(folder => ({
-  //   ...folder,
-  //   research: folder.research.filter(item =>
-  //     item.title.toLowerCase().includes(searchValue.toLowerCase())
-  //   ),
-  // }))
-  // .filter(folder => folder.research.length > 0);
-
-  // const filteredFolders = searchValue
-  //   ? folders
-  //       .map((folder) => ({
-  //         ...folder,
-  //         research: folder.research.filter((item) =>
-  //           item.title.toLowerCase().includes(searchValue.toLowerCase())
-  //         ),
-  //       }))
-  //       .filter((folder) => folder.research.length > 0)
-  //   : folders;
-
   console.log("selectedFilters", selectedFilters);
 
-  const filteredFolders = searchValue
-    ? folders
-        .filter((folder) => {
-          const statusFilters = selectedFilters
-            .filter((f) => f.type.value === "status")
-            .map((f) => String(f.value.value));
+  const filteredFolders = folders.filter((folder) => {
+    return selectedFilters.every((filter) => {
+      const filterType = filter.type.value;
+      const filterValue = filter.value.value;
 
-          if (statusFilters.length === 0) return true;
+      if (filterType === "status") {
+        return folder.status.toString() === filterValue.toString();
+      }
 
-          return statusFilters.includes(String(folder.status));
-        })
+      if (filterType === "companies") {
+        return folder.id.toString() === filterValue.toString();
+      }
+
+      if (filterType === "due_date") {
+        const [startDate, endDate] = filter.value.map(
+          (dateStr) => new Date(dateStr)
+        );
+
+        return folder.research.some((research) => {
+          const publicationDate = new Date(research.publication_date);
+          return publicationDate >= startDate && publicationDate <= endDate;
+        });
+      }
+
+      return true;
+    });
+  });
+
+  const searchInFilteredFolders = searchValue
+    ? filteredFolders
         .map((folder) => ({
           ...folder,
           research: folder.research.filter((item) =>
@@ -69,69 +68,16 @@ const AdminPortal = () => {
           ),
         }))
         .filter((folder) => folder.research.length > 0)
-    : folders;
+    : filteredFolders;
 
-  // const filteredFolders2 = folders.filter((folder) => {
-  //   selectedFilters.forEach((selectedFilter) => {
-  //     if (selectedFilter.type === 'status')
-  //   })
-  // })
-
-  const filteredFolders2 = folders.filter((folder) => {
-    return selectedFilters.every((filter) => {
-      const filterType = filter.type.value;
-      const filterValue = filter.value.value; 
-
-      
-
-      if (filterType === "status") {
-        return folder.status.toString() === filterValue.toString();
-      }
-
-      if (filterType === "companies") {
-        console.log("filterType, filterValue", filterType, filterValue);
-        return folder.id.toString() === filterValue.toString();
-      }
-
-    
-      // if (filterType === "due_date") {
-    
-      //   return true;
-      // }
-
-    
-      return true;
-    });
-  });
-
-  console.log("filteredFolders2", filteredFolders2);
-
-  // const filteredFolders = searchValue
-  // ? folders
-  // .filter(folder => {
-  //   const statusFilter = selectedFilters.find(f => f.type.value === 'status');
-
-  //   if (!statusFilter) return true;
-
-  //   return String(folder.status) === String(statusFilter.value.value);
-  // })
-  // .map(folder => ({
-  //   ...folder,
-  //   research: searchValue
-  //     ? folder.research.filter(item =>
-  //         item.title.toLowerCase().includes(searchValue.toLowerCase())
-  //       )
-  //     : folder.research
-  // }))
-  // .filter(folder => folder.research.length > 0);
+  // console.log("filteredFolders2", filteredFolders, searchInFilteredFolders);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentFolders = filteredFolders.slice(
+  const currentFolders = searchInFilteredFolders.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
-  // const currentFolders = folders.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     if (folders.length === 0 && status !== "loading") {
@@ -155,11 +101,21 @@ const AdminPortal = () => {
   };
 
   const handleFiltersChange = (newFilters) => {
-    console.log("newFilters", newFilters);
-    setSelectedFilters(newFilters.filter((f) => f.type.value === "status"));
+    console.log("newFilters", newFilters, folders);
+    setSelectedFilters(newFilters);
 
     // no provided filers yet
   };
+
+  const handleCreateFolder = useCallback(
+    (folderName) => {
+      if (folderName.trim()) {
+        setSelectedFilters([]);
+        dispatch(createFolder(folderName));
+      }
+    },
+    [dispatch]
+  );
 
   const handleViewClick = (item) => {
     setSelectedDocument(item);
@@ -180,6 +136,7 @@ const AdminPortal = () => {
       <ActionBar
         onSearchChange={handleSearchChange}
         onFiltersChange={handleFiltersChange}
+        onCreateFolder={handleCreateFolder}
       />
       <div className="folders-and-document-container">
         <div className="folders-container">
@@ -223,7 +180,7 @@ const AdminPortal = () => {
           )}
       </div>
 
-      {folders.length > 1 && currentFolders.length > 1 && (
+      {folders.length >= 1 && currentFolders.length >= 1 && (
         <Pagination
           currentPage={currentPage}
           totalItems={folders.length}
@@ -237,3 +194,47 @@ const AdminPortal = () => {
 };
 
 export default AdminPortal;
+
+// const filteredFolders = folders.filter((folder) => {
+//   return selectedFilters.every((filter) => {
+//     const filterType = filter.type.value;
+//     const filterValue = filter.value.value;
+
+//     if (filterType === "status") {
+//       return folder.status.toString() === filterValue.toString();
+//     }
+
+//     if (filterType === "companies") {
+//       return folder.id.toString() === filterValue.toString();
+//     }
+
+//     if (filterType === "due_date") {
+//       const [startDate, endDate] = filter.value.map(
+//         (dateStr) => new Date(dateStr)
+//       );
+
+//       return folder.research.some((research) => {
+//         const publicationDate = new Date(research.publication_date);
+//         return publicationDate >= startDate && publicationDate <= endDate;
+//       });
+//     }
+
+//     return true;
+//   });
+// });
+
+// const searchInFilteredFolders = filteredFolders.map((folder) => ({
+//   ...folder,
+//   research: folder.research.filter((item) =>
+//     item.title.toLowerCase().includes(searchValue.toLowerCase())
+//   ),
+// }));
+
+// console.log("filteredFolders2", filteredFolders, searchInFilteredFolders);
+
+// const indexOfLastItem = currentPage * itemsPerPage;
+// const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+// const currentFolders = searchInFilteredFolders.slice(
+//   indexOfFirstItem,
+//   indexOfLastItem
+// );

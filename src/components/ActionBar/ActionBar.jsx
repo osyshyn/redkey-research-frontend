@@ -7,7 +7,7 @@ import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearc
 
 import "./styles.scss";
 
-const ActionBar = ({ onSearchChange, onFiltersChange }) => {
+const ActionBar = ({ onSearchChange, onFiltersChange, onCreateFolder }) => {
   const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
   const [isUploadResearchModalOpen, setIsUploadResearchModalOpen] =
     useState(false);
@@ -24,16 +24,16 @@ const ActionBar = ({ onSearchChange, onFiltersChange }) => {
     [folders]
   );
 
-  const handleCreateFolder = useCallback(
-    (folderName) => {
-      if (folderName.trim()) {
-        dispatch(createFolder(folderName));
-      } else {
-        // console.log("Incorrect folder name");
-      }
-    },
-    [dispatch]
-  );
+  // const handleCreateFolder = useCallback(
+  //   (folderName) => {
+  //     if (folderName.trim()) {
+  //       dispatch(createFolder(folderName));
+  //     } else {
+  //       // console.log("Incorrect folder name");
+  //     }
+  //   },
+  //   [dispatch]
+  // );
 
   const handleSaveResearchData = useCallback(
     (researchData) => {
@@ -45,7 +45,7 @@ const ActionBar = ({ onSearchChange, onFiltersChange }) => {
   return (
     <div className="action-bar">
       <div className="action-bar-title">
-        <h1>Company name</h1>
+        <h1>Firm name</h1>
       </div>
       <div className="action-bar-controls">
         <SearchAndFilterPanel
@@ -70,7 +70,8 @@ const ActionBar = ({ onSearchChange, onFiltersChange }) => {
       <FolderAndResearchModals
         isCreateFolderModalOpen={isCreateFolderModalOpen}
         onCloseCreateFolderModal={() => setIsCreateFolderModalOpen(false)}
-        onCreateFolder={handleCreateFolder}
+        onCreateFolder={onCreateFolder}
+        // onCreateFolder={handleCreateFolder}
         isUploadResearchModalOpen={isUploadResearchModalOpen}
         onCloseUploadResearchModal={() => setIsUploadResearchModalOpen(false)}
         folderOptions={folderOptions}

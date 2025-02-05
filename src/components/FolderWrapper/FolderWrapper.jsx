@@ -109,7 +109,7 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
     };
 
     dispatch(changeFolderStatus(folderInfo));
-    setCurrentStatus(newStatus);
+    // setCurrentStatus(newStatus);
     setActiveDropdown(null);
     setStatusDropdownPosition(null);
   };
@@ -120,6 +120,11 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
       statusName: status.label,
       onOptionClick: () => handleChangeStatus(status.value, folderId),
     }));
+
+    useEffect(() => {
+      setCurrentStatus(status);
+    }, [status]);
+    
 
   return (
     <div className="folder-wrapper">

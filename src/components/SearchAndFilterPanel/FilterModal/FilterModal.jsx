@@ -28,12 +28,6 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
     { label: "Watchlist", value: "4" },
   ];
 
-  // const companiesOptions = [
-  //   { label: "Company A", value: "companyA" },
-  //   { label: "Company B", value: "companyB" },
-  //   { label: "Company C", value: "companyC" },
-  // ];
-
   console.log(additionalFilters);
 
   const addFilter = () => {
@@ -60,10 +54,9 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
     const newFilters = [...additionalFilters];
     newFilters[index].value = value;
     console.log(additionalFilters);
-    
+
     setAdditionalFilters(newFilters);
     console.log(newFilters);
-    
   };
 
   const handleClearAll = () => {
@@ -119,8 +112,8 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
                       ? filter.type.value === "status"
                         ? statusOptions
                         : filter.type.value === "companies"
-                        // ? companiesOptions
-                        ? folderOptions
+                        ? // ? companiesOptions
+                          folderOptions
                         : []
                       : []
                   }
