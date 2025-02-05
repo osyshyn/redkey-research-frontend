@@ -129,7 +129,8 @@ const researchSlice = createSlice({
       })
       .addCase(createFolder.fulfilled, (state, action) => {
         state.foldersStatus = "succeeded";
-        state.folders.push(action.payload);
+        // state.folders.push(action.payload);
+        state.folders.unshift(action.payload);
       })
       .addCase(createFolder.rejected, (state, action) => {
         state.foldersStatus = "failed";
