@@ -29,7 +29,19 @@ const FolderAndResearchModals = ({
 
   const currentFileId = useSelector((state) => state.upload.currentFileId);
 
-  console.log(editingResearch);
+  // const REPORT_TYPES = {
+  //   INITIATION: 1,
+  //   FINAL_REPORT: 2,
+  // };
+  
+  // const reportTypeOptions = [
+  //   { value: REPORT_TYPES.INITIATION, label: "Initiation" },
+  //   { value: REPORT_TYPES.FINAL_REPORT, label: "Final Report" },
+  // ];
+
+  // console.log(editingResearch);
+  // console.log('reportType', reportType);
+  
 
   useEffect(() => {
     if (editingResearch) {
@@ -141,6 +153,8 @@ const FolderAndResearchModals = ({
                 label="Report type"
                 placeholder="Select report type"
                 options={[1, 2]}
+                // options={reportTypeOptions}
+                // options={['Initiation', 'Final Report']}
                 value={reportType}
                 onChange={(option) => setReportType(option)}
               />
