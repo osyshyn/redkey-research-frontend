@@ -56,3 +56,15 @@
   margin-bottom: 10px;
   object-fit: contain;
 }
+
+.no-folders-message {
+  font-family: $font-family-satoshi;
+  font-size: 18px;
+  font-weight: $font-weight-medium;
+  line-height: 48px;
+  color: $text-color-light;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px auto 0 auto;
+}

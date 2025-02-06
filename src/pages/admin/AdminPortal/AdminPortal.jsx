@@ -159,21 +159,27 @@ const AdminPortal = () => {
       />
       <div className="folders-and-document-container">
         <div className="folders-container">
-          {currentFolders.map((folder, index) => (
-            <FolderWrapper
-              key={index}
-              title={folder.name}
-              folderId={folder.id}
-              itemsAmount={folder.research.length}
-              status={folder.status}
-            >
-              <FolderInnerList
-                tableData={folder.research}
-                currentFolder={{ value: folder.id, label: folder.name }}
-                handleViewClick={handleViewClick}
-              />
-            </FolderWrapper>
-          ))}
+          {currentFolders.length > 0 ? (
+            currentFolders.map((folder, index) => (
+              <FolderWrapper
+                key={index}
+                title={folder.name}
+                folderId={folder.id}
+                itemsAmount={folder.research.length}
+                status={folder.status}
+              >
+                <FolderInnerList
+                  tableData={folder.research}
+                  currentFolder={{ value: folder.id, label: folder.name }}
+                  handleViewClick={handleViewClick}
+                />
+              </FolderWrapper>
+            ))
+          ) : (
+            <p className="no-folders-message">
+              No folders available to display
+            </p>
+          )}
         </div>
         {showPreview &&
           selectedDocument &&
