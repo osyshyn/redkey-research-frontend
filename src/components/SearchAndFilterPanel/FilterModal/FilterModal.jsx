@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import CustomModal from "../../CustomModal/CustomModal";
 import CustomDropdown from "../../CustomDropdown/CustomDropdown";
 import CustomButton from "../../CustomButton/CustomButton";
@@ -7,13 +8,25 @@ import closeIconGrey from "../../../assets/icons/close-icon-grey.svg";
 import statusFilterIcon from "../../../assets/icons/status-filter-icon.svg";
 import companyFilterIcon from "../../../assets/icons/company-filter-icon.svg";
 import calendarFilterIcon from "../../../assets/icons/calendar-filter-icon.svg";
-
 import "./styles.scss";
 
-const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
-  const [additionalFilters, setAdditionalFilters] = useState([]);
+const FilterModal = ({
+  isOpen,
+  onClose,
+  onApply,
+  folderOptions,
+  initialFilters,
+}) => {
+  const [additionalFilters, setAdditionalFilters] = useState(
+    JSON.parse(JSON.stringify(initialFilters || []))
+  );
+  const { researchFilters } = useSelector((state) => state.filters);
 
-  console.log("additionalFilters", additionalFilters, folderOptions);
+  useEffect(() => {
+    if (isOpen) {
+      setAdditionalFilters(JSON.parse(JSON.stringify(researchFilters)));
+    }
+  }, [isOpen, researchFilters]);
 
   const dropdownOptions = [
     { icon: companyFilterIcon, label: "Companies", value: "companies" },
@@ -28,48 +41,68 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
     { label: "Watchlist", value: "4" },
   ];
 
-  console.log(additionalFilters);
-
   const addFilter = () => {
     if (additionalFilters.length < 3) {
       setAdditionalFilters([...additionalFilters, { type: null, value: null }]);
     }
   };
 
+  // const removeFilter = (index) => {
+  //   const newFilters = additionalFilters.filter((_, i) => i !== index);
+  //   setAdditionalFilters(newFilters);
+  //   // onApply(newFilters);
+  // };
+
   const removeFilter = (index) => {
-    const newFilters = [...additionalFilters];
-    newFilters.splice(index, 1);
+    const newFilters = additionalFilters.filter((_, i) => i !== index);
     setAdditionalFilters(newFilters);
+    if (newFilters.length === 0) {
+      onApply(newFilters);
+    }
   };
 
   const handleFilterTypeChange = (index, option) => {
-    const newFilters = [...additionalFilters];
-    newFilters[index] = { type: option, value: null };
+    const newFilters = additionalFilters.map((filter, i) =>
+      i === index ? { ...filter, type: option, value: null } : filter
+    );
     setAdditionalFilters(newFilters);
   };
 
   const handleFilterValueChange = (index, value) => {
-    console.log("date value", value);
-
     const newFilters = [...additionalFilters];
-    newFilters[index].value = value;
-    console.log(additionalFilters);
+
+    if (newFilters[index].type?.value === "due_date") {
+      newFilters[index].value = value.map((date) =>
+        date ? date.toISOString() : null
+      );
+    } else {
+      newFilters[index].value = value;
+    }
 
     setAdditionalFilters(newFilters);
-    console.log(newFilters);
   };
 
   const handleClearAll = () => {
-    const newFilters = additionalFilters.map((filter) => ({
-      ...filter,
-      value: null,
-    }));
-    setAdditionalFilters(newFilters);
+    setAdditionalFilters([]);
+    onApply([]);
   };
 
   const isApplyDisabled = additionalFilters.some(
     (filter) => !filter.type || !filter.value
   );
+
+  const getAvailableOptions = (currentIndex) => {
+    const usedTypes = additionalFilters
+      .filter((_, index) => index !== currentIndex)
+      .map((filter) => filter.type?.value)
+      .filter(Boolean);
+
+    return dropdownOptions.filter(
+      (option) =>
+        !usedTypes.includes(option.value) ||
+        additionalFilters[currentIndex]?.type?.value === option.value
+    );
+  };
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} modalTitle="Filters">
@@ -88,18 +121,26 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
               <CustomDropdown
                 label={`Filter ${index + 1}`}
                 placeholder="Select filter type"
-                options={dropdownOptions}
+                options={getAvailableOptions(index)}
                 value={filter.type}
                 onChange={(option) => handleFilterTypeChange(index, option)}
                 showLabel="hide-label"
               />
 
-              {filter.type && filter.type.value === "due_date" ? (
+              {filter.type?.value === "due_date" ? (
                 <CustomDatePicker
                   label={`Filter ${index + 1}`}
                   placeholder="Start date - end date"
-                  value={filter.value}
-                  onChange={(date) => handleFilterValueChange(index, date)}
+                  // value={filter.value}
+                  // onChange={(date) => handleFilterValueChange(index, date)}
+                  value={
+                    filter.value && filter.value.length
+                      ? filter.value
+                          .filter((dateStr) => dateStr)
+                          .map((dateStr) => new Date(dateStr))
+                      : []
+                  }
+                  onChange={(dates) => handleFilterValueChange(index, dates)}
                   showLabel="date-picker-hide-label"
                   isRange={true}
                 />
@@ -108,13 +149,10 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
                   label={`Filter ${index + 1}`}
                   placeholder="Select filter value"
                   options={
-                    filter.type
-                      ? filter.type.value === "status"
-                        ? statusOptions
-                        : filter.type.value === "companies"
-                        ? // ? companiesOptions
-                          folderOptions
-                        : []
+                    filter.type?.value === "status"
+                      ? statusOptions
+                      : filter.type?.value === "companies"
+                      ? folderOptions
                       : []
                   }
                   value={filter.value}
@@ -131,6 +169,7 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
               />
             </div>
           ))}
+
           {additionalFilters.length < 3 && (
             <p className="add-filter-button" onClick={addFilter}>
               + Add filter
@@ -147,7 +186,7 @@ const FilterModal = ({ isOpen, onClose, onApply, folderOptions }) => {
               style="red-shadow"
               onClick={() => onApply(additionalFilters)}
               disabled={isApplyDisabled}
-            />
+            />{" "}
           </div>
         </div>
       )}

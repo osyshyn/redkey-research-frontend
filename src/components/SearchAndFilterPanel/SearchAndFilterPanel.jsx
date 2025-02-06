@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FilterModal from "./FilterModal/FilterModal";
+import { toggleFilterModal } from "../../store/slices/filterSlice";
 import searchIcon from "../../assets/icons/search-icon.svg";
 import filterIcon from "../../assets/icons/filter-icon.svg";
 import closeIcon from "../../assets/icons/close-icon.svg";
@@ -12,20 +14,25 @@ const SearchAndFilterPanel = ({
   folderOptions,
 }) => {
   const [searchValue, setSearchValue] = useState("");
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isSearchSubmitted, setIsSearchSubmitted] = useState(false);
 
-  const handleFilterClick = () => {
-    setIsFilterModalOpen(true);
-  };
+  const dispatch = useDispatch();
 
-  const handleFilterSave = (filters) => {
-    setIsFilterModalOpen(false);
-    onFiltersChange(filters);
+  const { isFilterModalOpen, researchFilters } = useSelector(
+    (state) => state.filters
+  );
+
+  const handleFilterClick = () => {
+    dispatch(toggleFilterModal(true));
   };
 
   const handleFilterClose = () => {
-    setIsFilterModalOpen(false);
+    dispatch(toggleFilterModal(false));
+  };
+
+  const handleFilterSave = (filters) => {
+    dispatch(toggleFilterModal(false));
+    onFiltersChange(filters);
   };
 
   const handleSearchSubmit = (e) => {
@@ -82,6 +89,7 @@ const SearchAndFilterPanel = ({
           onClose={handleFilterClose}
           onApply={handleFilterSave}
           folderOptions={folderOptions}
+          initialFilters={researchFilters}
         />
       )}
     </div>

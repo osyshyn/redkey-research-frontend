@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import calendarIcon from "../../assets/icons/calendar-icon.svg";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,8 +13,14 @@ const CustomDatePicker = ({
   showLabel = "",
   isRange = false,
 }) => {
-  const [range, setRange] = useState([null, null]); // Локальный стейт для диапазона
+  const [range, setRange] = useState([null, null]);
   const [startDate, endDate] = range;
+
+  useEffect(() => {
+    if (isRange) {
+      setRange(value || [null, null]);
+    }
+  }, [value, isRange]);
 
   const handleChange = (dates) => {
     if (isRange) {
