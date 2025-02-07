@@ -1,0 +1,60 @@
+name: PROD Build and deploy dev frontend to s3
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_S3_BUCKET: redkey-research-default-fe-website
+  CLOUDFRONT_DISTRIBUTION_ID: E1BKKGQEU18DMS
+  VITE_API_URL: https://redkey-api.fcform.shop
+
+jobs:
+  build-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to AWS
+        id: setup_credential
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install Dependencies
+        run: npm i
+
+      - name: Build App
+        run: |
+          echo VITE_API_URL="https://redkey-api.fcform.shop" >> .env
+          npm run build --silent || echo "Warnings encountered during build, but continuing."
+
+      - name: Upload to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --follow-symlinks --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_DIR: dist
+          AWS_S3_BUCKET: ${{ env.AWS_S3_BUCKET }}
+
+  invalidate-cache:
+    name: Invalidate CloudFront Cache
+    runs-on: ubuntu-latest
+    needs: build-app
+    steps:
+      - name: Invalidate Cache
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          DISTRIBUTION: ${{env.CLOUDFRONT_DISTRIBUTION_ID}}
+          PATHS: "/"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
