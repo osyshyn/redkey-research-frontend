@@ -1,0 +1,26 @@
+@use "../../../assets/styles/variables" as *;
+
+.switch-rectangle {
+  position: relative;
+  width: 26px;
+  height: 15px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  background: $background-dark-light;
+  border-radius: 9px;
+}
+
+.switch-rectangle.active {
+  background: $accent-red-color;
+}
+
+.ellipse {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  top: 2px;
+  background: $accent-color;
+  border-radius: 50%;
+  transition: left 0.3s ease, background 0.3s ease;
+}

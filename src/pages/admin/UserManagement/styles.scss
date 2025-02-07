@@ -1,0 +1,9 @@
+@use "../../../assets/styles/variables" as *;
+
+.user-management-table-wrapper {
+  flex: 1;
+  background: $primary-background;
+  margin: 10px 32px;
+  padding: 12px;
+  border-radius: $border-radius-medium;
+}

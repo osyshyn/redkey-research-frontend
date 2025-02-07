@@ -1,0 +1,36 @@
+@use "../../assets/styles/variables" as *;
+
+.select-access-option {
+  margin-top: 24px;
+}
+
+.access-label {
+  font-family: $font-family-satoshi;
+  font-size: 16px;
+  font-weight: $font-weight-medium;
+  line-height: 21.6px;
+  color: $text-light-accent;
+}
+
+.access-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  row-gap: 24px;
+  column-gap: 10px;
+  justify-items: start;
+  margin-top: 24px;
+}
+
+.access-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.firm-name {
+  font-family: $font-family-satoshi;
+  font-size: 16px;
+  font-weight: $font-weight-normal;
+  line-height: 21.6px;
+  color: $primary-color;
+}

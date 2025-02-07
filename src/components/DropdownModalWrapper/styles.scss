@@ -32,6 +32,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      width: 100%;
 
       img {
         width: 16px;
@@ -41,7 +42,7 @@
 
     &.delete-option {
       color: $delete-red-color;
-      width: 100%;
+      // width: 100%;
 
       &:hover {
         background: $secondary-background;

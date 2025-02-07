@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import FolderHeader from "./FolderHeader/FolderHeader";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
 import DeleteModal from "../DeleteModal/DeleteModal";
+import { FOLDER_STATUSES } from "../../constants/constants";
 import {
   deleteFolder,
   changeFolderStatus,
@@ -11,13 +12,6 @@ import settingsIconDropdown from "../../assets/icons/settings-icon-dropdown.svg"
 import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
 
 import "./styles.scss";
-
-const FOLDER_STATUSES = {
-  ACTIVE: 1,
-  CLOSED: 2,
-  REJECTED: 3,
-  WATCHLIST: 4,
-};
 
 const getStatusName = (statusValue) => {
   return (
@@ -121,10 +115,9 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
       onOptionClick: () => handleChangeStatus(status.value, folderId),
     }));
 
-    useEffect(() => {
-      setCurrentStatus(status);
-    }, [status]);
-    
+  useEffect(() => {
+    setCurrentStatus(status);
+  }, [status]);
 
   return (
     <div className="folder-wrapper">
