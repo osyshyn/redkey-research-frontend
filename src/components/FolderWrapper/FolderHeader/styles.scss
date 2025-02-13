@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 360px;
+  width: fit-content;
   height: 54px;
   padding: 13px 20px;
   gap: 15px;
@@ -28,6 +28,9 @@
       line-height: 27px;
       text-align: left;
       color: $text-light-accent;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

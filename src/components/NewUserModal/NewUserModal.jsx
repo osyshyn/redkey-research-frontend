@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getFirms } from "../../store/slices/firmSlice";
+
 import CustomModal from "../CustomModal/CustomModal";
 import CustomInput from "../CustomInput/CustomInput";
 import CustomDropdown from "../CustomDropdown/CustomDropdown";
 import CustomButton from "../CustomButton/CustomButton";
 import ToggleSwitch from "./ToggleSwitch/ToggleSwitch";
+
 import { USER_TYPES } from "../../constants/constants";
 
 import "./styles.scss";
@@ -14,8 +17,8 @@ const NewUserModal = ({
   isCreateNewUserModalOpen = false,
   onCloseCreateNewUserModal = () => {},
   onSaveNewUser = () => {},
-  //   onUpdateNewUser = () => {},
-  editingNewUser = null,
+  onUpdateUser = () => {},
+  editingUser = null,
 }) => {
   const [nameEmailUserData, setNameEmailUserData] = useState({
     first_name: "",
@@ -29,12 +32,10 @@ const NewUserModal = ({
 
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
-  const [userAccess, setUserAccess] = useState([
-    { value: false, firm: { id: 1, name: "Antrim" } },
-    { value: false, firm: { id: 2, name: "Lafitte" } },
-    { value: false, firm: { id: 3, name: "Pacific Square" } },
-    { value: false, firm: { id: 4, name: "Pryrania" } },
-  ]);
+  const [userAccess, setUserAccess] = useState([]);
+
+  const dispatch = useDispatch();
+  const firmsList = useSelector((state) => state.firm.firms);
 
   const userTypeOptions = [
     { value: USER_TYPES.CLIENT, label: "Client" },
@@ -42,39 +43,45 @@ const NewUserModal = ({
     { value: USER_TYPES.SUPER_ADMIN, label: "Super admin" },
   ];
 
-  const handleToggle = (index) => {
-    setUserAccess((prev) =>
-      prev.map((item, idx) =>
-        idx === index ? { ...item, value: !item.value } : item
-      )
-    );
-  };
+  useEffect(() => {
+    dispatch(getFirms());
+  }, [dispatch]);
 
-  //   const currentFileId = useSelector((state) => state.upload.currentFileId);
+  console.log("firmsList", firmsList);
 
-  //   useEffect(() => {
-  //     if (editingNewUser) {
-  //       setResearchTitle(editingNewUser.title || "");
-  //       setSelectedFolder(editingNewUser.currentFolder || null);
-  //       setResearchDate(
-  //         editingNewUser.publication_date
-  //           ? new Date(editingNewUser.publication_date)
-  //           : null
-  //       );
-  //       setReportType(editingNewUser.report_type || null);
-  //     }
-  //   }, [editingNewUser]);
+  useEffect(() => {
+    if (firmsList.length > 0) {
+      setUserAccess(
+        firmsList.map((firm) => ({
+          value: false,
+          firm: { id: firm.id, name: firm.name },
+        }))
+      );
+    }
+  }, [firmsList]);
 
-  // useEffect(() => {
-  //   const isAllFieldsFilled =
-  //     (researchTitle.trim() &&
-  //       selectedFolder &&
-  //       researchDate &&
-  //       reportType &&
-  //       currentFileId !== null) ||
-  //     editingNewUser?.file;
-  //   setIsSaveDisabled(!isAllFieldsFilled);
-  // }, [researchTitle, selectedFolder, researchDate, reportType, currentFileId]);
+  useEffect(() => {
+    if (editingUser) {
+      setNameEmailUserData({
+        first_name: editingUser.first_name || "",
+        last_name: editingUser.last_name || "",
+        email: editingUser.email || "",
+      });
+      setUserType(editingUser.role || "");
+      setFirm(editingUser.company || "");
+      setUserAccess(
+        firmsList.map((firm) => {
+          const existingAccess = editingUser.access.find(
+            (access) => access.firm.id === firm.id
+          );
+          return {
+            value: existingAccess ? existingAccess.value : false,
+            firm: { id: firm.id, name: firm.name },
+          };
+        })
+      );
+    }
+  }, [editingUser, firmsList]);
 
   useEffect(() => {
     const isAllFieldsFilled =
@@ -86,7 +93,15 @@ const NewUserModal = ({
       userAccess.some((access) => access.value === true);
 
     setIsSaveDisabled(!isAllFieldsFilled);
-  }, [nameEmailUserData, userType, firm, userAccess]);
+  }, [nameEmailUserData, userType, firm, userAccess, editingUser]);
+
+  const handleToggle = (index) => {
+    setUserAccess((prev) =>
+      prev.map((item, idx) =>
+        idx === index ? { ...item, value: !item.value } : item
+      )
+    );
+  };
 
   const handleSaveNewUser = () => {
     const userData = {
@@ -98,13 +113,11 @@ const NewUserModal = ({
       access: userAccess,
     };
 
-    onSaveNewUser(userData);
-
-    // if (editingNewUser) {
-    //   onUpdateNewUser({ ...researchData, id: editingNewUser.id });
-    // } else {
-    //   onSaveNewUser(researchData);
-    // }
+    if (editingUser) {
+      onUpdateUser({ ...userData, id: editingUser.id });
+    } else {
+      onSaveNewUser(userData);
+    }
 
     setNameEmailUserData({
       first_name: "",
@@ -113,12 +126,12 @@ const NewUserModal = ({
     });
     setUserType("");
     setFirm("");
-    setUserAccess([
-      { value: false, firm: { id: 1, name: "Antrim" } },
-      { value: false, firm: { id: 2, name: "Lafitte" } },
-      { value: false, firm: { id: 3, name: "Pacific Square" } },
-      { value: false, firm: { id: 4, name: "Pryrania" } },
-    ]);
+    setUserAccess(
+      firmsList.map((firm) => ({
+        value: false,
+        firm: { id: firm.id, name: firm.name },
+      }))
+    );
 
     onCloseCreateNewUserModal();
   };
@@ -132,7 +145,7 @@ const NewUserModal = ({
           <CustomModal
             isOpen={isCreateNewUserModalOpen}
             onClose={onCloseCreateNewUserModal}
-            modalTitle={editingNewUser ? "Edit user" : "Create new user"}
+            modalTitle={editingUser ? "Edit user" : "Create new user"}
           >
             <div className="profile-first-last-name">
               <CustomInput
@@ -179,12 +192,11 @@ const NewUserModal = ({
                 value={userTypeOptions.find((opt) => opt.value === userType)}
                 onChange={(option) => setUserType(option.value)}
               />
-              <CustomDropdown
+              <CustomInput
                 label="Firm"
-                placeholder="Select firm"
-                options={[1, 2]}
+                placeholder="Enter user firm"
                 value={firm}
-                onChange={(option) => setFirm(option)}
+                onChange={(e) => setFirm(e.target.value)}
               />
             </div>
 

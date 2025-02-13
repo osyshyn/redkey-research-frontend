@@ -3,6 +3,8 @@ import {
   createNewUserAPI,
   getUsersAPI,
   deleteUsersAPI,
+  updateUserAPI,
+  changeUserPasswordAPI,
 } from "../../api/userManagementApi";
 
 export const createNewUser = createAsyncThunk(
@@ -39,6 +41,32 @@ export const deleteUsers = createAsyncThunk(
       return usersIdArray;
     } catch (error) {
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  "userManagement/updateUser",
+  async (updatedUserData, { rejectWithValue }) => {
+    try {
+      const response = await updateUserAPI(updatedUserData);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const changeUserPassword = createAsyncThunk(
+  "userManagement/changeUserPassword",
+  async (userPasswords, { rejectWithValue }) => {
+    try {
+      const response = await changeUserPasswordAPI(userPasswords);
+      return response;
+    } catch (error) {
+      console.error("Error changing user password:", error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -90,6 +118,43 @@ const userManagementSlice = createSlice({
         );
       })
       .addCase(deleteUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.users.findIndex(
+          (user) => user.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.users[index] = action.payload;
+        }
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(changeUserPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changeUserPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedUser = action.payload;
+        const index = state.users.findIndex(
+          (user) => user.id === updatedUser.id
+        );
+        if (index !== -1) {
+          state.users[index] = updatedUser;
+        }
+      })
+      .addCase(changeUserPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

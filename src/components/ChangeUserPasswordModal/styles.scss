@@ -1,0 +1,10 @@
+@use "../../assets/styles/variables" as *;
+
+.password-error-message {
+  color: $delete-red-color;
+  font-family: $font-family-satoshi;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  line-height: 21px;
+  margin-top: 5px;
+}

@@ -4,6 +4,7 @@ import authReducer from "./slices/authSlice";
 import uploadReducer from "./slices/uploadSlice";
 import filterReducer from "./slices/filterSlice";
 import userManagementReducer from "./slices/userManagementSlice";
+import firmsReducer from "./slices/firmSlice"; 
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     upload: uploadReducer,
     filters: filterReducer,
     userManagement: userManagementReducer,
+    firm: firmsReducer,
   },
 });

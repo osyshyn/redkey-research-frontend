@@ -9,6 +9,7 @@ const Pagination = ({
   itemsPerPage,
   onPageChange,
   onItemsPerPageChange,
+  itemsPerPageOptions,
 }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -41,9 +42,11 @@ const Pagination = ({
             onChange={handleItemsPerPageChange}
             className="per-page-select"
           >
-            <option value={3}>3 per page</option>
-            <option value={6}>6 per page</option>
-            <option value={10}>10 per page</option>
+            {itemsPerPageOptions.map((option) => (
+              <option key={option} value={option}>
+                {option} per page
+              </option>
+            ))}
           </select>
         </div>
       </div>

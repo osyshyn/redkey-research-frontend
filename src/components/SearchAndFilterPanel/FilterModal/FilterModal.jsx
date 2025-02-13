@@ -1,37 +1,58 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+
 import CustomModal from "../../CustomModal/CustomModal";
 import CustomDropdown from "../../CustomDropdown/CustomDropdown";
 import CustomButton from "../../CustomButton/CustomButton";
 import CustomDatePicker from "../../CustomDatePicker/CustomDatePicker";
+
 import closeIconGrey from "../../../assets/icons/close-icon-grey.svg";
 import statusFilterIcon from "../../../assets/icons/status-filter-icon.svg";
 import companyFilterIcon from "../../../assets/icons/company-filter-icon.svg";
 import calendarFilterIcon from "../../../assets/icons/calendar-filter-icon.svg";
+import registeredByIcon from "../../../assets/icons/registered-by-icon.svg";
+
 import "./styles.scss";
 
 const FilterModal = ({
   isOpen,
   onClose,
   onApply,
-  folderOptions,
+  folderOptions = [],
+  users,
+  firmsList = [],
   initialFilters,
+  componentType,
 }) => {
   const [additionalFilters, setAdditionalFilters] = useState(
     JSON.parse(JSON.stringify(initialFilters || []))
   );
-  const { researchFilters } = useSelector((state) => state.filters);
+
+  const creators = users
+    .map((user) => user.creator)
+    .filter((creator) => creator !== null)
+    .reduce((uniqueCreators, creator) => {
+      const exists = uniqueCreators.some((item) => item.id === creator.id);
+      if (!exists) {
+        uniqueCreators.push(creator);
+      }
+      return uniqueCreators;
+    }, []);
 
   useEffect(() => {
     if (isOpen) {
-      setAdditionalFilters(JSON.parse(JSON.stringify(researchFilters)));
+      setAdditionalFilters(JSON.parse(JSON.stringify(initialFilters)));
     }
-  }, [isOpen, researchFilters]);
+  }, [isOpen, initialFilters]);
 
-  const dropdownOptions = [
+  const dropdownFolderOptions = [
     { icon: companyFilterIcon, label: "Companies", value: "companies" },
     { icon: statusFilterIcon, label: "Status", value: "status" },
     { icon: calendarFilterIcon, label: "Due date", value: "due_date" },
+  ];
+
+  const dropdownUserManagementOptions = [
+    { icon: registeredByIcon, label: "Registered by", value: "registered_by" },
+    { icon: statusFilterIcon, label: "Accesses", value: "accesses" },
   ];
 
   const statusOptions = [
@@ -46,12 +67,6 @@ const FilterModal = ({
       setAdditionalFilters([...additionalFilters, { type: null, value: null }]);
     }
   };
-
-  // const removeFilter = (index) => {
-  //   const newFilters = additionalFilters.filter((_, i) => i !== index);
-  //   setAdditionalFilters(newFilters);
-  //   // onApply(newFilters);
-  // };
 
   const removeFilter = (index) => {
     const newFilters = additionalFilters.filter((_, i) => i !== index);
@@ -97,12 +112,30 @@ const FilterModal = ({
       .map((filter) => filter.type?.value)
       .filter(Boolean);
 
-    return dropdownOptions.filter(
-      (option) =>
-        !usedTypes.includes(option.value) ||
-        additionalFilters[currentIndex]?.type?.value === option.value
-    );
+    if (componentType === "admin_portal" || componentType === "user_portal") {
+      return dropdownFolderOptions.filter(
+        (option) =>
+          !usedTypes.includes(option.value) ||
+          additionalFilters[currentIndex]?.type?.value === option.value
+      );
+    } else if (componentType === "user_management") {
+      return dropdownUserManagementOptions.filter(
+        (option) =>
+          !usedTypes.includes(option.value) ||
+          additionalFilters[currentIndex]?.type?.value === option.value
+      );
+    }
   };
+
+  const registeredByOptions = creators.map((creator) => ({
+    label: `${creator.first_name} ${creator.last_name}`,
+    value: creator,
+  }));
+
+  const accessOptions = firmsList.map((firm) => ({
+    label: firm.name,
+    value: firm,
+  }));
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} modalTitle="Filters">
@@ -131,8 +164,6 @@ const FilterModal = ({
                 <CustomDatePicker
                   label={`Filter ${index + 1}`}
                   placeholder="Start date - end date"
-                  // value={filter.value}
-                  // onChange={(date) => handleFilterValueChange(index, date)}
                   value={
                     filter.value && filter.value.length
                       ? filter.value
@@ -153,6 +184,10 @@ const FilterModal = ({
                       ? statusOptions
                       : filter.type?.value === "companies"
                       ? folderOptions
+                      : filter.type?.value === "registered_by"
+                      ? registeredByOptions
+                      : filter.type?.value === "accesses"
+                      ? accessOptions
                       : []
                   }
                   value={filter.value}
@@ -186,7 +221,7 @@ const FilterModal = ({
               style="red-shadow"
               onClick={() => onApply(additionalFilters)}
               disabled={isApplyDisabled}
-            />{" "}
+            />
           </div>
         </div>
       )}

@@ -1,17 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getFolders,
-  createFolder,
-  createResearch,
-} from "../../../store/slices/researchSlice";
-import {
-  setResearchFilters,
-  clearResearchFilters,
-} from "../../../store/slices/filterSlice";
+import { getFolders } from "../../../store/slices/researchSlice";
+import { setResearchFilters } from "../../../store/slices/filterSlice";
+
 import Header from "../../../components/Header/Header";
 import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
-import FolderInnerList from "../../../components/FolderInnerList/FolderInnerList";
+import FolderInnerListUser from "../../../components/FolderInnerListUser/FolderInnerListUser";
 import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
 import Loader from "../../../components/Loader/Loader";
@@ -26,7 +20,7 @@ import "./styles.scss";
 
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
-const AdminPortal = () => {
+const UserPortal = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [numPages, setNumPages] = useState(null);
@@ -34,14 +28,9 @@ const AdminPortal = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(3);
 
-  const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
-  const [isUploadResearchModalOpen, setIsUploadResearchModalOpen] =
-    useState(false);
-
   const dispatch = useDispatch();
 
   const { folders, foldersStatus } = useSelector((state) => state.research);
-  console.log("loading", foldersStatus);
 
   const { researchFilters } = useSelector((state) => state.filters);
 
@@ -52,13 +41,6 @@ const AdminPortal = () => {
         label: folder.name,
       })),
     [folders]
-  );
-
-  const handleSaveResearchData = useCallback(
-    (researchData) => {
-      dispatch(createResearch(researchData));
-    },
-    [dispatch]
   );
 
   const filteredFolders = folders
@@ -112,6 +94,7 @@ const AdminPortal = () => {
         .filter((folder) => folder.research.length > 0)
     : filteredFolders;
 
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentFolders = searchInFilteredFolders.slice(
@@ -143,16 +126,6 @@ const AdminPortal = () => {
     setCurrentPage(1);
   };
 
-  const handleCreateFolder = useCallback(
-    (folderName) => {
-      if (folderName.trim()) {
-        dispatch(clearResearchFilters());
-        dispatch(createFolder(folderName));
-      }
-    },
-    [dispatch]
-  );
-
   const handleViewClick = (item) => {
     setSelectedDocument(item);
     setShowPreview(true);
@@ -171,32 +144,11 @@ const AdminPortal = () => {
       <Header />
       <ActionBar
         title="Firm name"
-        componentType={"admin_portal"}
+        componentType={"user_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
           onFiltersChange: handleFiltersChange,
           folderOptions: folderOptions,
-        }}
-        buttons={[
-          {
-            label: "Create folder",
-            style: "red-outline",
-            onClick: () => setIsCreateFolderModalOpen(true),
-          },
-          {
-            label: "Upload research",
-            style: "red-shadow",
-            onClick: () => setIsUploadResearchModalOpen(true),
-          },
-        ]}
-        modalsProps={{
-          isCreateFolderModalOpen,
-          onCloseCreateFolderModal: () => setIsCreateFolderModalOpen(false),
-          onCreateFolder: handleCreateFolder,
-          isUploadResearchModalOpen,
-          onCloseUploadResearchModal: () => setIsUploadResearchModalOpen(false),
-          folderOptions,
-          onSaveResearchData: handleSaveResearchData,
         }}
       />
       {foldersStatus === "loading" ? (
@@ -213,9 +165,9 @@ const AdminPortal = () => {
                     folderId={folder.id}
                     itemsAmount={folder.research.length}
                     status={folder.status}
-                    componentType={"admin_portal"}
+                    componentType={"user_portal"}
                   >
-                    <FolderInnerList
+                    <FolderInnerListUser
                       tableData={folder.research}
                       currentFolder={{ value: folder.id, label: folder.name }}
                       handleViewClick={handleViewClick}
@@ -270,4 +222,4 @@ const AdminPortal = () => {
   );
 };
 
-export default AdminPortal;
+export default UserPortal;

@@ -10,54 +10,24 @@ export const createNewUserAPI = async (userData) => {
       company: userData.company,
       access: userData.access,
     });
+    return response;
+  } catch (error) {
+    console.error("Error creating new user:", error);
+    throw error;
+  }
+};
 
-    console.log("RESP", response);
-
-    // {
-    //     "theme": 1,
-    //     "reset_password": true,
-    //     "created_at": "2025-02-07T13:13:02.118Z",
-    //     "updated_at": "2025-02-07T13:13:02.118Z",
-    //     "id": 13,
-    //     "company": 1,
-    //     "first_name": "new",
-    //     "last_name": "user",
-    //     "email": "hello@gmail.com",
-    //     "role": 1,
-    //     "password": "$2a$10$PvpSCVhJe1t4wh34vMgnpeRrYWlTt1IzLKTwcV8ICBUTtffSrAvv.",
-    //     "create_user_id": 2,
-    //     "access": [
-    //         {
-    //             "value": false,
-    //             "firm": {
-    //                 "id": 1,
-    //                 "name": "Antrim Research"
-    //             }
-    //         },
-    //         {
-    //             "value": false,
-    //             "firm": {
-    //                 "id": 2,
-    //                 "name": "Lafitte Research"
-    //             }
-    //         },
-    //         {
-    //             "value": false,
-    //             "firm": {
-    //                 "id": 3,
-    //                 "name": "Pacific Square Research"
-    //             }
-    //         },
-    //         {
-    //             "value": true,
-    //             "firm": {
-    //                 "id": 4,
-    //                 "name": "Pryrania Research"
-    //             }
-    //         }
-    //     ]
-    // }
-
+export const updateUserAPI = async (updatedUserData) => {
+  try {
+    const response = await axiosInstance.post("admin/updateUser", {
+      id: updatedUserData.id,
+      first_name: updatedUserData.first_name,
+      last_name: updatedUserData.last_name,
+      email: updatedUserData.email,
+      role: updatedUserData.role,
+      company: updatedUserData.company,
+      access: updatedUserData.access,
+    });
     return response;
   } catch (error) {
     console.error("Error creating new user:", error);
@@ -75,16 +45,27 @@ export const getUsersAPI = async () => {
   }
 };
 
-
 export const deleteUsersAPI = async (usersIdArray) => {
-    try {
-      const response = await axiosInstance.post("admin/deleteUsers", {
-        ids: usersIdArray,
-      });
-      return response;
-    } catch (error) {
-      console.error("Error deleting users:", error);
-      throw error;
-    }
-  };
-  
+  try {
+    const response = await axiosInstance.post("admin/deleteUsers", {
+      ids: usersIdArray,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting users:", error);
+    throw error;
+  }
+};
+
+export const changeUserPasswordAPI = async (userPasswords) => {
+  try {
+    const response = await axiosInstance.post(
+      "admin/changeUserPassword",
+      userPasswords
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error changing user password:", error);
+    throw error;
+  }
+};

@@ -1,62 +1,60 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import {
-  createResearch,
-  updateResearch,
-  deleteResearch,
-} from "../../store/slices/researchSlice";
-
+import React, { useState, useRef, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { deleteUsers } from "../../store/slices/userManagementSlice";
 
 import CustomButton from "../CustomButton/CustomButton";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
-import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearchModals";
-import { USER_TYPES } from "../../constants/constants";
+import NewUserModal from "../NewUserModal/NewUserModal";
+import ChangeUserPasswordModal from "../ChangeUserPasswordModal/ChangeUserPasswordModal";
+
+import { getUserTypeName } from "../../utils/userHelpers";
+import { generateUserReport } from "../../utils/pdfUtils";
 
 import moreIcon from "../../assets/icons/more-icon.svg";
-import folderIcon from "../../assets/icons/folder-icon.svg";
 import deleteLightRedIcon from "../../assets/icons/delete-icon-light-red.svg";
 import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
 import closeIcon from "../../assets/icons/close-icon.svg";
 import penIcon from "../../assets/icons/pen-icon.svg";
 import passwordIcon from "../../assets/icons/password-icon.svg";
+import arrowRightIcon from "../../assets/icons/arrow-right-icon.svg";
+import arrowLeftIcon from "../../assets/icons/arrow-left-icon.svg";
 
 import "./styles.scss";
 
-const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
+const UserManagementTable = ({ tableData, onUpdateUser }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [dropdownData, setDropdownData] = useState(null);
   const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
-  //   const [editingResearch, setEditingResearch] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteType, setDeleteType] = useState(null);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [isUploadResearchModalOpen, setIsUploadResearchModalOpen] =
+  const [isUpdateUserModalOpen, setIsUpdateUserModalOpen] = useState(false);
+  const [isChangeUserPasswordModalOpen, setIsChangeUserPasswordModalOpen] =
     useState(false);
+  const [currentUserData, setCurrentUserData] = useState(null);
 
   const dropdownRef = useRef(null);
   const parentContainerRef = useRef(null);
+  const scrollRefs = useRef([]);
 
   const dispatch = useDispatch();
 
-  const getUserTypeName = (typeValue) => {
-    const typeName = Object.keys(USER_TYPES)
-      .find((key) => USER_TYPES[key] === typeValue)
-      ?.toLowerCase();
+  console.log("tableData", tableData);
 
-    return typeName
-      ? typeName.charAt(0).toUpperCase() + typeName.slice(1)
-      : "Unknown";
+  const handleExportPDF = () => {
+    generateUserReport(tableData);
   };
+
+  useEffect(() => {
+    const handleExportEvent = () => handleExportPDF();
+    document.addEventListener("trigger-pdf-export", handleExportEvent);
+    return () => {
+      document.removeEventListener("trigger-pdf-export", handleExportEvent);
+    };
+  }, [tableData]);
 
   const handleCheckboxChange = (index) => {
     const newSelectedItems = [...selectedItems];
@@ -73,7 +71,18 @@ const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
     setSelectedItems([]);
   };
 
+  const scroll = (amount, index) => {
+    if (scrollRefs.current[index]) {
+      scrollRefs.current[index].scrollBy({
+        left: amount,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const handleMoreClick = (e, item, index) => {
+    console.log("e, item, index", e, item, index);
+
     const position = e.target.getBoundingClientRect();
     const parentPosition = parentContainerRef.current.getBoundingClientRect();
 
@@ -93,12 +102,20 @@ const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
           {
             optionName: "Edit profile and accesses",
             icon: penIcon,
-            onOptionClick: () => {},
+            onOptionClick: () => {
+              setEditingUser(item);
+              setIsUpdateUserModalOpen(true);
+              clearSelectedItems();
+            },
           },
           {
             optionName: "Change password",
             icon: passwordIcon,
-            onOptionClick: () => {},
+            onOptionClick: () => {
+              setIsChangeUserPasswordModalOpen(true);
+              setCurrentUserData(item);
+              clearSelectedItems();
+            },
           },
           {
             optionName: "Delete",
@@ -114,22 +131,6 @@ const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
     }
     clearSelectedItems();
   };
-
-  //   const handleSaveResearchData = useCallback(
-  //     (researchData) => {
-  //       dispatch(createResearch(researchData));
-  //     },
-  //     [dispatch]
-  //   );
-
-  //   const handleUpdateResearchData = useCallback(
-  //     (researchData) => {
-  //       console.log(researchData);
-
-  //       dispatch(updateResearch(researchData));
-  //     },
-  //     [dispatch]
-  //   );
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -222,22 +223,18 @@ const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
                       </div>
                       <div className="text-block">
                         <p>
-                          {" "}
                           {item.first_name} {item.last_name}
                         </p>
                         <p className="user-management-email">{item.email}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="table-data-item">firm</td>
+                  <td className="table-data-item">{item.company || "firm"}</td>
                   <td className="table-data-item">
                     {getUserTypeName(item.role)}
                   </td>
 
                   <td className="table-data-item">
-                    {/* {new Date(item.created_at || Date.now()).toLocaleDateString(
-                      "en-US"
-                    )} */}
                     <div className="user-column">
                       <div className="text-block">
                         <p>
@@ -260,7 +257,48 @@ const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
                       ? new Date(item.last_login).toLocaleDateString("en-US")
                       : new Date(item.created_at).toLocaleDateString("en-US")}
                   </td>
-                  <td className="table-data-item">Accesses test</td>
+
+                  <td className="table-data-item">
+                    <div className="user-management-scroll-container">
+                      {item.access.length > 4 && (
+                        <button
+                          className="scroll-btn left"
+                          onClick={() => scroll(-100, index)}
+                        >
+                          <img src={arrowLeftIcon} alt="Scroll Left" />
+                        </button>
+                      )}
+
+                      <div
+                        className="user-management-access-list"
+                        ref={(el) => (scrollRefs.current[index] = el)}
+                      >
+                        {item.access.length > 0 ? (
+                          item.access.map((access, idx) => (
+                            <div
+                              key={idx}
+                              className="user-management-access-item"
+                            >
+                              {access?.firm?.name}
+                            </div>
+                          ))
+                        ) : (
+                          <span className="user-management-no-data">
+                            No data
+                          </span>
+                        )}
+                      </div>
+
+                      {item.access.length > 4 && (
+                        <button
+                          className="scroll-btn right"
+                          onClick={() => scroll(100, index)}
+                        >
+                          <img src={arrowRightIcon} alt="Scroll Right" />
+                        </button>
+                      )}
+                    </div>
+                  </td>
 
                   <td className="table-data-item">
                     <div className="actions-column">
@@ -278,7 +316,6 @@ const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
         </div>
       ) : (
         <div className="user-management-table-empty">
-          {/* <img src={folderIcon} className="folder-icon" /> */}
           <p>
             This user management panel is empty. Click the button <br />
             below to add new user.
@@ -333,17 +370,25 @@ const UserManagementTable = ({ tableData, currentFolder, handleViewClick }) => {
         }}
       />
 
-      {/* <FolderAndResearchModals
-        isUploadResearchModalOpen={isUploadResearchModalOpen}
-        onCloseUploadResearchModal={() => {
-          setIsUploadResearchModalOpen(false);
-          setEditingResearch(null);
-        }}
-        folderOptions={folderOptions}
-        onSaveResearchData={handleSaveResearchData}
-        onUpdateResearchData={handleUpdateResearchData}
-        editingResearch={editingResearch}
-      /> */}
+      {isUpdateUserModalOpen && (
+        <NewUserModal
+          isCreateNewUserModalOpen={isUpdateUserModalOpen}
+          onCloseCreateNewUserModal={() => {
+            setIsUpdateUserModalOpen(false);
+            setEditingUser(null);
+          }}
+          onUpdateUser={onUpdateUser}
+          editingUser={editingUser}
+        />
+      )}
+
+      {isChangeUserPasswordModalOpen && (
+        <ChangeUserPasswordModal
+          isOpen={isChangeUserPasswordModalOpen}
+          onClose={() => setIsChangeUserPasswordModalOpen(false)}
+          userData={currentUserData}
+        />
+      )}
     </>
   );
 };

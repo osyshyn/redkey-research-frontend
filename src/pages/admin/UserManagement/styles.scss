@@ -7,3 +7,51 @@
   padding: 12px;
   border-radius: $border-radius-medium;
 }
+
+.pdf-export-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .loading-message {
+    font-size: 18px;
+    color: #333;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .download-pdf-button {
+    padding: 12px 24px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background: #bb2d3b;
+    }
+  }
+}
+
+.no-users-message {
+  font-family: $font-family-satoshi;
+  font-size: 18px;
+  font-weight: $font-weight-medium;
+  line-height: 48px;
+  color: $text-color-light;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px auto 0 auto;
+}

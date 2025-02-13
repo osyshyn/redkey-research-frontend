@@ -5,13 +5,15 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
+import { useDispatch, useSelector } from "react-redux";
 import {
   createResearch,
   updateResearch,
   deleteResearch,
 } from "../../store/slices/researchSlice";
+
+import { handleDownload, handleDownloadAll } from "../../utils/downloadHelpers";
 
 import CustomButton from "../CustomButton/CustomButton";
 import DeleteModal from "../DeleteModal/DeleteModal";
@@ -125,61 +127,6 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
     [dispatch]
   );
 
-  const handleDownload = (item) => {
-    const fileUrl = `${import.meta.env.VITE_API_URL}/${item.file.path}`;
-
-    if (!fileUrl) {
-      console.error("PDF file URL not found");
-      return;
-    }
-
-    fetch(fileUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("File download failed");
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = item.title + ".pdf";
-        link.click();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const handleDownloadAll = (items) => {
-    items.forEach((item) => {
-      const fileUrl = `${import.meta.env.VITE_API_URL}/${item.file.path}`;
-
-      if (fileUrl) {
-        fetch(fileUrl)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("File download failed");
-            }
-            return response.blob();
-          })
-          .then((blob) => {
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = item.title + ".pdf";
-            link.click();
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        console.error(`File for ${item.title} not found`);
-      }
-    });
-
-    clearSelectedItems();
-  };
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -229,7 +176,8 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                           className="research-button download-all"
                           onClick={() =>
                             handleDownloadAll(
-                              selectedItems.map((index) => tableData[index])
+                              selectedItems.map((index) => tableData[index]),
+                              clearSelectedItems
                             )
                           }
                         >

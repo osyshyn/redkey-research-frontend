@@ -1,27 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import FolderHeader from "./FolderHeader/FolderHeader";
-import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
-import DeleteModal from "../DeleteModal/DeleteModal";
-import { FOLDER_STATUSES } from "../../constants/constants";
 import {
   deleteFolder,
   changeFolderStatus,
 } from "../../store/slices/researchSlice";
+
+import FolderHeader from "./FolderHeader/FolderHeader";
+import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
+import DeleteModal from "../DeleteModal/DeleteModal";
+
+import { FOLDER_STATUSES } from "../../constants/constants";
+import { getStatusName } from "../../utils/userHelpers";
+
 import settingsIconDropdown from "../../assets/icons/settings-icon-dropdown.svg";
 import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
 
 import "./styles.scss";
 
-const getStatusName = (statusValue) => {
-  return (
-    Object.keys(FOLDER_STATUSES)
-      .find((key) => FOLDER_STATUSES[key] === statusValue)
-      ?.toLowerCase() || "unknown"
-  );
-};
-
-const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
+const FolderWrapper = ({
+  title,
+  folderId,
+  itemsAmount,
+  status,
+  children,
+  componentType,
+}) => {
   const [isFolderOpen, setIsFolderOpen] = useState(true);
   const [currentStatus, setCurrentStatus] = useState(status);
   const [dropdownPosition, setDropdownPosition] = useState(null);
@@ -103,7 +106,6 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
     };
 
     dispatch(changeFolderStatus(folderInfo));
-    // setCurrentStatus(newStatus);
     setActiveDropdown(null);
     setStatusDropdownPosition(null);
   };
@@ -129,6 +131,7 @@ const FolderWrapper = ({ title, folderId, itemsAmount, status, children }) => {
         onMoreClick={handleMoreClick}
         isFolderOpen={isFolderOpen}
         folderMoreIconRef={folderMoreIconRef}
+        componentType={componentType}
       />
 
       <div className={`folder-contents ${isFolderOpen ? "open" : "closed"}`}>

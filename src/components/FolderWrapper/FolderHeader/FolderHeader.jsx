@@ -16,8 +16,9 @@ const FolderHeader = ({
   isFolderOpen,
   statusRef,
   folderMoreIconRef,
+  componentType,
 }) => (
-  <div className={`folder-header ${isFolderOpen ? "open" : "closed"}`}>
+  <div className={`folder-header  ${isFolderOpen ? "open" : "closed"}`}>
     <div className="folder-expandable-element" onClick={onFolderToggle}>
       <img
         src={isFolderOpen ? arrowDown : arrowUp}
@@ -36,12 +37,14 @@ const FolderHeader = ({
     >
       {currentStatus}
     </p>
-    <img
-      ref={folderMoreIconRef}
-      src={moreIcon}
-      className="more-icon"
-      onClick={onMoreClick}
-    />
+    {componentType === "admin_portal" && (
+      <img
+        ref={folderMoreIconRef}
+        src={moreIcon}
+        className="more-icon"
+        onClick={onMoreClick}
+      />
+    )}
   </div>
 );
 

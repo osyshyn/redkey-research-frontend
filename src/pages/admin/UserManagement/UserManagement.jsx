@@ -1,28 +1,25 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getFolders, createFolder } from "../../../store/slices/researchSlice";
+import { setUserManagementFilters } from "../../../store/slices/filterSlice";
 import {
-  setResearchFilters,
-  clearResearchFilters,
-  toggleFilterModal,
-} from "../../../store/slices/filterSlice";
-import { getUsers } from "../../../store/slices/userManagementSlice";
-
+  getUsers,
+  updateUser,
+} from "../../../store/slices/userManagementSlice";
 import { createNewUser } from "../../../store/slices/userManagementSlice";
+import { clearUserManagementFilters } from "../../../store/slices/filterSlice";
+
 import Header from "../../../components/Header/Header";
-import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
 import UserManagementTable from "../../../components/UserManagementTable/UserManagementTable";
 import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
-import closeIcon from "../../../assets/icons/close-icon.svg";
+import Loader from "../../../components/Loader/Loader";
 
 import "./styles.scss";
 
 const UserManagement = () => {
-  const [numPages, setNumPages] = useState(null);
-  const [showPreview, setShowPreview] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [itemsPerPage, setItemsPerPage] = useState(8);
 
   const [isCreateNewUserModalOpen, setIsCreateNewUserModalOpen] =
     useState(false);
@@ -32,14 +29,61 @@ const UserManagement = () => {
     (state) => state.userManagement
   );
 
+  const firmsList = useSelector((state) => state.firm.firms);
+  const { userManagementFilters } = useSelector((state) => state.filters);
+
   console.log("USERS", users);
+
+  console.log("userManagementFilters", userManagementFilters);
+
+  const filteredUsers = users.filter((user) => {
+    return userManagementFilters.every((filter) => {
+      const filterType = filter.type.value;
+      const filterValue = filter.value.value;
+
+      if (filterType === "registered_by") {
+        return user.creator?.id === filterValue.id;
+      }
+
+      if (filterType === "accesses") {
+        return user.access?.some(
+          (firmObj) =>
+            firmObj.firm.id === filterValue.id && firmObj.value === true
+        );
+      }
+
+      return true;
+    });
+  });
+
+  const searchInFilteredUsers = searchValue
+    ? filteredUsers.filter((user) =>
+        [user.first_name, user.last_name, user.email].some((field) =>
+          field.toLowerCase().includes(searchValue.toLowerCase())
+        )
+      )
+    : filteredUsers;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = searchInFilteredUsers.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
 
   const handleSaveNewUser = (userData) => {
+    console.log("TEST CREATE USER");
+
+    dispatch(clearUserManagementFilters());
     dispatch(createNewUser(userData));
+  };
+  const handleUpdateUser = (updatedUserData) => {
+    dispatch(clearUserManagementFilters());
+    dispatch(updateUser(updatedUserData));
   };
 
   const handlePageChange = (newPage) => {
@@ -56,7 +100,7 @@ const UserManagement = () => {
   };
 
   const handleFiltersChange = (newFilters) => {
-    dispatch(setResearchFilters(newFilters));
+    dispatch(setUserManagementFilters(newFilters));
     setCurrentPage(1);
   };
 
@@ -66,19 +110,20 @@ const UserManagement = () => {
       <ActionBar
         title="User management"
         componentType={"user_management"}
-        searchPanelProps={
-          {
-            // onSearchChange: handleSearchChange,
-            // onFiltersChange: handleFiltersChange,
-            // folderOptions: folderOptions,
-          }
-        }
+        searchPanelProps={{
+          onSearchChange: handleSearchChange,
+          onFiltersChange: handleFiltersChange,
+          users: users,
+          firmsList: firmsList,
+        }}
         buttons={[
           {
             label: "Export report",
             style: "red-outline",
+
             onClick: () => {
-              console.log("Export report");
+              const event = new CustomEvent("trigger-pdf-export");
+              document.dispatchEvent(event);
             },
           },
           {
@@ -91,31 +136,34 @@ const UserManagement = () => {
           isCreateNewUserModalOpen: isCreateNewUserModalOpen,
           onCloseCreateNewUserModal: () => setIsCreateNewUserModalOpen(false),
           onSaveNewUser: handleSaveNewUser,
-          //   onUpdateNewUser = () => {},
         }}
       />
-
-      <div className="user-management-table-wrapper">
-        <UserManagementTable tableData={users} />
-
-        <Pagination
-          currentPage={currentPage}
-          totalItems={10}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange}
-        />
-      </div>
-
-      {/* {currentFolders.length >= 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalItems={searchInFilteredFolders.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange}
-        />
-      )} */}
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          {currentUsers.length > 0 ? (
+            <div className="user-management-table-wrapper">
+              <UserManagementTable
+                tableData={currentUsers}
+                onUpdateUser={handleUpdateUser}
+              />
+              {currentUsers.length >= 1 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalItems={searchInFilteredUsers.length}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={handlePageChange}
+                  onItemsPerPageChange={handleItemsPerPageChange}
+                  itemsPerPageOptions={[8, 16, 24]}
+                />
+              )}
+            </div>
+          ) : (
+            <p className="no-users-message">No users available to display</p>
+          )}
+        </>
+      )}
     </>
   );
 };

@@ -11,8 +11,6 @@ const CustomDropdown = ({
   value,
   showLabel = "",
 }) => {
-  console.log("options", options);
-
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionClick = (option) => {
@@ -31,9 +29,11 @@ const CustomDropdown = ({
       >
         <div className="dropdown-icon-value-container">
           {value?.icon && (
-           
-              <img src={value?.icon} alt="icon" className="dropdown-option-icon" />
-           
+            <img
+              src={value?.icon}
+              alt="icon"
+              className="dropdown-option-icon"
+            />
           )}
           <span className={`${value ? "value" : "placeholder"}`}>
             {value?.label || value || placeholder}
@@ -49,7 +49,7 @@ const CustomDropdown = ({
         <div className="custom-dropdown-menu">
           {options.map((option, index) => (
             <div
-              key={option.value || index}
+              key={option.value?.id ? option.value.id : option.value || index}
               className="custom-dropdown-item"
               onClick={() => handleOptionClick(option)}
             >

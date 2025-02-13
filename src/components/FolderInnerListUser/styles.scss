@@ -1,10 +1,10 @@
 @use "../../assets/styles/variables" as *;
 
-.user-management-table-container {
+.folder-inner-list {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-height: 60vh;
+  max-height: 280px;
   min-height: 260px;
   width: 100%;
   background: $primary-background;
@@ -32,7 +32,7 @@
       background: $secondary-background;
       padding: 8px 24px;
 
-      .selected-user-items {
+      .selected-folder-items {
         font-family: $font-family-satoshi;
         font-size: 14px;
         font-weight: $font-weight-bold;
@@ -43,7 +43,6 @@
 
   &::-webkit-scrollbar {
     width: 4px;
-    height: 5px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -56,11 +55,11 @@
   }
 }
 
-.user-management-table {
+.folder-table {
   width: 100%;
   border-collapse: collapse;
 
-  .user-management-table-header {
+  .folder-table-header {
     background-color: $primary-background;
     color: $primary-color;
     position: sticky;
@@ -127,12 +126,12 @@
     }
   }
 
-  .user-column {
+  .research-column {
     display: flex;
     align-items: center;
     gap: 16px;
 
-    .custom-user-management-checkbox {
+    .custom-folder-checkbox {
       position: relative;
       width: 14px;
       height: 14px;
@@ -161,21 +160,6 @@
         background-size: contain;
       }
     }
-
-    .text-block {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
-      .user-management-email,
-      .user-management-created-by {
-        font-family: $font-family-satoshi;
-        font-size: 12px;
-        font-weight: $font-weight-normal;
-        line-height: 18px;
-        color: $secondary-color;
-      }
-    }
   }
 
   .actions-column {
@@ -200,14 +184,10 @@
       background-color: $border-gray-dark;
       cursor: pointer;
     }
-
-    .more-icon {
-      cursor: pointer;
-    }
   }
 }
 
-.user-management-table-empty {
+.folder-table-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -226,7 +206,13 @@
   text-align: center;
 }
 
-.user-management-table-empty p {
+.folder-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+.folder-table-empty p {
   font-family: $font-family-satoshi;
   font-size: 16px;
   font-weight: $font-weight-normal;
@@ -238,11 +224,7 @@
   white-space: pre-line;
 }
 
-.add-user-btn {
-  width: 140px;
-}
-
-.user-management-button {
+.research-button {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -258,17 +240,6 @@
   line-height: 21px;
   cursor: pointer;
 
-  &.delete {
-    border: 1px solid $medium-red-color;
-    color: $medium-red-color;
-
-    &:hover {
-      background-color: rgba(140, 0, 0, 1);
-      box-shadow: 0px 3px 5px rgba(255, 218, 218, 0.3) inset,
-        0px -2px 5px rgba(255, 218, 218, 0.3) inset;
-      color: rgb(255, 238, 238);
-    }
-  }
   &.download-all {
     border: 1px solid $primary-color;
     color: $primary-color;
@@ -295,65 +266,4 @@
     height: 16px;
     cursor: pointer;
   }
-}
-
-.user-management-scroll-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.user-management-access-list {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  gap: 10px;
-  max-width: 400px;
-  white-space: nowrap;
-  scrollbar-width: none;
-}
-
-.user-management-access-list::-webkit-scrollbar {
-  display: none;
-}
-
-.user-management-access-item {
-  display: flex;
-  justify-content: center;
-  padding: 5px 8px;
-  border: 1px solid $background-dark-light;
-  border-radius: 16px;
-  font-size: 12px;
-  color: $text-light-neutral;
-  text-align: center;
-  font-family: $font-family-satoshi;
-  font-weight: $font-weight-normal;
-  line-height: 18px;
-  letter-spacing: 0%;
-}
-
-.scroll-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.scroll-btn img {
-  width: 15px;
-  height: 15px;
-}
-
-.user-management-no-data {
-  font-family: $font-family-satoshi;
-  font-weight: $font-weight-normal;
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: 0%;
-  display: flex;
-  justify-content: center;
-  padding: 5px 8px;
-  border-radius: 16px;
-  font-size: 12px;
-  color: $text-light-neutral;
-  text-align: center;
 }
