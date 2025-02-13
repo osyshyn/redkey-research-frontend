@@ -10,7 +10,7 @@ export const generateUserReport = (users) => {
     pageSize: "A4",
     defaultStyle: {
       font: "Roboto",
-      fontSize: 10,
+      fontSize: 9,
       lineHeight: 1.5,
     },
     content: [
@@ -39,36 +39,36 @@ export const generateUserReport = (users) => {
             ...users.map((user) => [
               {
                 text: `${user.first_name} ${user.last_name}\n${user.email}`,
-                fontSize: 9,
+                fontSize: 8,
                 margin: [0, 3, 0, 3],
               },
               {
                 text: user.company || "no data",
-                fontSize: 9,
+                fontSize: 8,
                 margin: [0, 3, 0, 3],
               },
               {
                 text: getUserTypeName(user.role),
-                fontSize: 9,
+                fontSize: 8,
                 margin: [0, 3, 0, 3],
               },
               {
                 text: `${new Date(user.created_at).toLocaleDateString()}\nby ${
                   user.creator?.first_name || "system"
                 } ${user.creator?.last_name || ""}`,
-                fontSize: 9,
+                fontSize: 8,
                 margin: [0, 3, 0, 3],
               },
               {
                 text: user.last_login
                   ? new Date(user.last_login).toLocaleDateString("en-US")
                   : new Date(user.created_at).toLocaleDateString("en-US"),
-                fontSize: 9,
+                fontSize: 8,
                 margin: [0, 3, 0, 3],
               },
               {
                 text: user.access?.map((a) => a.firm.name).join(", ") || "None",
-                fontSize: 9,
+                fontSize: 8,
                 margin: [0, 3, 0, 3],
               },
             ]),
@@ -85,7 +85,7 @@ export const generateUserReport = (users) => {
       },
       tableHeader: {
         bold: true,
-        fontSize: 10,
+        fontSize: 9,
         color: "black",
         fillColor: "#eeeeee",
       },
