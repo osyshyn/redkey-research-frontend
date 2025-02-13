@@ -18,7 +18,7 @@ export const generateUserReport = (users) => {
       {
         table: {
           headerRows: 1,
-          widths: ["20%", "15%", "10%", "15%", "10%", "30%"],
+          widths: ["18%", "12%", "10%", "15%", "10%", "35%"],
           body: [
             [
               { text: "Name", style: "tableHeader", margin: [0, 5, 0, 5] },
