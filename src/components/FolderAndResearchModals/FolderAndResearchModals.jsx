@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { useSelector } from "react-redux";
 import CustomModal from "../CustomModal/CustomModal";
@@ -23,30 +23,33 @@ const FolderAndResearchModals = ({
   const [folderName, setFolderName] = useState("");
   const [researchTitle, setResearchTitle] = useState("");
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [selectedFirm, setSelectedFirm] = useState(null);
   const [researchDate, setResearchDate] = useState(null);
   const [reportType, setReportType] = useState(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
   const currentFileId = useSelector((state) => state.upload.currentFileId);
+  const firmsList = useSelector((state) => state.firm.firms);
 
-  // const REPORT_TYPES = {
-  //   INITIATION: 1,
-  //   FINAL_REPORT: 2,
-  // };
-  
-  // const reportTypeOptions = [
-  //   { value: REPORT_TYPES.INITIATION, label: "Initiation" },
-  //   { value: REPORT_TYPES.FINAL_REPORT, label: "Final Report" },
-  // ];
+  const firmsListOptions = useMemo(
+    () =>
+      firmsList.map((firm) => ({
+        value: firm.id,
+        label: firm.name,
+      })),
+    [firmsList]
+  );
 
-  // console.log(editingResearch);
-  // console.log('reportType', reportType);
-  
+  console.log("editingResearch", editingResearch);
 
   useEffect(() => {
     if (editingResearch) {
       setResearchTitle(editingResearch.title || "");
       setSelectedFolder(editingResearch.currentFolder || null);
+      setSelectedFirm(
+        { value: editingResearch.firm.id, label: editingResearch.firm.name } ||
+          null
+      );
       setResearchDate(
         editingResearch.publication_date
           ? new Date(editingResearch.publication_date)
@@ -60,18 +63,26 @@ const FolderAndResearchModals = ({
     const isAllFieldsFilled =
       (researchTitle.trim() &&
         selectedFolder &&
+        selectedFirm &&
         researchDate &&
         reportType &&
         currentFileId !== null) ||
       editingResearch?.file;
     setIsSaveDisabled(!isAllFieldsFilled);
-  }, [researchTitle, selectedFolder, researchDate, reportType, currentFileId]);
-  
+  }, [
+    researchTitle,
+    selectedFolder,
+    selectedFirm,
+    researchDate,
+    reportType,
+    currentFileId,
+  ]);
 
   const handleSaveResearch = () => {
     const researchData = {
       title: researchTitle,
       companyId: selectedFolder.value,
+      firmId: selectedFirm.value,
       date: researchDate,
       reportType: reportType,
       fileId: currentFileId || editingResearch?.file?.id,
@@ -85,6 +96,7 @@ const FolderAndResearchModals = ({
 
     setResearchTitle("");
     setSelectedFolder(null);
+    setSelectedFirm(null);
     setResearchDate(null);
     setReportType(null);
     onCloseUploadResearchModal();
@@ -135,13 +147,22 @@ const FolderAndResearchModals = ({
               value={researchTitle}
               onChange={(e) => setResearchTitle(e.target.value)}
             />
-            <CustomDropdown
-              label="Company"
-              placeholder="Select a company"
-              options={folderOptions}
-              value={selectedFolder}
-              onChange={(option) => setSelectedFolder(option)}
-            />
+            <div className="upload-company-firm">
+              <CustomDropdown
+                label="Company"
+                placeholder="Select a company"
+                options={folderOptions}
+                value={selectedFolder}
+                onChange={(option) => setSelectedFolder(option)}
+              />
+              <CustomDropdown
+                label="Firm"
+                placeholder="Select a firm"
+                options={firmsListOptions}
+                value={selectedFirm}
+                onChange={(option) => setSelectedFirm(option)}
+              />
+            </div>
             <div className="upload-modal-type-date">
               <CustomDatePicker
                 label="Publication date"
@@ -153,8 +174,6 @@ const FolderAndResearchModals = ({
                 label="Report type"
                 placeholder="Select report type"
                 options={[1, 2]}
-                // options={reportTypeOptions}
-                // options={['Initiation', 'Final Report']}
                 value={reportType}
                 onChange={(option) => setReportType(option)}
               />

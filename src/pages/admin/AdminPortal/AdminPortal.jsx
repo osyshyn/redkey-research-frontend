@@ -9,6 +9,7 @@ import {
   setResearchFilters,
   clearResearchFilters,
 } from "../../../store/slices/filterSlice";
+import { getFirms } from "../../../store/slices/firmSlice";
 import Header from "../../../components/Header/Header";
 import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
 import FolderInnerList from "../../../components/FolderInnerList/FolderInnerList";
@@ -44,6 +45,12 @@ const AdminPortal = () => {
   console.log("loading", foldersStatus);
 
   const { researchFilters } = useSelector((state) => state.filters);
+  const currentFirm = useSelector((state) => state.firm.currentFirm);
+  console.log("currentFirm", currentFirm);
+
+  useEffect(() => {
+    dispatch(getFirms());
+  }, [dispatch]);
 
   const folderOptions = useMemo(
     () =>
@@ -170,7 +177,7 @@ const AdminPortal = () => {
     <>
       <Header />
       <ActionBar
-        title="Firm name"
+        title={`${currentFirm?.name} Research`}
         componentType={"admin_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
@@ -216,7 +223,19 @@ const AdminPortal = () => {
                     componentType={"admin_portal"}
                   >
                     <FolderInnerList
-                      tableData={folder.research}
+                      // tableData={folder.research.filter(
+                      //   (researchItem) =>
+                      //     (researchItem?.firm?.id === currentFirm?.id &&
+                      //     researchItem?.firm?.name === currentFirm?.name)
+                      // )}
+                      tableData={
+                        folder?.research?.filter(
+                          (researchItem) =>
+                            researchItem?.firm?.id === currentFirm?.id &&
+                            researchItem?.firm?.name === currentFirm?.name
+                        ) ||
+                        (folder?.research?.length ? [folder.research[0]] : [])
+                      }
                       currentFolder={{ value: folder.id, label: folder.name }}
                       handleViewClick={handleViewClick}
                     />

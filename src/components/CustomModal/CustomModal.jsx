@@ -3,11 +3,11 @@ import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
 
-const CustomModal = ({ isOpen, onClose, modalTitle, children }) => {
+const CustomModal = ({ isOpen, onClose, modalTitle, style = {}, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="custom-modal-overlay" onClick={onClose}>
+    <div className="custom-modal-overlay" onClick={onClose} style={style}>
       <div
         className="custom-modal-container"
         onClick={(e) => e.stopPropagation()}

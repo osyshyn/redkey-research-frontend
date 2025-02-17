@@ -55,12 +55,23 @@
   line-height: 24px;
   padding: 10px 0;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &:hover {
-    color: $delete-red-color;
+    color: $primary-color;
+    border-bottom: 1px solid $primary-color;
   }
 }
 
 .nav-link.active {
   color: $delete-red-color;
   border-bottom: 1px solid $delete-red-color;
+}
+
+.header-dropdown-icon {
+  width: 15px;
+  height: 15px;
+  margin-left: 10px;
 }

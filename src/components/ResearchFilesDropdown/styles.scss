@@ -1,0 +1,57 @@
+@use "../../assets/styles/variables" as *;
+
+.research-files-menu {
+  position: absolute;
+  background-color: #1c1c1c;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  min-width: 100px;
+  z-index: 10;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: start;
+
+  max-height: 250px;
+  overflow-y: auto; 
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
+  .research-files-dropdown-item {
+    padding: 8px;
+    border-radius: 8px;
+    color: $text-light-neutral;
+    cursor: pointer;
+    font-family: $font-family-satoshi;
+    font-size: 16px;
+    font-weight: $font-weight-normal;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background: $secondary-background;
+      border-radius: 8px;
+    }
+
+  }
+}

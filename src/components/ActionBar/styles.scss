@@ -5,6 +5,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px 32px;
+  gap: 20px;
 }
 
 .action-bar-title h1 {
@@ -21,10 +22,24 @@
 .action-bar-controls {
   display: flex;
   align-items: center;
-  gap: 14px;
+
+  &.user_portal {
+    gap: 0;
+  }
+  &.admin_portal {
+    gap: 14px;
+  }
+  &.user_management {
+    gap: 14px;
+  }
 }
 
 .action-bar-buttons {
   display: flex;
   gap: 14px;
+}
+
+.firm-button {
+  margin: 0 32px 24px 32px;
+  width: fit-content;
 }

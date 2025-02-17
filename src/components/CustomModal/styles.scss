@@ -52,7 +52,8 @@
 
 .upload-modal-type-date,
 .profile-first-last-name,
-.user-type-firm {
+.user-type-firm,
+.upload-company-firm {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;

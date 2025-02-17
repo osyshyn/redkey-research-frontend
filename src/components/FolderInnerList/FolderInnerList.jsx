@@ -94,7 +94,10 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
           {
             optionName: "Download",
             icon: downloadLightGreyIcon,
-            onOptionClick: () => handleDownload(item),
+            onOptionClick: () => {
+              handleDownload(item);
+              setActiveDropdownIndex(null);
+            },
           },
           {
             optionName: "Delete",

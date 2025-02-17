@@ -1,0 +1,65 @@
+@use "../../assets/styles/variables" as *;
+
+.contact-us-under-title-info {
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-normal;
+  font-size: 16px;
+  line-height: 24px;
+  color: $text-light-neutral;
+  margin-top: 14px;
+}
+
+.contact-us-phone-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 26px 0;
+}
+
+.contact-us-copy {
+  border: 1px solid $border-gray-dark;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px;
+  padding: 6px 20px;
+  border-radius: $border-radius-small;
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-normal;
+  font-size: 14px;
+  line-height: 21px;
+  color: $primary-color;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $border-gray-dark;
+  }
+}
+
+.contact-us-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-us-paragraph-title {
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-normal;
+  font-size: 14px;
+  color: $text-light-accent;
+  display: flex;
+  align-items: center;
+}
+
+.contact-us-paragraph-info {
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-normal;
+  font-size: 14px;
+  color: $text-light-neutral;
+}
+
+.contact-us-icon {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}

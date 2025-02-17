@@ -43,7 +43,7 @@ export const changePasswordAPI = async (passwords) => {
 
 export const getProfileAPI = async () => {
   try {
-    const response = await axiosInstance.get("user/getProfile");
+    const response = await axiosInstance.get("admin/getProfile");
 
     console.log(response);
 
