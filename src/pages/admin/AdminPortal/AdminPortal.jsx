@@ -233,8 +233,7 @@ const AdminPortal = () => {
                           (researchItem) =>
                             researchItem?.firm?.id === currentFirm?.id &&
                             researchItem?.firm?.name === currentFirm?.name
-                        ) ||
-                        (folder?.research?.length ? [folder.research[0]] : [])
+                        ) || [folder.research[0]]
                       }
                       currentFolder={{ value: folder.id, label: folder.name }}
                       handleViewClick={handleViewClick}

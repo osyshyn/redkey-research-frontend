@@ -40,11 +40,22 @@ const Header = () => {
   console.log("getProfile", user);
   const firmsList = useSelector((state) => state.firm.firms);
 
+  // useEffect(() => {
+  //   if (!user) {
+  //     dispatch(getProfile());
+  //   }
+  // }, [dispatch, user]);
+
   useEffect(() => {
     if (!user) {
       dispatch(getProfile());
+    } else if (location.pathname === "/admin/portal" && firmsList.length > 0) {
+      const currentFirm = firmsList[0];
+      if (currentFirm) {
+        dispatch(setCurrentFirm(currentFirm));
+      }
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, location.pathname, firmsList]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -94,6 +105,12 @@ const Header = () => {
   };
 
   const handleResearchOptionClick = (firmOption) => {
+    // dispatch(setCurrentFirm(firmOption));
+    // dispatch(clearUserManagementFilters());
+    // setIsResearchDropdownOpen(false);
+    // navigate("/admin/portal");
+
+    localStorage.setItem("currentFirm", JSON.stringify(firmOption));
     dispatch(setCurrentFirm(firmOption));
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
