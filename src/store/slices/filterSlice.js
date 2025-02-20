@@ -13,7 +13,7 @@ const filterSlice = createSlice({
   reducers: {
     setResearchFilters: (state, action) => {
       state.researchFilters = action.payload.map((filter) => {
-        if (filter.type?.value === "due_date" && filter.value) {
+        if (filter.type?.value === "initiation_date" && filter.value) {
           return {
             ...filter,
             value: filter.value.map((date) =>
@@ -27,7 +27,7 @@ const filterSlice = createSlice({
 
     setUserManagementFilters: (state, action) => {
       state.userManagementFilters = action.payload.map((filter) => {
-        if (filter.type?.value === "due_date" && filter.value) {
+        if (filter.type?.value === "initiation_date" && filter.value) {
           return {
             ...filter,
             value: filter.value.map((date) =>

@@ -29,7 +29,7 @@ const DropdownMenu = forwardRef(
           />
           <span>Profile</span>
         </div>
-        {currentUser.role === 3 && (
+        {currentUser?.role === 3 && (
           <div className="menu-item" onClick={onContactUsClick}>
             <img
               src={phoneIcon}

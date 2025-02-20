@@ -37,14 +37,9 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  console.log("getProfile", user);
-  const firmsList = useSelector((state) => state.firm.firms);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     dispatch(getProfile());
-  //   }
-  // }, [dispatch, user]);
+  const firmsList = useSelector((state) => state.firm.firms);
+  console.log("getProfile", user, firmsList);
 
   useEffect(() => {
     if (!user) {
@@ -55,7 +50,7 @@ const Header = () => {
         dispatch(setCurrentFirm(currentFirm));
       }
     }
-  }, [dispatch, user, location.pathname, firmsList]);
+  }, [dispatch, location.pathname]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -104,17 +99,20 @@ const Header = () => {
     }
   };
 
-  const handleResearchOptionClick = (firmOption) => {
-    // dispatch(setCurrentFirm(firmOption));
-    // dispatch(clearUserManagementFilters());
-    // setIsResearchDropdownOpen(false);
-    // navigate("/admin/portal");
-
+  const handleAdminResearchOptionClick = (firmOption) => {
     localStorage.setItem("currentFirm", JSON.stringify(firmOption));
     dispatch(setCurrentFirm(firmOption));
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
     navigate("/admin/portal");
+  };
+
+  const handleUserResearchOptionClick = (firmOption) => {
+    localStorage.setItem("currentFirm", JSON.stringify(firmOption));
+    dispatch(setCurrentFirm(firmOption));
+    dispatch(clearUserManagementFilters());
+    setIsResearchDropdownOpen(false);
+    navigate("/user/portal");
   };
 
   const handleResearchClick = (e) => {
@@ -126,9 +124,25 @@ const Header = () => {
     setIsResearchDropdownOpen((prev) => !prev);
   };
 
-  const researchDropdownOptions = firmsList.map((firmOption) => ({
+  // const adminResearchDropdownOptions = firmsList.map((firmOption) => ({
+  //   optionName: firmOption.name,
+  //   onOptionClick: () => handleAdminResearchOptionClick(firmOption),
+  // }));
+
+  const adminResearchDropdownOptions = [
+    {
+      optionName: "All",
+      onOptionClick: () => handleAdminResearchOptionClick({ name: "All" }),
+    },
+    ...firmsList.map((firmOption) => ({
+      optionName: firmOption.name,
+      onOptionClick: () => handleAdminResearchOptionClick(firmOption),
+    })),
+  ];
+
+  const userResearchDropdownOptions = firmsList.map((firmOption) => ({
     optionName: firmOption.name,
-    onOptionClick: () => handleResearchOptionClick(firmOption),
+    onOptionClick: () => handleUserResearchOptionClick(firmOption),
   }));
 
   return (
@@ -137,6 +151,67 @@ const Header = () => {
         <img src={logoHeader} alt="Logo" className="logo" />
       </div>
 
+      {/*  User client */}
+      {user?.role === 1 && (
+        <nav className="nav-links">
+          <span
+            className={`nav-link ${
+              location.pathname === "/user/portal" ? "active" : ""
+            }`}
+            onClick={handleResearchClick}
+            ref={researchButtonRef}
+          >
+            Research files
+            <img
+              src={
+                location.pathname === "/user/portal"
+                  ? dropdownChevronIconRed
+                  : dropdownChevronIcon
+              }
+              alt="Dropdown Chevron"
+              className="header-dropdown-icon"
+            />
+          </span>
+          {isResearchDropdownOpen && (
+            <ResearchFilesDropdown
+              position={researchDropdownPosition}
+              options={userResearchDropdownOptions}
+            />
+          )}
+        </nav>
+      )}
+
+      {/*  Admin */}
+      {user?.role === 2 && (
+        <nav className="nav-links">
+          <span
+            className={`nav-link ${
+              location.pathname === "/admin/portal" ? "active" : ""
+            }`}
+            onClick={handleResearchClick}
+            ref={researchButtonRef}
+          >
+            Research files
+            <img
+              src={
+                location.pathname === "/admin/portal"
+                  ? dropdownChevronIconRed
+                  : dropdownChevronIcon
+              }
+              alt="Dropdown Chevron"
+              className="header-dropdown-icon"
+            />
+          </span>
+          {isResearchDropdownOpen && (
+            <ResearchFilesDropdown
+              position={researchDropdownPosition}
+              options={adminResearchDropdownOptions}
+            />
+          )}
+        </nav>
+      )}
+
+      {/* Super Admin */}
       {user?.role === 3 && (
         <nav className="nav-links">
           <span
@@ -160,7 +235,7 @@ const Header = () => {
           {isResearchDropdownOpen && (
             <ResearchFilesDropdown
               position={researchDropdownPosition}
-              options={researchDropdownOptions}
+              options={adminResearchDropdownOptions}
             />
           )}
 

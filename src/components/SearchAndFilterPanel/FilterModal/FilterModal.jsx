@@ -47,7 +47,7 @@ const FilterModal = ({
   const dropdownFolderOptions = [
     { icon: companyFilterIcon, label: "Companies", value: "companies" },
     { icon: statusFilterIcon, label: "Status", value: "status" },
-    { icon: calendarFilterIcon, label: "Due date", value: "due_date" },
+    { icon: calendarFilterIcon, label: "Initiation date", value: "initiation_date" },
   ];
 
   const dropdownUserManagementOptions = [
@@ -86,7 +86,7 @@ const FilterModal = ({
   const handleFilterValueChange = (index, value) => {
     const newFilters = [...additionalFilters];
 
-    if (newFilters[index].type?.value === "due_date") {
+    if (newFilters[index].type?.value === "initiation_date") {
       newFilters[index].value = value.map((date) =>
         date ? date.toISOString() : null
       );
@@ -160,7 +160,7 @@ const FilterModal = ({
                 showLabel="hide-label"
               />
 
-              {filter.type?.value === "due_date" ? (
+              {filter.type?.value === "initiation_date" ? (
                 <CustomDatePicker
                   label={`Filter ${index + 1}`}
                   placeholder="Start date - end date"

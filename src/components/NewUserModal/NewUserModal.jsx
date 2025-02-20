@@ -9,7 +9,7 @@ import CustomDropdown from "../CustomDropdown/CustomDropdown";
 import CustomButton from "../CustomButton/CustomButton";
 import ToggleSwitch from "./ToggleSwitch/ToggleSwitch";
 
-import { USER_TYPES } from "../../constants/constants";
+import { userTypeOptions } from "../../constants/constants";
 
 import "./styles.scss";
 
@@ -37,11 +37,11 @@ const NewUserModal = ({
   const dispatch = useDispatch();
   const firmsList = useSelector((state) => state.firm.firms);
 
-  const userTypeOptions = [
-    { value: USER_TYPES.CLIENT, label: "Client" },
-    { value: USER_TYPES.ADMIN, label: "Admin" },
-    { value: USER_TYPES.SUPER_ADMIN, label: "Super admin" },
-  ];
+  // const userTypeOptions = [
+  //   { value: USER_TYPES.CLIENT, label: "Client" },
+  //   { value: USER_TYPES.ADMIN, label: "Admin" },
+  //   { value: USER_TYPES.SUPER_ADMIN, label: "Super admin" },
+  // ];
 
   useEffect(() => {
     dispatch(getFirms());

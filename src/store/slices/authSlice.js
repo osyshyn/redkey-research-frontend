@@ -5,6 +5,8 @@ import {
   changePasswordAPI,
   getProfileAPI,
   changeProfileAPI,
+  forgotPasswordSendEmailAPI,
+  changeThemeAPI,
 } from "../../api/authApi";
 
 export const loginUser = createAsyncThunk(
@@ -70,6 +72,34 @@ export const changeProfile = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error changing profile"
+      );
+    }
+  }
+);
+
+export const forgotPasswordSendEmail = createAsyncThunk(
+  "auth/forgotPasswordSendEmail",
+  async (userEmail, { rejectWithValue }) => {
+    try {
+      const data = await forgotPasswordSendEmailAPI(userEmail);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error sending password reset email"
+      );
+    }
+  }
+);
+
+export const changeTheme = createAsyncThunk(
+  "auth/changeTheme",
+  async (themeNum, { rejectWithValue }) => {
+    try {
+      const data = await changeThemeAPI(themeNum);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error changing theme"
       );
     }
   }
@@ -156,6 +186,30 @@ const authSlice = createSlice({
       })
 
       .addCase(changeProfile.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(forgotPasswordSendEmail.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(forgotPasswordSendEmail.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(forgotPasswordSendEmail.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(changeTheme.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(changeTheme.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user.theme = action.payload.theme;
+      })
+      .addCase(changeTheme.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

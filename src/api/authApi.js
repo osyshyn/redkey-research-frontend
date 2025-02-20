@@ -69,3 +69,27 @@ export const changeProfileAPI = async (profileData) => {
     throw error;
   }
 };
+
+export const forgotPasswordSendEmailAPI = async (userEmail) => {
+  try {
+    const response = await axiosInstance.post("auth/forgotPasswordSendEmail", {
+      email: userEmail,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error sending email to reset password:", error);
+    throw error;
+  }
+};
+
+export const changeThemeAPI = async (themeNum) => {
+  try {
+    const response = await axiosInstance.post("admin/changeTheme", {
+      theme: themeNum,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error changing theme:", error);
+    throw error;
+  }
+};

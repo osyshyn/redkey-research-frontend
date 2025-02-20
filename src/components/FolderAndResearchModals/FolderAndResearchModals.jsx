@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { resetCurrentFileId } from "../../store/slices/uploadSlice";
 import CustomModal from "../CustomModal/CustomModal";
 import CustomInput from "../CustomInput/CustomInput";
 import CustomDropdown from "../CustomDropdown/CustomDropdown";
 import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
 import FileUpload from "../FileUpload/FileUpload";
 import CustomButton from "../CustomButton/CustomButton";
+import { reportTypeOptions } from "../../constants/constants";
+import { getReportTypeName } from "../../utils/userHelpers";
 
 const FolderAndResearchModals = ({
   isCreateFolderModalOpen = false,
@@ -27,6 +30,8 @@ const FolderAndResearchModals = ({
   const [researchDate, setResearchDate] = useState(null);
   const [reportType, setReportType] = useState(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+
+  const dispatch = useDispatch();
 
   const currentFileId = useSelector((state) => state.upload.currentFileId);
   const firmsList = useSelector((state) => state.firm.firms);
@@ -55,7 +60,7 @@ const FolderAndResearchModals = ({
           ? new Date(editingResearch.publication_date)
           : null
       );
-      setReportType(editingResearch.report_type || null);
+      setReportType(getReportTypeName(editingResearch.report_type) || null);
     }
   }, [editingResearch]);
 
@@ -84,7 +89,7 @@ const FolderAndResearchModals = ({
       companyId: selectedFolder.value,
       firmId: selectedFirm.value,
       date: researchDate,
-      reportType: reportType,
+      reportType: reportType.value,
       fileId: currentFileId || editingResearch?.file?.id,
     };
 
@@ -99,6 +104,7 @@ const FolderAndResearchModals = ({
     setSelectedFirm(null);
     setResearchDate(null);
     setReportType(null);
+    dispatch(resetCurrentFileId());
     onCloseUploadResearchModal();
   };
 
@@ -173,7 +179,7 @@ const FolderAndResearchModals = ({
               <CustomDropdown
                 label="Report type"
                 placeholder="Select report type"
-                options={[1, 2]}
+                options={reportTypeOptions}
                 value={reportType}
                 onChange={(option) => setReportType(option)}
               />

@@ -1,7 +1,7 @@
-// Colors
-$primary-background: #262626;
+// // Colors
+// $primary-background: #262626;
 $secondary-background: #3d3d3d;
-$highlight-background: #151515;
+// $highlight-background: #151515;
 $highlight-background-hover: #1f1f1f;
 $accent-color: #1c1c1c;
 $background-dark-light: #5d5d5d;
@@ -28,3 +28,16 @@ $font-weight-bold: 700;
 // Others
 $border-radius-medium: 12px;
 $border-radius-small: 6px;
+
+:root {
+  --primary-background: #262626;
+  --highlight-background: #151515;
+}
+
+$primary-background: var(--primary-background);
+$highlight-background: var(--highlight-background);
+
+[data-theme-mode="light"] {
+  --primary-background: #E7E7E7;
+  --highlight-background: #F6F6F6;
+}

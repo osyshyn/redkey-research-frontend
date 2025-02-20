@@ -9,7 +9,7 @@ import FolderHeader from "./FolderHeader/FolderHeader";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
 import DeleteModal from "../DeleteModal/DeleteModal";
 
-import { FOLDER_STATUSES } from "../../constants/constants";
+import { statusOptions } from "../../constants/constants";
 import { getStatusName } from "../../utils/userHelpers";
 
 import settingsIconDropdown from "../../assets/icons/settings-icon-dropdown.svg";
@@ -31,13 +31,6 @@ const FolderWrapper = ({
   const [statusDropdownPosition, setStatusDropdownPosition] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] = useState(false);
-
-  const statusOptions = [
-    { value: FOLDER_STATUSES.ACTIVE, label: "active" },
-    { value: FOLDER_STATUSES.CLOSED, label: "closed" },
-    { value: FOLDER_STATUSES.REJECTED, label: "rejected" },
-    { value: FOLDER_STATUSES.WATCHLIST, label: "watchlist" },
-  ];
 
   const folderMoreIconRef = useRef(null);
   const statusDropdownRef = useRef(null);

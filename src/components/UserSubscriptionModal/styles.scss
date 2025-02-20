@@ -1,0 +1,275 @@
+@use "../../assets/styles/variables" as *;
+
+.skeleton-subscription-modal-backdrop {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 80px);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    rgba(21, 21, 21, 0) 0%,
+    rgba(21, 21, 21, 1) 45%
+  );
+}
+
+.skeleton-subscription-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 27px;
+  position: relative;
+}
+
+.skeleton-access-message {
+  position: absolute;
+  bottom: -120px;
+  border: 1px solid #3d3d3d;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  width: 500px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.skeleton-modal-text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 57px;
+}
+
+.skeleton-modal-description {
+  font-family: $font-family-satoshi;
+  text-align: center;
+  color: $primary-color;
+  font-weight: $font-weight-normal;
+  font-size: 20px;
+  max-width: 352px;
+}
+
+.skeleton-modal-request-button {
+  padding: 16px 24px;
+  background: transparent;
+  border: 1px solid $dark-red-color;
+  border-radius: 9px;
+  color: #ffeeee;
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 264px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: rgba(140, 0, 0, 1);
+    box-shadow: 0px 3px 5px rgba(255, 218, 218, 0.3) inset,
+      0px -2px 5px rgba(255, 218, 218, 0.3) inset;
+  }
+
+  &:active {
+    background-color: rgba(100, 0, 0, 1);
+    box-shadow: none;
+  }
+}
+
+.skeleton-folder-wrapper {
+  height: auto;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  margin: 46px 32px;
+}
+
+.skeleton-folder-contents {
+  padding: 12px;
+  border-radius: 0 12px 12px 12px;
+  background-color: $primary-background;
+}
+
+.skeleton-folder-inner-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-height: 280px;
+  min-height: 260px;
+  width: 100%;
+  background: $primary-background;
+  border-radius: $border-radius-medium;
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.skeleton-folder-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: fit-content;
+  height: 54px;
+  padding: 13px 20px;
+  gap: 15px;
+  background-color: $primary-background;
+  border-radius: 12px 12px 0 0;
+  transition: width 0.7s ease, border-radius 0.7s ease;
+
+  .skeleton-folder-expandable-element {
+    display: inline-flex;
+    gap: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      gap: 15px;
+    }
+
+    .skeleton-title {
+      width: 150px;
+      height: 8px;
+      background: #5d5d5d;
+      border-radius: 32px;
+    }
+  }
+}
+
+.skeleton-folder-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  .skeleton-folder-table-header {
+    background-color: $primary-background;
+    color: $primary-color;
+    position: sticky;
+    top: -1px;
+    z-index: 1;
+    font-family: $font-family-satoshi;
+    font-size: 14px;
+    font-weight: $font-weight-bold;
+    line-height: 21px;
+    padding: 16.5px 20px;
+    text-align: left;
+  }
+
+  .skeleton-table-data-item {
+    font-family: $font-family-satoshi;
+    font-size: 14px;
+    font-weight: $font-weight-normal;
+    line-height: 21px;
+    color: $primary-color;
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid $primary-background;
+
+    &.skeleton-actions-column {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .skeleton-line {
+      width: 150px;
+      height: 8px;
+      background: #5d5d5d;
+      border-radius: 32px;
+    }
+  }
+
+  .skeleton-table-data {
+    .skeleton-line {
+      width: 150px;
+      height: 8px;
+      background: #5d5d5d;
+      border-radius: 32px;
+    }
+  }
+
+  tbody {
+    .skeleton-table-data-body-row:first-child {
+      .skeleton-table-data-item:first-child {
+        border-top-left-radius: 12px;
+      }
+      .skeleton-table-data-item:last-child {
+        border-top-right-radius: 12px;
+      }
+    }
+    .skeleton-table-data-body-row:last-child {
+      .skeleton-table-data-item:first-child {
+        border-bottom-left-radius: 12px;
+      }
+      .skeleton-table-data-item:last-child {
+        border-bottom-right-radius: 12px;
+      }
+    }
+  }
+
+  .skeleton-table-data-body-row {
+    background-color: $highlight-background;
+  }
+
+  .skeleton-research-column {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .skeleton-custom-folder-checkbox {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      label {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: url("../../assets/icons/checkbox-inactive-icon.svg")
+          no-repeat center center;
+        background-size: contain;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .skeleton-actions-column {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-end;
+
+    .skeleton-admin-portal-action-btn {
+      font-family: $font-family-satoshi;
+      font-size: 14px;
+      font-weight: $font-weight-normal;
+      line-height: 21px;
+      color: $primary-color;
+      padding: 6px 12px;
+      background-color: transparent;
+      border: 1px solid $border-gray-dark;
+      border-radius: $border-radius-small;
+    }
+
+    .skeleton-admin-portal-action-btn:hover {
+      background-color: $border-gray-dark;
+      cursor: pointer;
+    }
+  }
+}

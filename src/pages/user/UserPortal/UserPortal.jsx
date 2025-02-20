@@ -2,13 +2,14 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getFolders } from "../../../store/slices/researchSlice";
 import { setResearchFilters } from "../../../store/slices/filterSlice";
-
+import { getFirms, setCurrentFirm } from "../../../store/slices/firmSlice";
 import Header from "../../../components/Header/Header";
 import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
 import FolderInnerListUser from "../../../components/FolderInnerListUser/FolderInnerListUser";
 import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
 import Loader from "../../../components/Loader/Loader";
+import UserSubscriptionModal from "../../../components/UserSubscriptionModal/UserSubscriptionModal";
 
 import closeIcon from "../../../assets/icons/close-icon.svg";
 
@@ -28,11 +29,34 @@ const UserPortal = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(3);
 
+  const [showAccessDenied, setShowAccessDenied] = useState(false);
+
   const dispatch = useDispatch();
 
   const { folders, foldersStatus } = useSelector((state) => state.research);
-
   const { researchFilters } = useSelector((state) => state.filters);
+  const user = useSelector((state) => state.auth.user);
+  const currentFirm = useSelector((state) => state.firm.currentFirm);
+
+  console.log("USER", user);
+
+  useEffect(() => {
+    dispatch(getFirms());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (currentFirm) {
+      const hasAccess = user?.access?.some(
+        (access) => access.firm.id === currentFirm.id && access.value === true
+      );
+      if (hasAccess) {
+        setShowAccessDenied(false);
+      } else if (!hasAccess) {
+        setShowAccessDenied(true);
+        dispatch(setCurrentFirm(null));
+      }
+    }
+  }, [currentFirm, user]);
 
   const folderOptions = useMemo(
     () =>
@@ -63,7 +87,7 @@ const UserPortal = () => {
     .map((folder) => {
       const filteredResearch = folder.research.filter((research) => {
         return researchFilters.every((filter) => {
-          if (filter.type.value === "due_date") {
+          if (filter.type.value === "initiation_date") {
             const [startDate, endDate] = filter.value.map(
               (dateStr) => new Date(dateStr)
             );
@@ -78,7 +102,7 @@ const UserPortal = () => {
     })
     .filter((folder) => {
       const hasDueDateFilter = researchFilters.some(
-        (filter) => filter.type.value === "due_date"
+        (filter) => filter.type.value === "initiation_date"
       );
       return hasDueDateFilter ? folder.research.length > 0 : true;
     });
@@ -93,7 +117,6 @@ const UserPortal = () => {
         }))
         .filter((folder) => folder.research.length > 0)
     : filteredFolders;
-
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -139,11 +162,20 @@ const UserPortal = () => {
     setShowPreview(false);
   };
 
+  if (showAccessDenied) {
+    return (
+      <>
+        <Header />
+        {foldersStatus === "loading" ? <Loader /> : <UserSubscriptionModal />}
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
       <ActionBar
-        title="Firm name"
+        title={`${currentFirm?.name} Research`}
         componentType={"user_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
@@ -163,12 +195,24 @@ const UserPortal = () => {
                     key={index}
                     title={folder.name}
                     folderId={folder.id}
-                    itemsAmount={folder.research.length}
+                    itemsAmount={
+                      folder?.research?.filter(
+                        (researchItem) =>
+                          researchItem?.firm?.id === currentFirm?.id &&
+                          researchItem?.firm?.name === currentFirm?.name
+                      ).length
+                    }
                     status={folder.status}
                     componentType={"user_portal"}
                   >
                     <FolderInnerListUser
-                      tableData={folder.research}
+                      tableData={
+                        folder?.research?.filter(
+                          (researchItem) =>
+                            researchItem?.firm?.id === currentFirm?.id &&
+                            researchItem?.firm?.name === currentFirm?.name
+                        ) || [folder.research[0]]
+                      }
                       currentFolder={{ value: folder.id, label: folder.name }}
                       handleViewClick={handleViewClick}
                     />

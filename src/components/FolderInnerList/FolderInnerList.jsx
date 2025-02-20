@@ -14,6 +14,7 @@ import {
 } from "../../store/slices/researchSlice";
 
 import { handleDownload, handleDownloadAll } from "../../utils/downloadHelpers";
+import { getReportTypeName } from "../../utils/userHelpers";
 
 import CustomButton from "../CustomButton/CustomButton";
 import DeleteModal from "../DeleteModal/DeleteModal";
@@ -242,7 +243,9 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                       </div>
                     </div>
                   </td>
-                  <td className="table-data-item">{item.report_type}</td>
+                  <td className="table-data-item">
+                    {getReportTypeName(item.report_type)}
+                  </td>
                   <td className="table-data-item">
                     {item.creator.first_name} {item.creator.last_name}
                   </td>

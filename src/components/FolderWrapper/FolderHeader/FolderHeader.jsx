@@ -28,7 +28,9 @@ const FolderHeader = ({
       <p className="title">{title}</p>
     </div>
     <img src={singleDotIcon} className="single-dot-icon" />
-    <p className="items-amount">{itemsAmount} items</p>
+    <p className="items-amount">
+      {itemsAmount} {itemsAmount.toString() === "1" ? "item" : "items"}
+    </p>
     <img src={singleDotIcon} className="single-dot-icon" />
     <p
       ref={statusRef}

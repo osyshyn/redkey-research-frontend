@@ -88,7 +88,7 @@ const AdminPortal = () => {
     .map((folder) => {
       const filteredResearch = folder.research.filter((research) => {
         return researchFilters.every((filter) => {
-          if (filter.type.value === "due_date") {
+          if (filter.type.value === "initiation_date") {
             const [startDate, endDate] = filter.value.map(
               (dateStr) => new Date(dateStr)
             );
@@ -103,7 +103,7 @@ const AdminPortal = () => {
     })
     .filter((folder) => {
       const hasDueDateFilter = researchFilters.some(
-        (filter) => filter.type.value === "due_date"
+        (filter) => filter.type.value === "initiation_date"
       );
       return hasDueDateFilter ? folder.research.length > 0 : true;
     });
@@ -177,7 +177,11 @@ const AdminPortal = () => {
     <>
       <Header />
       <ActionBar
-        title={`${currentFirm?.name} Research`}
+        title={
+          currentFirm?.name === "All"
+            ? `All Researches`
+            : `${currentFirm?.name} Research`
+        }
         componentType={"admin_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
@@ -218,7 +222,16 @@ const AdminPortal = () => {
                     key={index}
                     title={folder.name}
                     folderId={folder.id}
-                    itemsAmount={folder.research.length}
+                    // itemsAmount={folder.research.length}
+                    itemsAmount={
+                      currentFirm?.name === "All"
+                        ? folder?.research?.length
+                        : folder?.research?.filter(
+                            (researchItem) =>
+                              researchItem?.firm?.id === currentFirm?.id &&
+                              researchItem?.firm?.name === currentFirm?.name
+                          ).length
+                    }
                     status={folder.status}
                     componentType={"admin_portal"}
                   >
@@ -229,11 +242,13 @@ const AdminPortal = () => {
                       //     researchItem?.firm?.name === currentFirm?.name)
                       // )}
                       tableData={
-                        folder?.research?.filter(
-                          (researchItem) =>
-                            researchItem?.firm?.id === currentFirm?.id &&
-                            researchItem?.firm?.name === currentFirm?.name
-                        ) || [folder.research[0]]
+                        currentFirm?.name === "All"
+                          ? folder?.research
+                          : folder?.research?.filter(
+                              (researchItem) =>
+                                researchItem?.firm?.id === currentFirm?.id &&
+                                researchItem?.firm?.name === currentFirm?.name
+                            ) || [folder.research[0]]
                       }
                       currentFolder={{ value: folder.id, label: folder.name }}
                       handleViewClick={handleViewClick}

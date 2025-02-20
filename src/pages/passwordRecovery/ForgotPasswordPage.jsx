@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectAuth } from "../../store/slices/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { selectAuth, forgotPasswordSendEmail } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
-import forgotPasswordNotificationIcon from "../../assets/icons/forgot-password-notification-icon.svg";
+import forgotPasswordNotificationIcon from "../../assets/icons/red-done-circle-icon.svg";
 import logoBig from "../../assets/images/logo-big.png";
 
 import "./styles.scss";
@@ -13,10 +13,19 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isNotificationVisible, setNotificationVisible] = useState(false);
 
+  const dispatch = useDispatch();
+
   const { status, error } = useSelector(selectAuth);
 
-  const handleSendEmail = () => {
-    setNotificationVisible(true);
+  const handleSendEmail = async () => {
+    setNotificationVisible(false);
+    try {
+      await dispatch(forgotPasswordSendEmail(email)).unwrap();
+      setNotificationVisible(true);
+    } catch (err) {
+      console.error("Failed to send email:", err);
+      setNotificationVisible(false);
+    }
   };
 
   return (
