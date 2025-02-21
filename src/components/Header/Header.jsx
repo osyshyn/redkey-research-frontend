@@ -50,7 +50,7 @@ const Header = () => {
   useEffect(() => {
     if (!user) {
       dispatch(getProfile());
-    } 
+    }
     // else if (location.pathname === "/admin/portal" && firmsList.length > 0) {
     //   const currentFirm = { name: "All" };
     //   if (currentFirm) {
@@ -59,12 +59,12 @@ const Header = () => {
     // }
   }, [dispatch, location.pathname]);
 
-   useEffect(() => {
-      if (user?.theme) {
-        const themeName = getThemeName(user.theme);
-        document.body.setAttribute("data-theme-mode", themeName.toLowerCase());
-      }
-    }, [user?.theme]);
+  useEffect(() => {
+    if (user?.theme) {
+      const themeName = getThemeName(user.theme);
+      document.body.setAttribute("data-theme-mode", themeName.toLowerCase());
+    }
+  }, [user?.theme]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -162,13 +162,15 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo-container">
-        <img 
-            src={currentTheme === "dark" ? logoDarkHeader : logoLightHeader} 
-        alt="Logo" className="logo" />
+        <img
+          src={currentTheme === "dark" ? logoDarkHeader : logoLightHeader}
+          alt="Logo"
+          className="logo"
+        />
       </div>
 
       {/*  User client */}
-      {user?.role === 3 && (
+      {user?.role === 1 && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -228,7 +230,7 @@ const Header = () => {
       )}
 
       {/* Super Admin */}
-      {user?.role === 1 && (
+      {user?.role === 3 && (
         <nav className="nav-links">
           <span
             className={`nav-link ${

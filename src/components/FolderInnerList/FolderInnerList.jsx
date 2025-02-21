@@ -94,7 +94,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
         options: [
           {
             optionName: "Download",
-            icon: <DownloadLightGreyIcon className="dropdown-menu-icon"/>,
+            icon: <DownloadLightGreyIcon className="dropdown-menu-icon" />,
             onOptionClick: () => {
               handleDownload(item);
               setActiveDropdownIndex(null);
@@ -102,7 +102,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
           },
           {
             optionName: "Delete",
-            icon: <DeleteIconRed className="dropdown-menu-icon-red"/>,
+            icon: <DeleteIconRed className="dropdown-menu-icon-red" />,
             onOptionClick: () => {
               setDeleteType("single");
               setItemToDelete(item);
@@ -185,9 +185,10 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                             )
                           }
                         >
-                       
-                          <DownloadIcon  alt="Download all"
-                            className="button-icon download-all"/>
+                          <DownloadIcon
+                            alt="Download all"
+                            className="button-icon download-all"
+                          />
                           Download all
                         </button>
                         <button
@@ -287,7 +288,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
         </div>
       ) : (
         <div className="folder-table-empty">
-               <FolderIcon className="folder-icon" />
+          <FolderIcon className="folder-icon" />
           <p>
             This folder is empty. Click the button <br />
             below to add new researches.

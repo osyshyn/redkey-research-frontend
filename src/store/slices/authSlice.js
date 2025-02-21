@@ -7,6 +7,7 @@ import {
   changeProfileAPI,
   forgotPasswordSendEmailAPI,
   changeThemeAPI,
+  requestGetAccessAPI,
 } from "../../api/authApi";
 
 export const loginUser = createAsyncThunk(
@@ -100,6 +101,21 @@ export const changeTheme = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error changing theme"
+      );
+    }
+  }
+);
+
+export const requestGetAccess = createAsyncThunk(
+  "auth/requestGetAccess",
+  async (accessFirmInfo, { rejectWithValue }) => {
+    try {
+      const data = await requestGetAccessAPI(accessFirmInfo);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Error getting access to the firm. Please try again."
       );
     }
   }
@@ -210,6 +226,18 @@ const authSlice = createSlice({
         state.user.theme = action.payload.theme;
       })
       .addCase(changeTheme.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(requestGetAccess.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(requestGetAccess.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(requestGetAccess.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

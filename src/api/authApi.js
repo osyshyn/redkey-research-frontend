@@ -93,3 +93,15 @@ export const changeThemeAPI = async (themeNum) => {
     throw error;
   }
 };
+
+export const requestGetAccessAPI = async (accessFirmInfo) => {
+  try {
+    const response = await axiosInstance.post("user/requestGetAccess", {
+      firm: accessFirmInfo,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting access to the firm:", error);
+    throw error;
+  }
+};

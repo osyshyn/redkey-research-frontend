@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { handleDownload, handleDownloadAll } from "../../utils/downloadHelpers";
 
 import FolderIcon from "../../assets/icons/folder-icon.svg?react";
-import downloadIcon from "../../assets/icons/download-icon.svg";
+import DownloadIcon from "../../assets/icons/download-icon.svg?react";
 import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
@@ -66,8 +66,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
                           )
                         }
                       >
-                        <img
-                          src={downloadIcon}
+                        <DownloadIcon
                           alt="Download all"
                           className="button-icon download-all"
                         />

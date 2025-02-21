@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { requestGetAccess } from "../../store/slices/authSlice";
 import arrowDown from "../../assets/icons/arrow-down.svg";
 import singleDotIcon from "../../assets/icons/single-dot-icon.svg";
 import BigLockIcon from "../../assets/icons/big-lock-icon.svg?react";
@@ -8,6 +10,23 @@ import "./styles.scss";
 
 const UserSubscriptionModal = () => {
   const [isAccessRequested, setIsAccessRequested] = useState(false);
+
+  const dispatch = useDispatch();
+  const { status, error } = useSelector((state) => state.auth);
+  const currentFirm = useSelector((state) => state.firm.currentFirm);
+  console.log("current", currentFirm);
+
+  const handleRequestAccess = () => {
+    dispatch(requestGetAccess(currentFirm))
+      .unwrap()
+      .then(() => {
+        setIsAccessRequested(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <>
       <div className="skeleton-folder-wrapper">
@@ -78,7 +97,7 @@ const UserSubscriptionModal = () => {
             </p>
             <button
               className="skeleton-modal-request-button"
-              onClick={() => setIsAccessRequested(true)}
+              onClick={handleRequestAccess}
             >
               Request Access
             </button>

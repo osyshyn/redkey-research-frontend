@@ -46,6 +46,7 @@ const UserPortal = () => {
 
   useEffect(() => {
     if (currentFirm) {
+      
       const hasAccess = user?.access?.some(
         (access) => access.firm.id === currentFirm.id && access.value === true
       );
@@ -53,7 +54,7 @@ const UserPortal = () => {
         setShowAccessDenied(false);
       } else if (!hasAccess) {
         setShowAccessDenied(true);
-        dispatch(setCurrentFirm(null));
+        // dispatch(setCurrentFirm(null));
       }
     }
   }, [currentFirm, user]);
@@ -162,7 +163,7 @@ const UserPortal = () => {
     setShowPreview(false);
   };
 
-  if (showAccessDenied) {
+  if (showAccessDenied) {   
     return (
       <>
         <Header />
