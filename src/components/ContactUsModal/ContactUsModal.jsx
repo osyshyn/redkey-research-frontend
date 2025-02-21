@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 
 import CustomModal from "../CustomModal/CustomModal";
 
-import phoneIcon from "../../assets/icons/phone-icon.svg";
-import addressIcon from "../../assets/icons/address-icon.svg";
+import PhoneIcon from "../../assets/icons/phone-icon.svg?react";
+import AddressIcon from "../../assets/icons/address-icon.svg?react";
 
 import "./styles.scss";
 
@@ -40,11 +40,7 @@ const ContactUsModal = ({ isOpen = false, onClose = () => {} }) => {
             <div className="contact-us-phone-wrapper">
               <div className="contact-us-info">
                 <p className="contact-us-paragraph-title">
-                  <img
-                    className="contact-us-icon"
-                    src={phoneIcon}
-                    alt="phone icon"
-                  />
+                  <PhoneIcon className="contact-us-icon" alt="phone icon" />
                   Phone number
                 </p>
                 <p className="contact-us-paragraph-info">{phoneNumber}</p>
@@ -58,11 +54,7 @@ const ContactUsModal = ({ isOpen = false, onClose = () => {} }) => {
 
             <div className="contact-us-info">
               <p className="contact-us-paragraph-title">
-                <img
-                  className="contact-us-icon"
-                  src={addressIcon}
-                  alt="address icon"
-                />
+                <AddressIcon className="contact-us-icon" alt="address icon" />
                 Address
               </p>
               <p className="contact-us-paragraph-info">

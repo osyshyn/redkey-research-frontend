@@ -1,5 +1,4 @@
-@use './assets/styles/variables' as *;
-
+@use "./assets/styles/variables" as *;
 
 @font-face {
   font-family: "Satoshi";
@@ -57,12 +56,96 @@ body {
   background-color: $highlight-background;
 }
 
-
-
-[data-theme-mode="dark"] .theme-icon {
-  stroke: green;
+[data-theme-mode="dark"] {
+  .theme-toggle-icon {
+    stroke: $text-color-accent !important;
+    width: 13px;
+    height: 13px;
+  }
+  .dropdown-menu-icon {
+    stroke: $text-color-neutral !important;
+    width: 16px;
+    height: 16px;
+  }
+  .dropdown-menu-icon-red {
+    stroke: $delete-red-color !important;
+    width: 16px;
+    height: 16px;
+  }
+  .filter-icons {
+    stroke: $text-color-accent !important;
+    width: 14px;
+    height: 14px;
+  }
+  .file-icon {
+    stroke: $text-color-main !important;
+    width: 14px;
+    height: 14px;
+  }
+  .upload-icon {
+    stroke: $text-color-accent !important;
+  }
+  .button-icon.download-all {
+    stroke: $primary-color !important;
+  }
+  .folder-icon {
+    stroke: $primary-color !important;
+    width: 40px;
+    height: 40px;
+  }
+  .contact-us-icon {
+    stroke: $text-color-accent !important;
+    width: 15px;
+    height: 15px;
+  }
+  .big-lock-icon {
+    stroke: $text-color-accent !important;
+  }
 }
 
-[data-theme-mode="light"] .theme-icon {
-  stroke: red;
+[data-theme-mode="light"] {
+  .theme-toggle-icon {
+    stroke: $text-color-accent !important;
+    width: 13px;
+    height: 13px;
+  }
+  .dropdown-menu-icon {
+    stroke: $text-color-main !important;
+    width: 16px;
+    height: 16px;
+  }
+  .dropdown-menu-icon-red {
+    stroke: $delete-red-color !important;
+    width: 16px;
+    height: 16px;
+  }
+  .filter-icons {
+    stroke: $text-color-accent !important;
+    width: 14px;
+    height: 14px;
+  }
+  .file-icon {
+    stroke: $text-color-main !important;
+    width: 14px;
+    height: 14px;
+  }
+  .upload-icon {
+    stroke: $text-color-main !important;
+  }
+  .button-icon.download-all {
+    stroke: $background-dark-light !important;
+  }
+  .folder-icon {
+    stroke: $secondary-color !important;
+    width: 40px;
+    height: 40px;
+  }
+  .contact-us-icon {
+    stroke: $secondary-color !important;
+    width: 15px;
+    height: 15px;
+  }
+  .big-lock-icon {
+    stroke: $primary-color !important;
+  }
 }

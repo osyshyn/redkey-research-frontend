@@ -2,9 +2,9 @@ import React, { forwardRef } from "react";
 
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 
-import settingsIcon from "../../assets/icons/settings-icon.svg";
-import phoneIcon from "../../assets/icons/phone-icon.svg";
-import logOutIcon from "../../assets/icons/log-out-icon.svg";
+import SettingsIcon from "../../assets/icons/settings-icon.svg?react";
+import PhoneIcon from "../../assets/icons/phone-icon.svg?react";
+import LogOutIcon from "../../assets/icons/log-out-icon.svg?react";
 
 import "./styles.scss";
 
@@ -22,30 +22,18 @@ const DropdownMenu = forwardRef(
           <ThemeToggle />
         </div>
         <div className="menu-item" onClick={onProfileClick}>
-          <img
-            src={settingsIcon}
-            alt="Profile Icon"
-            className="dropdown-menu-icon"
-          />
+          <SettingsIcon className="dropdown-menu-icon" alt="Profile Icon" />
           <span>Profile</span>
         </div>
         {currentUser?.role === 3 && (
           <div className="menu-item" onClick={onContactUsClick}>
-            <img
-              src={phoneIcon}
-              alt="Contact us Icon"
-              className="dropdown-menu-icon"
-            />
+            <PhoneIcon className="dropdown-menu-icon" alt="Contact us Icon" />
             <span>Contact us</span>
           </div>
         )}
         <hr className="menu-divider" />
         <div className="menu-item" onClick={onLogoutClick}>
-          <img
-            src={logOutIcon}
-            alt="Log Out Icon"
-            className="dropdown-menu-icon"
-          />
+          <LogOutIcon alt="Log Out Icon" className="dropdown-menu-icon" />
           <span>Log Out</span>
         </div>
       </div>

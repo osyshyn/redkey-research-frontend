@@ -28,7 +28,7 @@
 .skeleton-access-message {
   position: absolute;
   bottom: -120px;
-  border: 1px solid #3d3d3d;
+  border: 1px solid $input-border;
   padding: 20px;
   border-radius: 12px;
   display: flex;
@@ -36,6 +36,7 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+  color: $text-color-main;
 }
 
 .skeleton-modal-text-content {
@@ -138,7 +139,7 @@
     .skeleton-title {
       width: 150px;
       height: 8px;
-      background: #5d5d5d;
+      background: $background-dark-light;
       border-radius: 32px;
     }
   }
@@ -270,6 +271,32 @@
     .skeleton-admin-portal-action-btn:hover {
       background-color: $input-border-gray-darker;
       cursor: pointer;
+    }
+  }
+}
+
+[data-theme-mode="light"] {
+  .skeleton-subscription-modal-backdrop {
+    background: linear-gradient(
+      180deg,
+      rgba(246, 246, 246, 0) 0%,
+      rgba(246, 246, 246, 1) 45%
+    );
+  }
+
+  .skeleton-title {
+    background: $secondary-color !important;
+  }
+
+  .skeleton-modal-request-button {
+    color: $dark-red-color;
+
+    &:hover {
+      color: #ffeeee;
+    }
+
+    &:active {
+      color: #ffeeee;
     }
   }
 }

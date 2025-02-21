@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import arrowDown from "../../assets/icons/arrow-down.svg";
 import singleDotIcon from "../../assets/icons/single-dot-icon.svg";
-import bigLockIcon from "../../assets/icons/big-lock-icon.svg";
+import BigLockIcon from "../../assets/icons/big-lock-icon.svg?react";
 import redDoneCircleIcon from "../../assets/icons/red-done-circle-icon.svg";
 
 import "./styles.scss";
@@ -69,7 +69,7 @@ const UserSubscriptionModal = () => {
           className="skeleton-subscription-modal-content"
           onClick={(e) => e.stopPropagation()}
         >
-          <img src={bigLockIcon} />
+          <BigLockIcon className="big-lock-icon" />
 
           <div className="skeleton-modal-text-content">
             <p className="skeleton-modal-description">

@@ -13,10 +13,10 @@ import { generateUserReport } from "../../utils/pdfUtils";
 
 import moreIcon from "../../assets/icons/more-icon.svg";
 import deleteLightRedIcon from "../../assets/icons/delete-icon-light-red.svg";
-import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
+import DeleteIconRed from "../../assets/icons/delete-icon-red.svg?react";
 import closeIcon from "../../assets/icons/close-icon.svg";
-import penIcon from "../../assets/icons/pen-icon.svg";
-import passwordIcon from "../../assets/icons/password-icon.svg";
+import PenIcon from "../../assets/icons/pen-icon.svg?react";
+import PasswordIcon from "../../assets/icons/password-icon.svg?react";
 import arrowRightIcon from "../../assets/icons/arrow-right-icon.svg";
 import arrowLeftIcon from "../../assets/icons/arrow-left-icon.svg";
 
@@ -101,7 +101,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
         options: [
           {
             optionName: "Edit profile and accesses",
-            icon: penIcon,
+            icon: <PenIcon className="dropdown-menu-icon"/>,
             onOptionClick: () => {
               setEditingUser(item);
               setIsUpdateUserModalOpen(true);
@@ -110,7 +110,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
           },
           {
             optionName: "Change password",
-            icon: passwordIcon,
+            icon: <PasswordIcon className="dropdown-menu-icon"/>,
             onOptionClick: () => {
               setIsChangeUserPasswordModalOpen(true);
               setCurrentUserData(item);
@@ -119,7 +119,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
           },
           {
             optionName: "Delete",
-            icon: deleteIconRed,
+            icon: <DeleteIconRed className="dropdown-menu-icon-red"/>,
             onOptionClick: () => {
               setDeleteType("single");
               setItemToDelete(item);

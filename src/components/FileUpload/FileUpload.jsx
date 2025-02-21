@@ -6,8 +6,8 @@ import {
   resetCurrentFileId,
   setCurrentFileId,
 } from "../../store/slices/uploadSlice";
-import fileUploadIcon from "../../assets/icons/file-upload-icon.svg";
-import fileIcon from "../../assets/icons/file-icon.svg";
+import FileUploadIcon from "../../assets/icons/file-upload-icon.svg?react";
+import FileIcon from "../../assets/icons/file-icon.svg?react";
 import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
@@ -121,11 +121,7 @@ const FileUpload = ({ existingFile }) => {
             style={{ display: "none" }}
           />
           <label htmlFor="fileInput" className="file-upload-label">
-            <img
-              src={fileUploadIcon}
-              alt="Upload Icon"
-              className="upload-icon"
-            />
+            <FileUploadIcon alt="Upload Icon" className="upload-icon" />
             <p className="file-upload-text">
               Drag & drop or click <br /> to choose a file
             </p>
@@ -136,7 +132,7 @@ const FileUpload = ({ existingFile }) => {
       {isFileUploaded && uploadedFile && (
         <div className="progress-bar-and-title-wrapper">
           <div className="uploaded-file-info">
-            <img src={fileIcon} alt="File Icon" className="file-icon" />
+            <FileIcon alt="File Icon" className="file-icon" />
             <p className="file-name">
               {uploadedFile.name}{" "}
               <span className="uploaded-file-size">

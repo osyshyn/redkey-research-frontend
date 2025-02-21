@@ -12,8 +12,8 @@ import DeleteModal from "../DeleteModal/DeleteModal";
 import { statusOptions } from "../../constants/constants";
 import { getStatusName } from "../../utils/userHelpers";
 
-import settingsIconDropdown from "../../assets/icons/settings-icon-dropdown.svg";
-import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
+import SettingsIconDropdown from "../../assets/icons/settings-icon-dropdown.svg?react";
+import DeleteIconRed from "../../assets/icons/delete-icon-red.svg?react";
 
 import "./styles.scss";
 
@@ -138,12 +138,12 @@ const FolderWrapper = ({
             options={[
               {
                 optionName: "Change status",
-                icon: settingsIconDropdown,
+                icon: <SettingsIconDropdown className="dropdown-menu-icon"/>,
                 onOptionClick: handleChangeStatusClick,
               },
               {
                 optionName: "Delete",
-                icon: deleteIconRed,
+                icon: <DeleteIconRed className="dropdown-menu-icon-red"/>,
                 onOptionClick: () => setIsDeleteFolderModalOpen(true),
               },
             ]}

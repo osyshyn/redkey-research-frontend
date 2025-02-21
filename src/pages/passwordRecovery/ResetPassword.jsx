@@ -4,6 +4,7 @@ import { selectAuth, changePassword } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import logoBig from "../../assets/images/logo-big.png";
+import logoLightBig from "../../assets/images/logo-light-big.png";
 
 import "./styles.scss";
 
@@ -14,6 +15,8 @@ const ResetPassword = () => {
   });
   const [passwordError, setPasswordError] = useState("");
   const { status, error } = useSelector(selectAuth);
+
+  const currentTheme = document.body.getAttribute("data-theme-mode");
 
   const handlePasswordChange = (event) => {
     setPasswords({
@@ -62,7 +65,11 @@ const ResetPassword = () => {
 
   return (
     <div className="reset-password-page">
-      <img className="logo-big" src={logoBig} alt="Logo" />
+      <img
+        className="logo-big"
+        src={currentTheme === "dark" ? logoBig : logoLightBig}
+        alt="Logo"
+      />
       <h1 className="title">Reset Password</h1>
       <div className="form">
         <CustomInput

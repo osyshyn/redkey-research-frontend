@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeTheme } from "../../store/slices/authSlice";
 import { USER_THEME } from "../../constants/constants";
 import { getThemeName, getThemeValue } from "../../utils/userHelpers";
-import lightModeSunIcon from "../../assets/icons/light-mode-sun-icon.svg";
-import darkModeMoonIcon from "../../assets/icons/dark-mode-moon-icon.svg";
+import DarkModeMoonIcon from "../../assets/icons/dark-mode-moon-icon.svg?react";
+import LightModeSunIcon from "../../assets/icons/light-mode-sun-icon.svg?react";
+
 import "./styles.scss";
 
 const ThemeToggle = () => {
@@ -25,7 +26,8 @@ const ThemeToggle = () => {
     }
   }, [user?.theme]);
 
-  const toggleTheme = () => {
+  const toggleTheme = (event) => {
+    event.stopPropagation();
     const newThemeName =
       localTheme === getThemeName(USER_THEME.DARK)
         ? getThemeName(USER_THEME.LIGHT)
@@ -45,9 +47,17 @@ const ThemeToggle = () => {
     >
       <div className="toggle-circle">
         {localTheme === getThemeName(USER_THEME.DARK) ? (
-          <img src={darkModeMoonIcon} alt="Dark Mode" className="dark-icon" />
+          <DarkModeMoonIcon
+            className="theme-toggle-icon"
+            onClick={toggleTheme}
+            alt="Dark Mode"
+          />
         ) : (
-          <img src={lightModeSunIcon} alt="Light Mode" className="light-icon" />
+          <LightModeSunIcon
+            className="theme-toggle-icon"
+            onClick={toggleTheme}
+            alt="Light Mode"
+          />
         )}
       </div>
     </div>

@@ -122,3 +122,15 @@
   margin-left: auto;
   cursor: pointer;
 }
+
+[data-theme-mode="light"] {
+  .file-upload {
+    .file-upload-label {
+      color: $text-color-main;
+    }
+
+    .file-upload-text {
+      color: $text-color-main;
+    }
+  }
+}

@@ -22,11 +22,11 @@ import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
 import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearchModals";
 
 import moreIcon from "../../assets/icons/more-icon.svg";
-import folderIcon from "../../assets/icons/folder-icon.svg";
-import downloadIcon from "../../assets/icons/download-icon.svg";
-import downloadLightGreyIcon from "../../assets/icons/download-icon-light-grey.svg";
+import FolderIcon from "../../assets/icons/folder-icon.svg?react";
+import DownloadIcon from "../../assets/icons/download-icon.svg?react";
+import DownloadLightGreyIcon from "../../assets/icons/download-icon-light-grey.svg?react";
 import deleteLightRedIcon from "../../assets/icons/delete-icon-light-red.svg";
-import deleteIconRed from "../../assets/icons/delete-icon-red.svg";
+import DeleteIconRed from "../../assets/icons/delete-icon-red.svg?react";
 import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
@@ -94,7 +94,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
         options: [
           {
             optionName: "Download",
-            icon: downloadLightGreyIcon,
+            icon: <DownloadLightGreyIcon className="dropdown-menu-icon"/>,
             onOptionClick: () => {
               handleDownload(item);
               setActiveDropdownIndex(null);
@@ -102,7 +102,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
           },
           {
             optionName: "Delete",
-            icon: deleteIconRed,
+            icon: <DeleteIconRed className="dropdown-menu-icon-red"/>,
             onOptionClick: () => {
               setDeleteType("single");
               setItemToDelete(item);
@@ -185,11 +185,9 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                             )
                           }
                         >
-                          <img
-                            src={downloadIcon}
-                            alt="Download all"
-                            className="button-icon download-all"
-                          />
+                       
+                          <DownloadIcon  alt="Download all"
+                            className="button-icon download-all"/>
                           Download all
                         </button>
                         <button
@@ -289,7 +287,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
         </div>
       ) : (
         <div className="folder-table-empty">
-          <img src={folderIcon} className="folder-icon" />
+               <FolderIcon className="folder-icon" />
           <p>
             This folder is empty. Click the button <br />
             below to add new researches.

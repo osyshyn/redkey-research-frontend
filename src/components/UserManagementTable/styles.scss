@@ -357,3 +357,32 @@
   color: $text-color-neutral;
   text-align: center;
 }
+
+[data-theme-mode="light"] {
+  .user-management-table {
+    .user-column {
+      .custom-user-management-checkbox {
+        label {
+          background: url("../../assets/icons/checkbox-light-inactive-icon.svg")
+            no-repeat center center;
+          display: block;
+          width: 100%;
+          height: 100%;
+
+          background-size: contain;
+          cursor: pointer;
+        }
+
+        input:checked + label {
+          background: url("../../assets/icons/checkbox-light-active-icon.svg")
+            no-repeat center center;
+          background-size: contain;
+        }
+      }
+    }
+  }
+
+.selected-actions-panel .selected-actions {
+    background-color: var(--input-border);
+}
+}

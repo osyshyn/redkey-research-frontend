@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { handleDownload, handleDownloadAll } from "../../utils/downloadHelpers";
 
-import folderIcon from "../../assets/icons/folder-icon.svg";
+import FolderIcon from "../../assets/icons/folder-icon.svg?react";
 import downloadIcon from "../../assets/icons/download-icon.svg";
 import closeIcon from "../../assets/icons/close-icon.svg";
 
@@ -134,7 +134,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
         </div>
       ) : (
         <div className="folder-table-empty">
-          <img src={folderIcon} className="folder-icon" />
+          <FolderIcon className="folder-icon" />
           <p>This folder is empty.</p>
         </div>
       )}

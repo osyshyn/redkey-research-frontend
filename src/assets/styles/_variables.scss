@@ -1,38 +1,3 @@
-// // Colors
-// $primary-background: #262626;
-// $secondary-background: #3d3d3d;
-// $input-border: #3d3d3d;
-// $input-border-gray-darker: #454545;
-// $highlight-background: #151515;
-// $highlight-background-hover: #1f1f1f;
-// $accent-color: #1c1c1c;
-$background-darker: #4d4d4d;
-$background-dark-light: #5d5d5d;
-$background-lighter: #6d6d6d;
-// $text-color-main: #f6f6f6;
-// $text-color-accent: #e7e7e7;
-$text-color-neutral: #b0b0b0;
-$text-red-button-inner-light-color: #ffeeee;
-$status-active-green: #6daf51;
-// $primary-color: #d1d1d1;
-$secondary-color: #888888;
-$dark-red-color: #7a0000;
-$medium-red-color: #ff4949;
-$bright-red-color: #ff0000;
-$delete-red-color: #e70000;
-$accent-red-color: #be0000;
-$white: #ffffff;
-
-// Fonts
-$font-family-satoshi: "Satoshi", sans-serif;
-$font-weight-normal: 400;
-$font-weight-medium: 500;
-$font-weight-bold: 700;
-
-// Others
-$border-radius-medium: 12px;
-$border-radius-small: 6px;
-
 :root {
   --primary-background: #262626;
   --highlight-background: #151515;
@@ -61,6 +26,8 @@ $border-radius-small: 6px;
   --highlight-background-hover: #f1f1f1;
 }
 
+// Colors
+
 $primary-background: var(--primary-background);
 $highlight-background: var(--highlight-background);
 $text-color-main: var(--text-color-main);
@@ -72,3 +39,26 @@ $input-border-gray-darker: var(--input-border-gray-darker);
 $text-color-neutral: var(--text-color-neutral);
 $secondary-background: var(--secondary-background);
 $highlight-background-hover: var(--highlight-background-hover);
+
+$background-darker: #4d4d4d;
+$background-dark-light: #5d5d5d;
+$background-lighter: #6d6d6d;
+$text-red-button-inner-light-color: #ffeeee;
+$status-active-green: #6daf51;
+$secondary-color: #888888;
+$dark-red-color: #7a0000;
+$medium-red-color: #ff4949;
+$bright-red-color: #ff0000;
+$delete-red-color: #e70000;
+$accent-red-color: #be0000;
+$white: #ffffff;
+
+// Fonts
+$font-family-satoshi: "Satoshi", sans-serif;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+// Others
+$border-radius-medium: 12px;
+$border-radius-small: 6px;

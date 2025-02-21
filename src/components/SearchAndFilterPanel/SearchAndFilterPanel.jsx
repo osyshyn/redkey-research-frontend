@@ -78,7 +78,7 @@ const SearchAndFilterPanel = ({
           {isSearchSubmitted && (
             <button
               type="button"
-              className="close-icon"
+              className="search-close-icon"
               onClick={handleClearSearch}
             >
               <img src={closeIcon} alt="close icon" width="16" height="16" />

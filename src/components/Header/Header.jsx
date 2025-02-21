@@ -11,9 +11,13 @@ import DropdownMenu from "../DropdownMenu/DropdownMenu";
 import ProfileSettingsModal from "../ProfileSettingsModal/ProfileSettingsModal";
 import ContactUsModal from "../ContactUsModal/ContactUsModal";
 import ResearchFilesDropdown from "../ResearchFilesDropdown/ResearchFilesDropdown";
+
+import { getThemeName } from "../../utils/userHelpers";
+
 import dropdownChevronIconRed from "../../assets/icons/dropdown-chevron-icon-red.svg";
 import dropdownChevronIcon from "../../assets/icons/dropdown-chevron-icon.svg";
-import logoHeader from "../../assets/images/logo-header.png";
+import logoDarkHeader from "../../assets/images/logo-header.png";
+import logoLightHeader from "../../assets/images/logo-light-big.png";
 
 import "./styles.scss";
 
@@ -36,6 +40,8 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  const currentTheme = document.body.getAttribute("data-theme-mode");
+
   const { user } = useSelector((state) => state.auth);
 
   const firmsList = useSelector((state) => state.firm.firms);
@@ -52,6 +58,13 @@ const Header = () => {
     //   }
     // }
   }, [dispatch, location.pathname]);
+
+   useEffect(() => {
+      if (user?.theme) {
+        const themeName = getThemeName(user.theme);
+        document.body.setAttribute("data-theme-mode", themeName.toLowerCase());
+      }
+    }, [user?.theme]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -149,11 +162,13 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo-container">
-        <img src={logoHeader} alt="Logo" className="logo" />
+        <img 
+            src={currentTheme === "dark" ? logoDarkHeader : logoLightHeader} 
+        alt="Logo" className="logo" />
       </div>
 
       {/*  User client */}
-      {user?.role === 1 && (
+      {user?.role === 3 && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -213,7 +228,7 @@ const Header = () => {
       )}
 
       {/* Super Admin */}
-      {user?.role === 3 && (
+      {user?.role === 1 && (
         <nav className="nav-links">
           <span
             className={`nav-link ${

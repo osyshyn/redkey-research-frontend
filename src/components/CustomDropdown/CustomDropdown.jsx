@@ -10,8 +10,12 @@ const CustomDropdown = ({
   onChange,
   value,
   showLabel = "",
+  iconComponent: IconComponent = null
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  console.log('iconComponent', IconComponent);
+  
 
   const handleOptionClick = (option) => {
     onChange(option);
@@ -28,13 +32,10 @@ const CustomDropdown = ({
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <div className="dropdown-icon-value-container">
-          {value?.icon && (
-            <img
-              src={value?.icon}
-              alt="icon"
-              className="dropdown-option-icon"
-            />
-          )}
+          {/* {value?.icon && (
+            <>{value?.icon}</>
+          )}   */}
+          {IconComponent && <IconComponent className="filter-icons" />}
           <span className={`${value ? "value" : "placeholder"}`}>
             {value?.label || value || placeholder}
           </span>

@@ -5,12 +5,15 @@ import { loginUser, selectAuth } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import logoBig from "../../assets/images/logo-big.png";
+import logoLightBig from "../../assets/images/logo-light-big.png";
 
 import "./styles.scss";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const currentTheme = document.body.getAttribute("data-theme-mode");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,10 +24,6 @@ const LoginPage = () => {
       navigate("/admin/portal");
     }
   }, [status, navigate]);
-
-  // const handleLogin = () => {
-  //   dispatch(loginUser({ email, password }));
-  // };
 
   const handleLogin = async () => {
     try {
@@ -37,7 +36,11 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <img className="logo-big" src={logoBig} alt="Logo" />
+      <img
+        className="logo-big"
+        src={currentTheme === "dark" ? logoBig : logoLightBig}
+        alt="Logo"
+      />
       <h1 className="title">Log in to your account</h1>
       <div className="form">
         <CustomInput

@@ -42,15 +42,15 @@ const AdminPortal = () => {
   const dispatch = useDispatch();
 
   const { folders, foldersStatus } = useSelector((state) => state.research);
-  console.log("loading", foldersStatus);
 
   const { researchFilters } = useSelector((state) => state.filters);
   const currentFirm = useSelector((state) => state.firm.currentFirm);
-  console.log("currentFirm", currentFirm);
 
   useEffect(() => {
     dispatch(getFirms());
   }, [dispatch]);
+
+  
 
   const folderOptions = useMemo(
     () =>

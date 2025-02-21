@@ -28,7 +28,7 @@ const DropdownModalWrapper = ({ position, options }) => {
             } ${isStatusOption ? option.statusName : ""}`}
             onClick={optionHandler}
           >
-            {optionIcon && <img src={optionIcon} alt="" />}
+            {optionIcon && <>{optionIcon}</>}
             {optionName.charAt(0).toUpperCase() + optionName.slice(1)}
           </div>
         );

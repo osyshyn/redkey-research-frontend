@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectAuth, forgotPasswordSendEmail } from "../../store/slices/authSlice";
+import {
+  selectAuth,
+  forgotPasswordSendEmail,
+} from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import forgotPasswordNotificationIcon from "../../assets/icons/red-done-circle-icon.svg";
 import logoBig from "../../assets/images/logo-big.png";
+import logoLightBig from "../../assets/images/logo-light-big.png";
 
 import "./styles.scss";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isNotificationVisible, setNotificationVisible] = useState(false);
+
+  const currentTheme = document.body.getAttribute("data-theme-mode");
 
   const dispatch = useDispatch();
 
@@ -30,7 +36,11 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="forgot-password-page">
-      <img className="logo-big" src={logoBig} alt="Logo" />
+      <img
+        className="logo-big"
+      src={currentTheme === "dark" ? logoBig : logoLightBig}
+        alt="Logo"
+      />
       <div className="forgot-password-title-wrapper">
         <h1 className="title">Forgot password?</h1>
         <p className="help-text">Enter email to reset password</p>
