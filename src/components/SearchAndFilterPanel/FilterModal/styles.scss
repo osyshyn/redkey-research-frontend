@@ -1,3 +1,5 @@
+@use "../../../assets/styles/variables" as *;
+
 .filter-modal-clear-all {
   width: 100%;
   display: flex;
@@ -8,15 +10,14 @@
 }
 
 .clear-all {
-  font-family: "Satoshi", sans-serif;
+  font-family: $font-family-satoshi;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: $font-weight-normal;
   line-height: 16px;
-  color: #888888;
+  color: $secondary-color;
   cursor: pointer;
 }
 
-/* Основное тело модалки */
 .filter-modal-body {
   width: 100%;
   display: flex;
@@ -24,7 +25,7 @@
   gap: 24px;
 }
 
-/* Блок быстрых фильтров */
+
 .quick-filters {
   width: 100%;
   display: flex;
@@ -33,11 +34,11 @@
 }
 
 .quick-filters-title {
-  font-family: "Satoshi", sans-serif;
+  font-family: $font-family-satoshi;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: $font-weight-normal;
   line-height: 16px;
-  color: #6d6d6d;
+  color: $background-lighter;
 }
 
 .quick-filters-tags {
@@ -54,20 +55,19 @@
   gap: 6px;
   min-width: 42px;
   height: 34px;
-
-  background: #151515; /* Fuscous Gray/1000 */
-  border: 1px solid #3d3d3d;
+  background: $highlight-background;
+  border: 1px solid $secondary-background;
   border-radius: 990px;
 
-  font-family: "Satoshi", sans-serif;
+  font-family: $font-family-satoshi;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: $font-weight-normal;
   line-height: 16px;
-  color: #ffffff;
+  color: $white;
   cursor: pointer;
 }
 
-/* Блок всех фильтров */
+
 .all-filters {
   width: 100%;
   display: flex;
@@ -76,11 +76,11 @@
 }
 
 .all-filters-title {
-  font-family: "Satoshi", sans-serif;
+  font-family: $font-family-satoshi;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: $font-weight-normal;
   line-height: 16px;
-  color: #6d6d6d;
+  color: $background-lighter;
 }
 
 .all-filters-options {
@@ -108,14 +108,14 @@
 .add-filter-button {
   font-family: Satoshi;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   line-height: 16px;
-  color: #888888;
+  color: $secondary-color;
   cursor: pointer;
   margin-top: 20px;
 }
 
-/* Футер модалки */
+
 .filter-modal-footer {
   width: 97%;
   display: flex;
@@ -125,10 +125,10 @@
 
 
 .apply-filters-button:hover {
-  background-color: #3d3d3d;
+  background-color: $secondary-background;
 }
 
-/* Кнопка закрытия модалки */
+
 .close-modal-button {
   position: absolute;
   top: 10px;
@@ -136,6 +136,6 @@
   background: none;
   border: none;
   font-size: 20px;
-  color: #ffffff;
+  color: $white;
   cursor: pointer;
 }

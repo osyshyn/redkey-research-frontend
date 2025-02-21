@@ -2,7 +2,7 @@
 
 .research-files-menu {
   position: absolute;
-  background-color: #1c1c1c;
+  background-color: $accent-color;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 4px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   min-width: 100px;
@@ -32,7 +32,7 @@
   .research-files-dropdown-item {
     padding: 8px;
     border-radius: 8px;
-    color: $text-light-neutral;
+    color: $text-color-neutral;
     cursor: pointer;
     font-family: $font-family-satoshi;
     font-size: 16px;

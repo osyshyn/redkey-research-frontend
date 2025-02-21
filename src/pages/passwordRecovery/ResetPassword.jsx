@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { selectAuth } from "../../store/slices/authSlice";
+import { selectAuth, changePassword } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import logoBig from "../../assets/images/logo-big.png";
@@ -9,8 +9,8 @@ import "./styles.scss";
 
 const ResetPassword = () => {
   const [passwords, setPasswords] = useState({
-    password1: "",
-    password2: "",
+    new_password: "",
+    confirm_password: "",
   });
   const [passwordError, setPasswordError] = useState("");
   const { status, error } = useSelector(selectAuth);
@@ -24,26 +24,40 @@ const ResetPassword = () => {
   };
 
   const handleSave = () => {
-    if (passwords.password1 === "") {
+    if (passwords.new_password === "") {
       setPasswordError("New Password field cannot be empty.");
       return;
     }
-    if (passwords.password2 === "") {
+    if (passwords.confirm_password === "") {
       setPasswordError("Confirm Password field cannot be empty.");
       return;
     }
-    if (passwords.password1 !== passwords.password2) {
+    if (passwords.new_password !== passwords.confirm_password) {
       setPasswordError("Passwords do not match!");
       return;
     }
 
-    if (passwords.password1.length < 6) {
+    if (passwords.new_password.length < 6) {
       setPasswordError("Password must be at least 6 characters long!");
       return;
     }
 
-    // Here will be password update
-    console.log("Password saved:", passwords.password1);
+    console.log("Password saved:", passwords.new_password);
+
+    const passwordData = {
+      new_password: passwords.new_password,
+      confirm_password: passwords.confirm_password,
+    };
+
+    dispatch(changePassword(passwordData))
+      .unwrap()
+      .then(() => {
+        setPasswords("");
+        setPasswordError("");
+      })
+      .catch((error) => {
+        setPasswordError(error);
+      });
   };
 
   return (
@@ -55,8 +69,8 @@ const ResetPassword = () => {
           label="New Password"
           placeholder="Enter your password"
           type="password"
-          name="password1"
-          value={passwords.password1}
+          name="new_password"
+          value={passwords.new_password}
           onChange={handlePasswordChange}
         />
 
@@ -64,8 +78,8 @@ const ResetPassword = () => {
           label="Re-enter password"
           placeholder="Enter your password"
           type="password"
-          name="password2"
-          value={passwords.password2}
+          name="confirm_password"
+          value={passwords.confirm_password}
           onChange={handlePasswordChange}
         />
         {passwordError && <p className="error-text">{passwordError}</p>}

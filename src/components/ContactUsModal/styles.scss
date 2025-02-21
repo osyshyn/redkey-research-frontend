@@ -5,7 +5,7 @@
   font-weight: $font-weight-normal;
   font-size: 16px;
   line-height: 24px;
-  color: $text-light-neutral;
+  color: $text-color-neutral;
   margin-top: 14px;
 }
 
@@ -17,7 +17,7 @@
 }
 
 .contact-us-copy {
-  border: 1px solid $border-gray-dark;
+  border: 1px solid $input-border-gray-darker;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,7 +32,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: $border-gray-dark;
+    background-color: $input-border-gray-darker;
   }
 }
 
@@ -46,7 +46,7 @@
   font-family: $font-family-satoshi;
   font-weight: $font-weight-normal;
   font-size: 14px;
-  color: $text-light-accent;
+  color: $text-color-accent;
   display: flex;
   align-items: center;
 }
@@ -55,7 +55,7 @@
   font-family: $font-family-satoshi;
   font-weight: $font-weight-normal;
   font-size: 14px;
-  color: $text-light-neutral;
+  color: $text-color-neutral;
 }
 
 .contact-us-icon {

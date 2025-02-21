@@ -177,11 +177,12 @@ const AdminPortal = () => {
     <>
       <Header />
       <ActionBar
-        title={
-          currentFirm?.name === "All"
-            ? `All Researches`
-            : `${currentFirm?.name} Research`
-        }
+      title={
+  currentFirm?.name === "All"
+    ? "All Researches"
+    : `${currentFirm?.name.charAt(0).toUpperCase() + currentFirm?.name.slice(1)} Research`
+}
+
         componentType={"admin_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,

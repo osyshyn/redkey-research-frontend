@@ -192,12 +192,12 @@
       color: $primary-color;
       padding: 6px 12px;
       background-color: transparent;
-      border: 1px solid $border-gray-dark;
+      border: 1px solid $input-border-gray-darker;
       border-radius: $border-radius-small;
     }
 
     .admin-portal-action-btn:hover {
-      background-color: $border-gray-dark;
+      background-color: $input-border-gray-darker;
       cursor: pointer;
     }
 
@@ -324,7 +324,7 @@
   border: 1px solid $background-dark-light;
   border-radius: 16px;
   font-size: 12px;
-  color: $text-light-neutral;
+  color: $text-color-neutral;
   text-align: center;
   font-family: $font-family-satoshi;
   font-weight: $font-weight-normal;
@@ -354,6 +354,6 @@
   padding: 5px 8px;
   border-radius: 16px;
   font-size: 12px;
-  color: $text-light-neutral;
+  color: $text-color-neutral;
   text-align: center;
 }

@@ -44,12 +44,13 @@ const Header = () => {
   useEffect(() => {
     if (!user) {
       dispatch(getProfile());
-    } else if (location.pathname === "/admin/portal" && firmsList.length > 0) {
-      const currentFirm = firmsList[0];
-      if (currentFirm) {
-        dispatch(setCurrentFirm(currentFirm));
-      }
-    }
+    } 
+    // else if (location.pathname === "/admin/portal" && firmsList.length > 0) {
+    //   const currentFirm = { name: "All" };
+    //   if (currentFirm) {
+    //     dispatch(setCurrentFirm(currentFirm));
+    //   }
+    // }
   }, [dispatch, location.pathname]);
 
   const toggleMenu = () => {

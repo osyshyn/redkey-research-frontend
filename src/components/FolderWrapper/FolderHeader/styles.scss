@@ -27,7 +27,7 @@
       font-weight: $font-weight-medium;
       line-height: 27px;
       text-align: left;
-      color: $text-light-accent;
+      color: $text-color-accent;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -61,7 +61,7 @@
       background-color: rgba(37, 122, 0, 0.2);
     }
     &.closed {
-      color: $text-light-neutral;
+      color: $text-color-neutral;
       background-color: $background-dark-light;
     }
     &.rejected {
@@ -82,4 +82,22 @@
     width: 100%;
     border-radius: $border-radius-medium;
   }
+}
+
+[data-theme-mode="light"] {
+  .folder-header {
+  .status {
+    &.closed {
+      color: $background-dark-light;
+      background-color: $input-border-gray-darker;
+    }
+    &.rejected {
+      color: #FF4949;
+      background-color: rgba(231, 0, 0, 0.2);
+    }
+    &.watchlist {
+      color: #3083cc;
+      background-color: rgba(33, 88, 205, 0.2);
+    }
+  }}
 }

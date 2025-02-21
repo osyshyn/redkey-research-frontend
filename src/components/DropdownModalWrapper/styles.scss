@@ -2,7 +2,7 @@
 
 .dropdown-folder-menu {
   position: absolute;
-  background-color: #1c1c1c;
+  background-color: $accent-color;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 4px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   min-width: 100px;
@@ -16,7 +16,7 @@
   .dropdown-item {
     padding: 8px;
     border-radius: 8px;
-    color: $text-light-neutral;
+    color: $text-color-neutral;
     cursor: pointer;
     font-family: $font-family-satoshi;
     font-size: 16px;
@@ -73,7 +73,7 @@
   }
 
   &.closed {
-    color: $text-light-neutral;
+    color: $text-color-neutral;
     background-color: $background-dark-light;
     border-radius: 20px;
 
@@ -99,6 +99,32 @@
 
     &:hover {
       background-color: rgba(4, 45, 134, 0.3);
+    }
+  }
+}
+
+[data-theme-mode="light"] {
+  .dropdown-item.status-option {
+    &.closed {
+      color: $background-dark-light;
+      background-color: $input-border-gray-darker;
+      &:hover {
+        background-color: $secondary-color;
+      }
+    }
+    &.rejected {
+      color: #FF4949;
+      background-color: rgba(231, 0, 0, 0.2);
+      &:hover {
+        background-color: rgba(122, 0, 0, 0.2);
+      }
+    }
+    &.watchlist {
+      color: #3083cc;
+      background-color: rgba(33, 88, 205, 0.2);
+      &:hover {
+        background-color: rgba(4, 45, 134, 0.3);
+      }
     }
   }
 }

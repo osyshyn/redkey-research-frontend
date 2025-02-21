@@ -190,12 +190,12 @@
       color: $primary-color;
       padding: 6px 12px;
       background-color: transparent;
-      border: 1px solid $border-gray-dark;
+      border: 1px solid $input-border-gray-darker;
       border-radius: $border-radius-small;
     }
 
     .admin-portal-action-btn:hover {
-      background-color: $border-gray-dark;
+      background-color: $input-border-gray-darker;
       cursor: pointer;
     }
 
@@ -306,4 +306,12 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+}
+
+[data-theme-mode="light"] {
+  .selected-actions-panel {
+    .selected-actions {
+      background-color: $input-border;
+    }
+  }
 }

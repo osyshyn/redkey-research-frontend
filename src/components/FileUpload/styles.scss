@@ -1,7 +1,7 @@
 @use "../../assets/styles/variables" as *;
 
 .file-upload {
-  border: 1.5px dashed $border-gray-dark;
+  border: 1.5px dashed $input-border-gray-darker;
   border-radius: 8px;
   padding: 20px;
   text-align: center;
@@ -19,7 +19,7 @@
     font-weight: $font-weight-medium;
     font-size: 16px;
     line-height: 22px;
-    color: $text-light-accent;
+    color: $text-color-accent;
   }
 
   .upload-icon {
@@ -34,7 +34,7 @@
     line-height: 20px;
     letter-spacing: -0.01em;
     text-align: center;
-    color: $text-light-accent;
+    color: $text-color-accent;
   }
 }
 
@@ -44,7 +44,7 @@
   font-weight: $font-weight-medium;
   font-size: 16px;
   line-height: 22px;
-  color: $text-light-accent;
+  color: $text-color-accent;
   margin-bottom: 16px;
   margin-top: 24px;
 }
@@ -76,7 +76,7 @@
   font-size: 10px;
   font-weight: $font-weight-normal;
   line-height: 15px;
-  color: #6d6d6d;
+  color: $background-lighter;
 }
 
 .progress-container {

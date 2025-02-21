@@ -42,7 +42,7 @@ body {
   width: 100%;
   font-family: $font-family-satoshi;
   background-color: $highlight-background;
-  color: $text-light-accent;
+  color: $text-color-accent;
 }
 
 body {
@@ -54,4 +54,15 @@ body {
 #root {
   display: flex;
   flex-direction: column;
+  background-color: $highlight-background;
+}
+
+
+
+[data-theme-mode="dark"] .theme-icon {
+  stroke: green;
+}
+
+[data-theme-mode="light"] .theme-icon {
+  stroke: red;
 }

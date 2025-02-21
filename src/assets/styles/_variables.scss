@@ -1,23 +1,27 @@
 // // Colors
 // $primary-background: #262626;
-$secondary-background: #3d3d3d;
+// $secondary-background: #3d3d3d;
+// $input-border: #3d3d3d;
+// $input-border-gray-darker: #454545;
 // $highlight-background: #151515;
-$highlight-background-hover: #1f1f1f;
-$accent-color: #1c1c1c;
+// $highlight-background-hover: #1f1f1f;
+// $accent-color: #1c1c1c;
+$background-darker: #4d4d4d;
 $background-dark-light: #5d5d5d;
-$border-gray-dark: #454545;
-$text-color-light: #f6f6f6;
-$text-light-accent: #e7e7e7;
-$text-light-neutral: #b0b0b0;
-$text-red-button-inner-color: #ffeeee;
+$background-lighter: #6d6d6d;
+// $text-color-main: #f6f6f6;
+// $text-color-accent: #e7e7e7;
+$text-color-neutral: #b0b0b0;
+$text-red-button-inner-light-color: #ffeeee;
 $status-active-green: #6daf51;
-$primary-color: #d1d1d1;
+// $primary-color: #d1d1d1;
 $secondary-color: #888888;
 $dark-red-color: #7a0000;
 $medium-red-color: #ff4949;
 $bright-red-color: #ff0000;
 $delete-red-color: #e70000;
 $accent-red-color: #be0000;
+$white: #ffffff;
 
 // Fonts
 $font-family-satoshi: "Satoshi", sans-serif;
@@ -32,12 +36,39 @@ $border-radius-small: 6px;
 :root {
   --primary-background: #262626;
   --highlight-background: #151515;
+  --text-color-main: #f6f6f6;
+  --text-color-accent: #e7e7e7;
+  --primary-color: #d1d1d1;
+  --accent-color: #1c1c1c;
+  --input-border: #3d3d3d;
+  --input-border-gray-darker: #454545;
+  --text-color-neutral: #b0b0b0;
+  --secondary-background: #3d3d3d;
+  --highlight-background-hover: #1f1f1f;
+}
+
+[data-theme-mode="light"] {
+  --primary-background: #e7e7e7;
+  --highlight-background: #f6f6f6;
+  --text-color-main: #454545;
+  --text-color-accent: #262626;
+  --primary-color: #4d4d4d;
+  --accent-color: #f6f6f6;
+  --input-border: #d1d1d1;
+  --input-border-gray-darker: #b0b0b0;
+  --text-color-neutral: #4d4d4d;
+  --secondary-background: #e7e7e7;
+  --highlight-background-hover: #f1f1f1;
 }
 
 $primary-background: var(--primary-background);
 $highlight-background: var(--highlight-background);
-
-[data-theme-mode="light"] {
-  --primary-background: #E7E7E7;
-  --highlight-background: #F6F6F6;
-}
+$text-color-main: var(--text-color-main);
+$text-color-accent: var(--text-color-accent);
+$primary-color: var(--primary-color);
+$accent-color: var(--accent-color);
+$input-border: var(--input-border);
+$input-border-gray-darker: var(--input-border-gray-darker);
+$text-color-neutral: var(--text-color-neutral);
+$secondary-background: var(--secondary-background);
+$highlight-background-hover: var(--highlight-background-hover);

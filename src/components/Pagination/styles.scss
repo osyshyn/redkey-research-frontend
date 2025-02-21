@@ -31,7 +31,7 @@
   align-items: center;
 
   .ellipsis {
-    color: $text-light-neutral;
+    color: $text-color-neutral;
     padding: 0 8px;
     user-select: none;
     font-size: 12px;
@@ -44,12 +44,12 @@
     font-size: 12px;
     font-weight: $font-weight-medium;
     line-height: 18px;
-    color: $text-light-neutral;
+    color: $text-color-neutral;
 
     &:hover:not(:disabled) {
       border-radius: 6px;
       background: $secondary-color;
-      color: $text-color-light;
+      color: $text-color-main;
     }
   }
 
@@ -60,12 +60,12 @@
     padding: 5px 10px;
     font-family: $font-family-satoshi;
     font-size: 12px;
-    color: $text-light-neutral;
+    color: $text-color-neutral;
     transition: all 0.3s ease;
 
     &.active {
       background: $background-dark-light;
-      color: $text-color-light;
+      color: $text-color-main;
       border-radius: $border-radius-small;
     }
 
@@ -84,5 +84,23 @@
   img {
     width: 15px;
     height: 15px;
+  }
+}
+
+[data-theme-mode="light"] {
+  .page-numbers {
+    .page-number {
+      &:hover:not(:disabled) {
+        background: $input-border-gray-darker;
+        color: $primary-color;
+      }
+    }
+    button {
+      color: $secondary-color;
+      &.active {
+        background: $input-border;
+        color: $primary-color;
+      }
+    }
   }
 }

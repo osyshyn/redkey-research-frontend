@@ -175,7 +175,7 @@ const UserPortal = () => {
     <>
       <Header />
       <ActionBar
-        title={`${currentFirm?.name} Research`}
+       title={`${currentFirm?.name.charAt(0).toUpperCase() + currentFirm?.name.slice(1)} Research`}
         componentType={"user_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,

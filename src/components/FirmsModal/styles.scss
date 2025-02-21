@@ -26,7 +26,7 @@
 }
 
 .firms-table tr {
-  border-top: 1px solid $border-gray-dark;
+  border-top: 1px solid $input-border-gray-darker;
 }
 .firms-table tr:first-child {
   border-top: none;
@@ -59,11 +59,11 @@
   color: $primary-color;
   padding: 6px 12px;
   background-color: transparent;
-  border: 1px solid $border-gray-dark;
+  border: 1px solid $input-border-gray-darker;
   border-radius: $border-radius-small;
 
   &:hover {
-    background-color: $border-gray-dark;
+    background-color: $input-border-gray-darker;
     cursor: pointer;
   }
 }
