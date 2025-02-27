@@ -295,3 +295,136 @@
     color: $secondary-color;
   }
 }
+
+// mobile modal
+.mobile-options-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.mobile-option-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  color: $text-color-neutral;
+  padding: 10px 6px;
+
+ 
+  &:hover {
+    background: $secondary-background;
+    border-radius: 8px;
+  }
+  .mobile-dropdown-menu-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .folder-inner-list {
+    max-height: 280px;
+    min-height: 0px !important;
+    border-radius: 0px 0px 12px 12px !important;
+  }
+  .folder-icon {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 15px;
+  }
+  .folder-table-empty p {
+    font-size: 14px;
+  }
+
+  .mobile-selected-actions {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    background: var(--primary-background);
+    width: 100%;
+    align-items: self-end;
+    padding: 24px 16px;
+    height: 100px;
+    box-shadow: 0px 4px 6px #151515;
+  }
+
+  .mobile-selected-folder-items {
+    font-family: $font-family-satoshi;
+    font-size: 14px;
+    font-weight: $font-weight-bold;
+    line-height: 21px;
+  }
+
+  .mobile-close-button-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .mobile-research-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 12px;
+    gap: 10px;
+    border-radius: $border-radius-small;
+    background-color: transparent;
+    font-family: $font-family-satoshi;
+    font-style: normal;
+    font-weight: $font-weight-normal;
+    font-size: 14px;
+    line-height: 21px;
+    cursor: pointer;
+  }
+
+  .mobile-research-button.download-all {
+    border: 1px solid $primary-color;
+    color: $primary-color;
+  }
+
+  .mobile-research-button.download-all:hover {
+    background-color: $background-dark-light;
+  }
+
+  .mobile-button-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .mobile-selected-items-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .folder-table {
+    .table-data-item {
+      padding: 20px 12px !important;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .research-title {
+    font-size: 12px;
+    font-weight: $font-weight-normal;
+  }
+
+  .mobile-publication-date {
+    font-size: 10px;
+    color: $text-color-neutral;
+    font-weight: $font-weight-normal;
+    font-family: $font-family-satoshi;
+    margin-top: 15px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, selectAuth } from "../../store/slices/authSlice";
+import {
+  getProfile,
+  loginUser,
+  selectAuth,
+} from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import logoBig from "../../assets/images/logo-big.png";
@@ -14,21 +18,41 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
+  console.log("ccc", currentTheme);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status, error } = useSelector(selectAuth);
+  const { user, status, error } = useSelector(selectAuth);
+
+  // useEffect(() => {
+  //   if (status === "succeeded") {
+  //     navigate("/admin/portal");
+  //   }
+  // }, [status, navigate]);
 
   useEffect(() => {
     if (status === "succeeded") {
-      navigate("/admin/portal");
+      dispatch(getProfile());
     }
-  }, [status, navigate]);
+  }, [status, dispatch]);
+
+  useEffect(() => {
+    if (status === "succeeded" && user) {
+      console.log('UUUUUU', user);
+      
+      if (user.role === 1 || user.role === 2) {
+        navigate("/admin/portal");
+      } else if (user.role === 3) {
+        navigate("/user/portal");
+      } 
+    }
+  }, [status, user, navigate]);
 
   const handleLogin = async () => {
     try {
       await dispatch(loginUser({ email, password })).unwrap();
-      navigate("/admin/portal");
+      await dispatch(getProfile()).unwrap();
+      // navigate("/admin/portal");
     } catch (err) {
       console.error("Login error:", err);
     }
@@ -38,7 +62,11 @@ const LoginPage = () => {
     <div className="login-page">
       <img
         className="logo-big"
-        src={currentTheme === "dark" ? logoBig : logoLightBig}
+        src={
+          currentTheme === "dark" || currentTheme === null
+            ? logoBig
+            : logoLightBig
+        }
         alt="Logo"
       />
       <h1 className="title">Log in to your account</h1>

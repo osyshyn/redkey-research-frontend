@@ -30,3 +30,17 @@
     }
   }
 }
+
+@media screen and (max-width: 480px) {
+  .folder-wrapper {
+    margin: 14px 16px;
+
+    .folder-contents {
+      border-radius: 0 0 12px 12px;
+      padding: 1px;
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

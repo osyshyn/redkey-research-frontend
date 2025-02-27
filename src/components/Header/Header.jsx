@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import useDeviceType from "../../hooks/useDeviceType";
 import { logoutUser, getProfile } from "../../store/slices/authSlice";
 import {
   clearResearchFilters,
@@ -39,6 +40,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const currentUserDevice = useDeviceType();
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
 
@@ -51,18 +53,35 @@ const Header = () => {
     if (!user) {
       dispatch(getProfile());
     }
-    // else if (location.pathname === "/admin/portal" && firmsList.length > 0) {
-    //   const currentFirm = { name: "All" };
-    //   if (currentFirm) {
-    //     dispatch(setCurrentFirm(currentFirm));
-    //   }
-    // }
+
+    if (location.pathname === "/admin/portal" && firmsList.length > 0) {
+      const currentFirm = { name: "All" };
+      if (currentFirm) {
+        dispatch(setCurrentFirm(currentFirm));
+      }
+    } else if (location.pathname === "/user/portal" && firmsList.length > 0) {
+      const currentFirm = user?.access[0].firm;
+      if (currentFirm) {
+        dispatch(setCurrentFirm(currentFirm));
+      }
+    }
   }, [dispatch, location.pathname]);
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem("selectedTheme");
+
+    let themeToApply = savedTheme
+      ? getThemeName(savedTheme)
+      : user?.theme
+      ? getThemeName(user.theme)
+      : null;
+
+    if (themeToApply) {
+      document.body.setAttribute("data-theme-mode", themeToApply.toLowerCase());
+    }
+
     if (user?.theme) {
-      const themeName = getThemeName(user.theme);
-      document.body.setAttribute("data-theme-mode", themeName.toLowerCase());
+      localStorage.setItem("selectedTheme", user?.theme);
     }
   }, [user?.theme]);
 
@@ -114,7 +133,7 @@ const Header = () => {
   };
 
   const handleAdminResearchOptionClick = (firmOption) => {
-    localStorage.setItem("currentFirm", JSON.stringify(firmOption));
+    // localStorage.setItem("currentFirm", JSON.stringify(firmOption));
     dispatch(setCurrentFirm(firmOption));
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
@@ -122,7 +141,7 @@ const Header = () => {
   };
 
   const handleUserResearchOptionClick = (firmOption) => {
-    localStorage.setItem("currentFirm", JSON.stringify(firmOption));
+    // localStorage.setItem("currentFirm", JSON.stringify(firmOption));
     dispatch(setCurrentFirm(firmOption));
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
@@ -163,14 +182,18 @@ const Header = () => {
     <header className="header">
       <div className="logo-container">
         <img
-          src={currentTheme === "dark" ? logoDarkHeader : logoLightHeader}
+          src={
+            currentTheme === "dark" || currentTheme === null
+              ? logoDarkHeader
+              : logoLightHeader
+          }
           alt="Logo"
           className="logo"
         />
       </div>
 
       {/*  User client */}
-      {user?.role === 1 && (
+      {user?.role === 3 && currentUserDevice === "desktop" && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -230,7 +253,7 @@ const Header = () => {
       )}
 
       {/* Super Admin */}
-      {user?.role === 3 && (
+      {user?.role === 1 && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -273,7 +296,7 @@ const Header = () => {
 
       <div className="menu-icon" onClick={toggleMenu} ref={menuIconRef}></div>
 
-      {isMenuOpen && (
+      {isMenuOpen && currentUserDevice === "desktop" && (
         <DropdownMenu
           isOpen={isMenuOpen}
           ref={menuRef}

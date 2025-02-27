@@ -23,6 +23,8 @@ export const logoutAPI = async () => {
 
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("selectedTheme");
+    localStorage.removeItem("currentFirm");
 
     console.log("User logged out successfully");
   } catch (error) {
@@ -87,6 +89,8 @@ export const changeThemeAPI = async (themeNum) => {
     const response = await axiosInstance.post("admin/changeTheme", {
       theme: themeNum,
     });
+
+    localStorage.setItem("selectedTheme", themeNum);
     return response.data;
   } catch (error) {
     console.error("Error changing theme:", error);

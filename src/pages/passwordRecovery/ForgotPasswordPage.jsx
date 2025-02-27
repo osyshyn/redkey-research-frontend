@@ -38,7 +38,11 @@ const ForgotPasswordPage = () => {
     <div className="forgot-password-page">
       <img
         className="logo-big"
-      src={currentTheme === "dark" ? logoBig : logoLightBig}
+        src={
+          currentTheme === "dark" || currentTheme === null
+            ? logoBig
+            : logoLightBig
+        }
         alt="Logo"
       />
       <div className="forgot-password-title-wrapper">

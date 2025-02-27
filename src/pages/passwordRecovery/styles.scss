@@ -131,3 +131,58 @@
     margin-top: 40px;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .forgot-password-page,
+  .reset-password-page {
+    gap: 30px;
+    width: 340px;
+    position: relative;
+
+    .logo-big {
+      height: 55px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: $font-weight-bold;
+    }
+
+    .back-to-login-text-red {
+      font-size: 14px;
+      margin-top: -10px;
+    }
+
+    .forgot-password-title-wrapper {
+      .help-text {
+        font-size: 14px;
+      }
+    }
+
+    .notification {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      padding: 20px 22px;
+      border: 1px solid #3d3d3d;
+      color: white;
+      position: absolute;
+      top: 0;
+      background-color: #1c1c1c;
+      width: 120%;
+
+      .notification-text {
+        font-size: 14px;
+        text-align: start;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .forgot-password-page,
+  .reset-password-page {
+    gap: 30px;
+    width: 300px;
+  }
+}

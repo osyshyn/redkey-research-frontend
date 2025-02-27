@@ -67,7 +67,11 @@ const ResetPassword = () => {
     <div className="reset-password-page">
       <img
         className="logo-big"
-        src={currentTheme === "dark" ? logoBig : logoLightBig}
+        src={
+          currentTheme === "dark" || currentTheme === null
+            ? logoBig
+            : logoLightBig
+        }
         alt="Logo"
       />
       <h1 className="title">Reset Password</h1>

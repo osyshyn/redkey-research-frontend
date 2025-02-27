@@ -63,6 +63,8 @@ const loadCurrentFirm = () => {
   return storedFirm ? JSON.parse(storedFirm) : null;
 };
 
+
+
 const firmSlice = createSlice({
   name: "firm",
   initialState: {

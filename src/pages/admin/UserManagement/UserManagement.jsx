@@ -58,9 +58,11 @@ const UserManagement = () => {
 
   const searchInFilteredUsers = searchValue
     ? filteredUsers.filter((user) =>
-        [user.first_name, user.last_name, user.email].some((field) =>
-          field.toLowerCase().includes(searchValue.toLowerCase())
-        )
+        [user.first_name, user.last_name, user.email, user.company]
+          .filter(Boolean)
+          .some((field) =>
+            field.toLowerCase().includes(searchValue.toLowerCase())
+          )
       )
     : filteredUsers;
 

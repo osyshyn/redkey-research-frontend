@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useDeviceType from "../../hooks/useDeviceType";
 import SearchAndFilterPanel from "../SearchAndFilterPanel/SearchAndFilterPanel";
 import CustomButton from "../CustomButton/CustomButton";
 import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearchModals";
@@ -15,6 +16,7 @@ const ActionBar = ({
   modalsProps = {},
 }) => {
   const [isFirmsModalOpen, setIsFirmsModalOpen] = useState(false);
+  const currentUserDevice = useDeviceType();
   return (
     <>
       <div className="action-bar">

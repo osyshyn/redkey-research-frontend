@@ -101,7 +101,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
         options: [
           {
             optionName: "Edit profile and accesses",
-            icon: <PenIcon className="dropdown-menu-icon"/>,
+            icon: <PenIcon className="dropdown-menu-icon" />,
             onOptionClick: () => {
               setEditingUser(item);
               setIsUpdateUserModalOpen(true);
@@ -110,7 +110,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
           },
           {
             optionName: "Change password",
-            icon: <PasswordIcon className="dropdown-menu-icon"/>,
+            icon: <PasswordIcon className="dropdown-menu-icon" />,
             onOptionClick: () => {
               setIsChangeUserPasswordModalOpen(true);
               setCurrentUserData(item);
@@ -119,7 +119,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
           },
           {
             optionName: "Delete",
-            icon: <DeleteIconRed className="dropdown-menu-icon-red"/>,
+            icon: <DeleteIconRed className="dropdown-menu-icon-red" />,
             onOptionClick: () => {
               setDeleteType("single");
               setItemToDelete(item);
@@ -178,7 +178,9 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
                           onClick={clearSelectedItems}
                         />
                         <p className="selected-user-items">
-                          {selectedItems.length} items selected
+                          {`${selectedItems.length} ${
+                            selectedItems.length === 1 ? "item" : "items"
+                          } selected`}
                         </p>
                       </div>
 

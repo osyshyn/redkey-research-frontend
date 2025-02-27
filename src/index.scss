@@ -67,6 +67,11 @@ body {
     width: 16px;
     height: 16px;
   }
+  .mobile-dropdown-menu-icon  {
+    stroke: $text-color-neutral !important;
+    width: 14px;
+    height: 14px;
+  }
   .dropdown-menu-icon-red {
     stroke: $delete-red-color !important;
     width: 16px;
@@ -88,10 +93,11 @@ body {
   .button-icon.download-all {
     stroke: $primary-color !important;
   }
+  .mobile-button-icon.download-all {
+    stroke: $primary-color !important;
+  }
   .folder-icon {
     stroke: $primary-color !important;
-    width: 40px;
-    height: 40px;
   }
   .contact-us-icon {
     stroke: $text-color-accent !important;
@@ -114,6 +120,11 @@ body {
     width: 16px;
     height: 16px;
   }
+  .mobile-dropdown-menu-icon {
+    stroke: $text-color-main !important;
+    width: 14px;
+    height: 14px;
+  }
   .dropdown-menu-icon-red {
     stroke: $delete-red-color !important;
     width: 16px;
@@ -135,10 +146,11 @@ body {
   .button-icon.download-all {
     stroke: $background-dark-light !important;
   }
+  .mobile-button-icon.download-all {
+    stroke: $background-dark-light !important;
+  }
   .folder-icon {
     stroke: $secondary-color !important;
-    width: 40px;
-    height: 40px;
   }
   .contact-us-icon {
     stroke: $secondary-color !important;

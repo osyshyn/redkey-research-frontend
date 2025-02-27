@@ -43,3 +43,32 @@
   margin: 0 32px 24px 32px;
   width: fit-content;
 }
+
+@media screen and (max-width: 480px) {
+  .action-bar {
+    display: flex;
+    align-items: flex-start;
+    padding: 24px 16px;
+    gap: 20px;
+    flex-direction: column;
+  }
+
+  .action-bar-title h1 {
+    font-family: $font-family-satoshi;
+    font-size: 24px;
+    font-weight: $font-weight-bold;
+    line-height: 48px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: $text-color-main;
+  }
+
+}
+
+@media screen and (max-width: 375px) {
+  .login-page {
+    width: 300px;
+    gap: 30px;
+  }
+}
