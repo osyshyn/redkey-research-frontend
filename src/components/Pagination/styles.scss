@@ -104,3 +104,23 @@
     }
   }
 }
+
+@media screen and (max-width: 480px) {
+  .items-per-page {
+    .per-page-select {
+      padding: 3px 7px;
+    }
+  }
+  .page-numbers {
+    .ellipsis {
+      padding: 0 7px;
+    }
+
+    button {
+      padding: 3px 7px;
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

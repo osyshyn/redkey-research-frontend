@@ -17,7 +17,7 @@ import "./styles.scss";
 const FolderInnerListUser = ({ tableData, handleViewClick }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
-  const [mobileMoreiconData, setMobileMoreIconData] = useState({
+  const [mobileMoreIconData, setMobileMoreIconData] = useState({
     options: [],
   });
 
@@ -60,7 +60,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
       ],
     });
 
-    setIsMobileModalOpen(true); // Открываем модалку
+    setIsMobileModalOpen(true); 
   };
 
   const clearSelectedItems = () => {
@@ -227,7 +227,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
           onClose={() => setIsMobileModalOpen(false)}
         >
           <div className="mobile-options-list">
-            {mobileMoreiconData.options?.map((option) => (
+            {mobileMoreIconData.options?.map((option) => (
               <div
                 key={option.optionName}
                 className="mobile-option-item"

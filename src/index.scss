@@ -71,7 +71,10 @@ body {
     stroke: $text-color-neutral !important;
     width: 14px;
     height: 14px;
+  } .chosen-option-icon {
+    stroke:  $delete-red-color !important;
   }
+  
   .dropdown-menu-icon-red {
     stroke: $delete-red-color !important;
     width: 16px;
@@ -125,6 +128,10 @@ body {
     width: 14px;
     height: 14px;
   }
+  .chosen-option-icon {
+    stroke:  $delete-red-color !important;
+  }
+  
   .dropdown-menu-icon-red {
     stroke: $delete-red-color !important;
     width: 16px;

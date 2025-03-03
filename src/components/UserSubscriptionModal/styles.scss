@@ -9,6 +9,7 @@
   z-index: 1;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   background: linear-gradient(
     180deg,
@@ -26,8 +27,8 @@
 }
 
 .skeleton-access-message {
-  position: absolute;
-  bottom: -120px;
+  // position: absolute;
+  // bottom: -120px;
   border: 1px solid $input-border;
   padding: 20px;
   border-radius: 12px;
@@ -37,6 +38,7 @@
   align-items: center;
   gap: 10px;
   color: $text-color-main;
+  margin-top: 30px;
 }
 
 .skeleton-modal-text-content {
@@ -197,25 +199,6 @@
     }
   }
 
-  tbody {
-    .skeleton-table-data-body-row:first-child {
-      .skeleton-table-data-item:first-child {
-        border-top-left-radius: 12px;
-      }
-      .skeleton-table-data-item:last-child {
-        border-top-right-radius: 12px;
-      }
-    }
-    .skeleton-table-data-body-row:last-child {
-      .skeleton-table-data-item:first-child {
-        border-bottom-left-radius: 12px;
-      }
-      .skeleton-table-data-item:last-child {
-        border-bottom-right-radius: 12px;
-      }
-    }
-  }
-
   .skeleton-table-data-body-row {
     background-color: $highlight-background;
   }
@@ -299,4 +282,94 @@
       color: #ffeeee;
     }
   }
+}
+
+.big-lock-icon {
+  width: 71px;
+  height: 71px;
+}
+
+@media screen and (max-width: 480px) {
+  .skeleton-folder-header {
+    width: auto;
+    gap: 15px;
+
+    .skeleton-folder-expandable-element {
+      .skeleton-title {
+        font-family: $font-family-satoshi;
+        font-size: 14px;
+        font-weight: $font-weight-medium;
+        line-height: normal;
+        text-align: left;
+        color: $text-color-accent;
+        max-width: 101px;
+      }
+    }
+  }
+
+  .skeleton-folder-wrapper {
+    margin: 40px 16px;
+
+    .skeleton-folder-contents {
+      border-radius: 0 0 12px 12px;
+      padding: 1px;
+    }
+  }
+
+  .skeleton-folder-table {
+    .skeleton-table-data-item {
+      .skeleton-line {
+        width: 140px;
+      }
+    }
+    .skeleton-table-data-body-row {
+      height: 70px;
+    }
+  }
+
+  .big-lock-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .skeleton-modal-text-content {
+    gap: 34px;
+  }
+
+  .skeleton-modal-description {
+    font-size: 16px;
+    max-width: 280px;
+  }
+
+  .skeleton-modal-request-button {
+    width: 170px;
+    height: 40px;
+  }
+
+  .skeleton-access-message {
+    position: absolute;
+    top: -80px;
+    border: 1px solid $input-border;
+    padding: 20px;
+    border-radius: 0;
+    display: flex;
+    height: 100px;
+    flex-direction: column;
+    background: $accent-color;
+    width: 100%;
+    align-items: start;
+    margin-top: 0;
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-normal;
+    font-size: 14px;
+  }
+
+  .skeleton-items-amount {
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-normal;
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 375px) {
 }

@@ -1,0 +1,153 @@
+@use "../../assets/styles/variables" as *;
+
+.document-preview {
+  background-color: $primary-background;
+  border-radius: $border-radius-medium;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  margin-right: 32px;
+  margin-top: 68px;
+  background-color: $primary-background;
+  padding: 26px 10px;
+  //   padding-bottom: 0;
+  border-radius: $border-radius-medium;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 80vh;
+  position: relative;
+
+  .close-icon {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+}
+
+.react-pdf__Document {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .react-pdf__message {
+    position: relative;
+    top: 50px;
+  }
+}
+
+.react-pdf__Page {
+  width: 100%;
+  //   margin-bottom: 10px;
+  object-fit: contain;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: $primary-background;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.document-preview-mobile {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background-color: $primary-background;
+  z-index: 10;
+}
+
+.mobile-name-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.back-arrow {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+}
+
+.title {
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-medium;
+  font-size: 18px;
+  line-height: 27px;
+  color: $text-color-accent;
+}
+
+.mobile-document-content {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+
+  .react-pdf__Document {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    align-items: center;
+
+    .react-pdf__message {
+      position: absolute;
+      top: 50px;
+    }
+  }
+
+  .react-pdf__Page {
+    width: 100%;
+    // margin-bottom: 10px;
+    object-fit: contain;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.mobile-view-download-icon {
+  stroke: $secondary-color;
+  width: 20px;
+  height: 20px;
+}

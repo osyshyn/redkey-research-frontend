@@ -10,21 +10,22 @@ import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
 import Loader from "../../../components/Loader/Loader";
 import UserSubscriptionModal from "../../../components/UserSubscriptionModal/UserSubscriptionModal";
+import DocumentPreview from "../../../components/DocumentPreview/DocumentPreview";
 
 import closeIcon from "../../../assets/icons/close-icon.svg";
 
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
+// import { Document, Page, pdfjs } from "react-pdf";
+// import "react-pdf/dist/Page/AnnotationLayer.css";
+// import "react-pdf/dist/Page/TextLayer.css";
 
 import "./styles.scss";
 
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+// pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 const UserPortal = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedDocument, setSelectedDocument] = useState(null);
-  const [numPages, setNumPages] = useState(null);
+  // const [numPages, setNumPages] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(3);
@@ -46,7 +47,6 @@ const UserPortal = () => {
 
   useEffect(() => {
     if (currentFirm) {
-      
       const hasAccess = user?.access?.some(
         (access) => access.firm.id === currentFirm.id && access.value === true
       );
@@ -155,15 +155,15 @@ const UserPortal = () => {
     setShowPreview(true);
   };
 
-  const onLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
-  };
+  // const onLoadSuccess = ({ numPages }) => {
+  //   setNumPages(numPages);
+  // };
 
   const closePreview = () => {
     setShowPreview(false);
   };
 
-  if (showAccessDenied) {   
+  if (showAccessDenied) {
     return (
       <>
         <Header />
@@ -176,7 +176,9 @@ const UserPortal = () => {
     <>
       <Header />
       <ActionBar
-       title={`${currentFirm?.name.charAt(0).toUpperCase() + currentFirm?.name.slice(1)} Research`}
+        title={`${
+          currentFirm?.name.charAt(0).toUpperCase() + currentFirm?.name.slice(1)
+        } Research`}
         componentType={"user_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
@@ -228,24 +230,11 @@ const UserPortal = () => {
             {showPreview &&
               selectedDocument &&
               selectedDocument?.file?.type === "file" && (
-                <div className="document-preview">
-                  <img
-                    src={closeIcon}
-                    alt="Close"
-                    className="close-icon"
-                    onClick={closePreview}
-                  />
-                  <Document
-                    file={`${import.meta.env.VITE_API_URL}/${
-                      selectedDocument.file.path
-                    }`}
-                    onLoadSuccess={onLoadSuccess}
-                  >
-                    {Array.from(new Array(numPages), (el, index) => (
-                      <Page key={index} pageNumber={index + 1} scale={0.9} />
-                    ))}
-                  </Document>
-                </div>
+                <DocumentPreview
+                  showPreview={showPreview}
+                  selectedDocument={selectedDocument}
+                  onClose={closePreview}
+                />
               )}
           </div>
 
@@ -268,3 +257,24 @@ const UserPortal = () => {
 };
 
 export default UserPortal;
+
+{
+  /* <div className="document-preview">
+                  <img
+                    src={closeIcon}
+                    alt="Close"
+                    className="close-icon"
+                    onClick={closePreview}
+                  />
+                  <Document
+                    file={`${import.meta.env.VITE_API_URL}/${
+                      selectedDocument.file.path
+                    }`}
+                    onLoadSuccess={onLoadSuccess}
+                  >
+                    {Array.from(new Array(numPages), (el, index) => (
+                      <Page key={index} pageNumber={index + 1} scale={0.9} />
+                    ))}
+                  </Document>
+                </div> */
+}

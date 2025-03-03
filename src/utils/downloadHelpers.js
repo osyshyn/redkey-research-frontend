@@ -1,6 +1,9 @@
 export const handleDownload = (item) => {
   const fileUrl = `${import.meta.env.VITE_API_URL}/${item.file.path}`;
 
+  console.log('item', item);
+  
+
   if (!fileUrl) {
     console.error("PDF file URL not found");
     return;

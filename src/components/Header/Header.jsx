@@ -12,6 +12,7 @@ import DropdownMenu from "../DropdownMenu/DropdownMenu";
 import ProfileSettingsModal from "../ProfileSettingsModal/ProfileSettingsModal";
 import ContactUsModal from "../ContactUsModal/ContactUsModal";
 import ResearchFilesDropdown from "../ResearchFilesDropdown/ResearchFilesDropdown";
+import MobileDropdownMenu from "../MobileDropdownMenu/MobileDropdownMenu";
 
 import { getThemeName } from "../../utils/userHelpers";
 
@@ -137,6 +138,7 @@ const Header = () => {
     dispatch(setCurrentFirm(firmOption));
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
+    setIsMenuOpen(false);
     navigate("/admin/portal");
   };
 
@@ -145,6 +147,7 @@ const Header = () => {
     dispatch(setCurrentFirm(firmOption));
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
+    setIsMenuOpen(false);
     navigate("/user/portal");
   };
 
@@ -156,11 +159,6 @@ const Header = () => {
     }
     setIsResearchDropdownOpen((prev) => !prev);
   };
-
-  // const adminResearchDropdownOptions = firmsList.map((firmOption) => ({
-  //   optionName: firmOption.name,
-  //   onOptionClick: () => handleAdminResearchOptionClick(firmOption),
-  // }));
 
   const adminResearchDropdownOptions = [
     {
@@ -178,6 +176,18 @@ const Header = () => {
     onOptionClick: () => handleUserResearchOptionClick(firmOption),
   }));
 
+  const rolesConfig = {
+    3: { path: "/user/portal", options: userResearchDropdownOptions },
+    2: { path: "/admin/portal", options: adminResearchDropdownOptions },
+    1: {
+      path: "/admin/portal",
+      options: adminResearchDropdownOptions,
+      userManagement: true,
+    },
+  };
+
+  const roleData = rolesConfig[user?.role];
+
   return (
     <header className="header">
       <div className="logo-container">
@@ -193,7 +203,7 @@ const Header = () => {
       </div>
 
       {/*  User client */}
-      {user?.role === 3 && currentUserDevice === "desktop" && (
+      {/* {user?.role === 1 && currentUserDevice === "desktop" && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -220,10 +230,10 @@ const Header = () => {
             />
           )}
         </nav>
-      )}
+      )} */}
 
       {/*  Admin */}
-      {user?.role === 2 && (
+      {/* {user?.role === 2 && currentUserDevice === "desktop" && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -250,10 +260,10 @@ const Header = () => {
             />
           )}
         </nav>
-      )}
+      )} */}
 
       {/* Super Admin */}
-      {user?.role === 1 && (
+      {/* {user?.role === 3 && currentUserDevice === "desktop" && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -292,6 +302,57 @@ const Header = () => {
             User management
           </span>
         </nav>
+      )} */}
+
+      {/* Navigation */}
+      {/* const rolesConfig = {
+  1: { path: "/user/portal", options: userResearchDropdownOptions },
+  2: { path: "/admin/portal", options: adminResearchDropdownOptions },
+  3: { path: "/admin/portal", options: adminResearchDropdownOptions, userManagement: true },
+};
+
+const roleData = rolesConfig[user?.role]; */}
+
+      {roleData && currentUserDevice === "desktop" && (
+        <nav className="nav-links">
+          <span
+            className={`nav-link ${
+              location.pathname === roleData.path ? "active" : ""
+            }`}
+            onClick={handleResearchClick}
+            ref={researchButtonRef}
+          >
+            Research files
+            <img
+              src={
+                location.pathname === roleData.path
+                  ? dropdownChevronIconRed
+                  : dropdownChevronIcon
+              }
+              alt="Dropdown Chevron"
+              className="header-dropdown-icon"
+            />
+          </span>
+          {isResearchDropdownOpen && (
+            <ResearchFilesDropdown
+              position={researchDropdownPosition}
+              options={roleData.options}
+            />
+          )}
+          {roleData.userManagement && (
+            <span
+              className={`nav-link ${
+                location.pathname === "/admin/user-management" ? "active" : ""
+              }`}
+              onClick={() => {
+                dispatch(clearResearchFilters());
+                navigate("/admin/user-management");
+              }}
+            >
+              User management
+            </span>
+          )}
+        </nav>
       )}
 
       <div className="menu-icon" onClick={toggleMenu} ref={menuIconRef}></div>
@@ -304,6 +365,22 @@ const Header = () => {
           onContactUsClick={handleContactUsClick}
           onLogoutClick={handleLogoutClick}
           currentUser={user}
+        />
+      )}
+
+      {isMenuOpen && currentUserDevice === "mobile" && (
+        <MobileDropdownMenu
+          isOpen={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
+          onProfileClick={handleProfileClick}
+          onContactUsClick={handleContactUsClick}
+          onLogoutClick={handleLogoutClick}
+          currentUser={user}
+          researchOptions={
+            user?.role === 3
+              ? userResearchDropdownOptions
+              : adminResearchDropdownOptions
+          }
         />
       )}
 

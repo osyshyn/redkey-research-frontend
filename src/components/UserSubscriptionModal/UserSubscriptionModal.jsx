@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useDeviceType from "../../hooks/useDeviceType";
 import { requestGetAccess } from "../../store/slices/authSlice";
 import arrowDown from "../../assets/icons/arrow-down.svg";
 import singleDotIcon from "../../assets/icons/single-dot-icon.svg";
 import BigLockIcon from "../../assets/icons/big-lock-icon.svg?react";
 import redDoneCircleIcon from "../../assets/icons/red-done-circle-icon.svg";
+import moreIcon from "../../assets/icons/more-icon.svg";
 
 import "./styles.scss";
 
@@ -14,7 +16,7 @@ const UserSubscriptionModal = () => {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.auth);
   const currentFirm = useSelector((state) => state.firm.currentFirm);
-  console.log("current", currentFirm);
+  const currentUserDevice = useDeviceType();
 
   const handleRequestAccess = () => {
     dispatch(requestGetAccess(currentFirm))
@@ -42,13 +44,15 @@ const UserSubscriptionModal = () => {
         <div className="skeleton-folder-contents">
           <div className="skeleton-folder-inner-list">
             <table className="skeleton-folder-table">
-              <thead>
-                <tr>
-                  <th className="skeleton-folder-table-header">Research</th>
-                  <th className="skeleton-folder-table-header">Date</th>
-                  <th className="skeleton-folder-table-header"></th>
-                </tr>
-              </thead>
+              {currentUserDevice === "desktop" && (
+                <thead>
+                  <tr>
+                    <th className="skeleton-folder-table-header">Research</th>
+                    <th className="skeleton-folder-table-header">Date</th>
+                    <th className="skeleton-folder-table-header"></th>
+                  </tr>
+                </thead>
+              )}
 
               <tbody>
                 {Array.from({ length: 4 }).map((_, index) => (
@@ -62,18 +66,26 @@ const UserSubscriptionModal = () => {
                         <p className="skeleton-line"></p>
                       </div>
                     </td>
-
-                    <td className="skeleton-table-data">
-                      <p className="skeleton-line"></p>
-                    </td>
+                    {currentUserDevice === "desktop" && (
+                      <td className="skeleton-table-data">
+                        <p className="skeleton-line"></p>
+                      </td>
+                    )}
                     <td className="skeleton-table-data-item">
                       <div className="skeleton-actions-column">
-                        <div className="skeleton-admin-portal-action-btn">
-                          View
-                        </div>
-                        <div className="skeleton-admin-portal-action-btn">
-                          Download
-                        </div>
+                        {currentUserDevice === "desktop" && (
+                          <>
+                            <div className="skeleton-admin-portal-action-btn">
+                              View
+                            </div>
+                            <div className="skeleton-admin-portal-action-btn">
+                              Download
+                            </div>
+                          </>
+                        )}
+                        {currentUserDevice === "mobile" && (
+                          <img src={moreIcon} className="more-icon" />
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -92,7 +104,7 @@ const UserSubscriptionModal = () => {
 
           <div className="skeleton-modal-text-content">
             <p className="skeleton-modal-description">
-              Your are not subscribed to this service. Click below to request
+              You are not subscribed to this service. Click below to request
               access.
             </p>
             <button
@@ -102,14 +114,13 @@ const UserSubscriptionModal = () => {
               Request Access
             </button>
           </div>
-
-          {isAccessRequested && (
-            <div className="skeleton-access-message">
-              <img src={redDoneCircleIcon} />
-              Thank you for inquiry. We will reach out to you soon.
-            </div>
-          )}
         </div>
+        {isAccessRequested && (
+          <div className="skeleton-access-message">
+            <img src={redDoneCircleIcon} />
+            Thank you for inquiry. We will reach out to you soon.
+          </div>
+        )}
       </div>
     </>
   );
