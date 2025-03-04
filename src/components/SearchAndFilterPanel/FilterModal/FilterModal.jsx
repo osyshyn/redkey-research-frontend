@@ -13,7 +13,7 @@ import CloseIconGrey from "../../../assets/icons/close-icon-grey.svg?react";
 import StatusFilterIcon from "../../../assets/icons/status-filter-icon.svg?react";
 import CompanyFilterIcon from "../../../assets/icons/company-filter-icon.svg?react";
 import CalendarFilterIcon from "../../../assets/icons/calendar-filter-icon.svg?react";
-import RegisteredByIcon from "../../../assets/icons/registered-by-icon.svg?react";
+import RegisteredByIcon from "../../../assets/icons/users-icon.svg?react";
 
 import "./styles.scss";
 

@@ -10,6 +10,7 @@ import AntrimResearchIcon from "../../assets/icons/antrim-research-icon.svg?reac
 import DefaultResearchIcon from "../../assets/icons/default-research-icon.svg?react";
 import LafitteResearchIcon from "../../assets/icons/lafitte-research-icon.svg?react";
 import PrytaniaResearchIcon from "../../assets/icons/prytania-research-icon.svg?react";
+import UsersIcon from "../../assets/icons/users-icon.svg?react";
 
 import "./styles.scss";
 
@@ -19,6 +20,7 @@ const MobileDropdownMenu = ({
   onProfileClick,
   onContactUsClick,
   onLogoutClick,
+  onUserManagementClick,
   currentUser,
   researchOptions,
 }) => {
@@ -71,7 +73,9 @@ const MobileDropdownMenu = ({
                 >
                   <OptionIcon
                     className={`mobile-dropdown-menu-icon ${
-                      currentFirm.name === optionName ? "chosen-option-icon" : ""
+                      currentFirm.name === optionName
+                        ? "chosen-option-icon"
+                        : ""
                     }`}
                   />
                   {optionName.charAt(0).toUpperCase() + optionName.slice(1)}
@@ -79,6 +83,23 @@ const MobileDropdownMenu = ({
               );
             })}
           </div>
+          {currentUser?.role === 3 && (
+            <>
+              <div className="mobile-menu-header">
+                <span>User managemenet</span>
+              </div>
+              <div
+                className="mobile-menu-option-item"
+                onClick={onUserManagementClick}
+              >
+                <UsersIcon
+                  className="mobile-dropdown-menu-icon"
+                  alt="Report Icon"
+                />
+                <span>Report</span>
+              </div>
+            </>
+          )}
           <div className="mobile-menu-header">
             <span>Settings</span>
             <ThemeToggle />

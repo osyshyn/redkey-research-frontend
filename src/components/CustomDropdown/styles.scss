@@ -105,6 +105,8 @@
       font-size: 16px;
       color: $text-color-neutral;
       cursor: pointer;
+      white-space: normal;
+      word-break: break-word;
 
       &:hover {
         background: $secondary-background;

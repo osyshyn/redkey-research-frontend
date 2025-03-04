@@ -5,9 +5,12 @@ import {
   changeFolderStatus,
 } from "../../store/slices/researchSlice";
 
+import useDeviceType from "../../hooks/useDeviceType";
+
 import FolderHeader from "./FolderHeader/FolderHeader";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
 import DeleteModal from "../DeleteModal/DeleteModal";
+import MobileModalWrapper from "../MobileModalWrapper/MobileModalWrapper";
 
 import { statusOptions } from "../../constants/constants";
 import { getStatusName } from "../../utils/userHelpers";
@@ -31,10 +34,15 @@ const FolderWrapper = ({
   const [statusDropdownPosition, setStatusDropdownPosition] = useState(null);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] = useState(false);
+  const [isMobileMoreModalOpen, setIsMobileMoreModalOpen] = useState(false);
+  const [isMobileChangeStatusModalOpen, setIsMobileChangeStatusModalOpen] =
+    useState(false);
 
   const folderMoreIconRef = useRef(null);
   const statusDropdownRef = useRef(null);
   const dispatch = useDispatch();
+
+  const currentUserDevice = useDeviceType();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -66,26 +74,37 @@ const FolderWrapper = ({
   };
 
   const handleMoreClick = (e) => {
-    const position = e.target.getBoundingClientRect();
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    setDropdownPosition({
-      top: position.bottom + scrollTop,
-      left: position.left,
-    });
-    setActiveDropdown(
-      activeDropdown === "folderMoreIcon" ? null : "folderMoreIcon"
-    );
-    setStatusDropdownPosition(null);
+    if (currentUserDevice === "desktop") {
+      const position = e.target.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setDropdownPosition({
+        top: position.bottom + scrollTop,
+        left: position.left,
+      });
+      setActiveDropdown(
+        activeDropdown === "folderMoreIcon" ? null : "folderMoreIcon"
+      );
+      setStatusDropdownPosition(null);
+    }
+    if (currentUserDevice === "mobile") {
+      setIsMobileMoreModalOpen(true);
+    }
   };
 
   const handleChangeStatusClick = (e) => {
-    const position = e.target.getBoundingClientRect();
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    setStatusDropdownPosition({
-      top: position.bottom + scrollTop,
-      left: position.left,
-    });
-    setActiveDropdown("status");
+    if (currentUserDevice === "desktop") {
+      const position = e.target.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setStatusDropdownPosition({
+        top: position.bottom + scrollTop,
+        left: position.left,
+      });
+      setActiveDropdown("status");
+    }
+    if (currentUserDevice === "mobile") {
+      setIsMobileMoreModalOpen(false);
+      setIsMobileChangeStatusModalOpen(true);
+    }
   };
 
   const handleDeleteFolder = () => {
@@ -114,6 +133,19 @@ const FolderWrapper = ({
     setCurrentStatus(status);
   }, [status]);
 
+  const folderMoreActionsOptions = [
+    {
+      optionName: "Change status",
+      icon: <SettingsIconDropdown className="dropdown-menu-icon" />,
+      onOptionClick: handleChangeStatusClick,
+    },
+    {
+      optionName: "Delete",
+      icon: <DeleteIconRed className="dropdown-menu-icon-red" />,
+      onOptionClick: () => setIsDeleteFolderModalOpen(true),
+    },
+  ];
+
   return (
     <div className="folder-wrapper">
       <FolderHeader
@@ -135,18 +167,7 @@ const FolderWrapper = ({
         <div ref={folderMoreIconRef}>
           <DropdownModalWrapper
             position={dropdownPosition}
-            options={[
-              {
-                optionName: "Change status",
-                icon: <SettingsIconDropdown className="dropdown-menu-icon"/>,
-                onOptionClick: handleChangeStatusClick,
-              },
-              {
-                optionName: "Delete",
-                icon: <DeleteIconRed className="dropdown-menu-icon-red"/>,
-                onOptionClick: () => setIsDeleteFolderModalOpen(true),
-              },
-            ]}
+            options={folderMoreActionsOptions}
           />
         </div>
       )}
@@ -158,6 +179,51 @@ const FolderWrapper = ({
             options={filteredStatusOptions}
           />
         </div>
+      )}
+
+      {/* Mobile open folder more modal */}
+      {currentUserDevice === "mobile" && isMobileMoreModalOpen && (
+        <MobileModalWrapper
+          isOpen={isMobileMoreModalOpen}
+          onClose={() => setIsMobileMoreModalOpen(false)}
+        >
+          <div className="mobile-options-list">
+            {folderMoreActionsOptions.map((option) => (
+              <div
+                key={option.optionName}
+                className={`mobile-option-item ${
+                  option.optionName === "Delete" ? "delete-option" : ""
+                }`}
+                onClick={option.onOptionClick}
+              >
+                {option.icon}
+                <span>{option.optionName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
+      )}
+
+      {/* Mobile change status */}
+      {currentUserDevice === "mobile" && isMobileChangeStatusModalOpen && (
+        <MobileModalWrapper
+          isOpen={isMobileChangeStatusModalOpen}
+          onClose={() => setIsMobileChangeStatusModalOpen(false)}
+        >
+          <div className="mobile-statuses-list">
+            {filteredStatusOptions.map((status) => (
+              <div
+                key={status.statusName}
+                className={`mobile-status-item ${
+                  status.statusName !== undefined ? status.statusName : ""
+                }`}
+                onClick={status.onOptionClick}
+              >
+                <span>{status.statusName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
       )}
 
       <DeleteModal

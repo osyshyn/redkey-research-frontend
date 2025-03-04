@@ -67,16 +67,17 @@
   }
 }
 
-
-
-
-
 @media screen and (max-width: 480px) {
   .custom-button {
-  
     font-size: 14px;
-   
-  }  
+  }
+
+  .add-research-mobile {
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
 }
 
 @media screen and (max-width: 375px) {

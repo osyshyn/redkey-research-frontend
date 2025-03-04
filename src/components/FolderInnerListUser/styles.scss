@@ -315,6 +315,10 @@
   color: $text-color-neutral;
   padding: 10px 6px;
 
+  &.delete-option {
+    color: $delete-red-color;
+  }
+
   &:hover {
     background: $secondary-background;
     border-radius: 8px;

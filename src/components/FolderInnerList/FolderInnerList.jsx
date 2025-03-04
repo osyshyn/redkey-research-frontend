@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
+import ReactDOM from "react-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,11 +16,13 @@ import {
 
 import { handleDownload, handleDownloadAll } from "../../utils/downloadHelpers";
 import { getReportTypeName } from "../../utils/userHelpers";
+import useDeviceType from "../../hooks/useDeviceType";
 
 import CustomButton from "../CustomButton/CustomButton";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
 import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearchModals";
+import MobileModalWrapper from "../MobileModalWrapper/MobileModalWrapper";
 
 import moreIcon from "../../assets/icons/more-icon.svg";
 import FolderIcon from "../../assets/icons/folder-icon.svg?react";
@@ -27,6 +30,8 @@ import DownloadIcon from "../../assets/icons/download-icon.svg?react";
 import DownloadLightGreyIcon from "../../assets/icons/download-icon-light-grey.svg?react";
 import deleteLightRedIcon from "../../assets/icons/delete-icon-light-red.svg";
 import DeleteIconRed from "../../assets/icons/delete-icon-red.svg?react";
+import ViewIcon from "../../assets/icons/view-icon.svg?react";
+import PenIcon from "../../assets/icons/pen-icon.svg?react";
 import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
@@ -43,8 +48,15 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
   const [isUploadResearchModalOpen, setIsUploadResearchModalOpen] =
     useState(false);
 
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [mobileMoreIconData, setMobileMoreIconData] = useState({
+    options: [],
+  });
+
   const dropdownRef = useRef(null);
   const parentContainerRef = useRef(null);
+
+  const currentUserDevice = useDeviceType();
 
   const dispatch = useDispatch();
   const folders = useSelector((state) => state.research.folders);
@@ -76,43 +88,94 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
   };
 
   const handleMoreClick = (e, item, index) => {
-    const position = e.target.getBoundingClientRect();
-    const parentPosition = parentContainerRef.current.getBoundingClientRect();
+    if (currentUserDevice === "desktop") {
+      const position = e.target.getBoundingClientRect();
+      const parentPosition = parentContainerRef.current.getBoundingClientRect();
 
-    const relativeTop = position.top - parentPosition.top - 80;
-    const relativeLeft = position.left - parentPosition.left - 150;
+      const relativeTop = position.top - parentPosition.top - 80;
+      const relativeLeft = position.left - parentPosition.left - 150;
 
-    if (activeDropdownIndex === index) {
-      setActiveDropdownIndex(null);
-    } else {
-      setActiveDropdownIndex(index);
-      setDropdownData({
-        position: {
-          top: relativeTop,
-          left: relativeLeft,
-        },
+      if (activeDropdownIndex === index) {
+        setActiveDropdownIndex(null);
+      } else {
+        setActiveDropdownIndex(index);
+        setDropdownData({
+          position: {
+            top: relativeTop,
+            left: relativeLeft,
+          },
+          options: [
+            {
+              optionName: "Download",
+              icon: <DownloadLightGreyIcon className="dropdown-menu-icon" />,
+              onOptionClick: () => {
+                handleDownload(item);
+                setActiveDropdownIndex(null);
+              },
+            },
+            {
+              optionName: "Delete",
+              icon: <DeleteIconRed className="dropdown-menu-icon-red" />,
+              onOptionClick: () => {
+                setDeleteType("single");
+                setItemToDelete(item);
+                setIsDeleteModalOpen(true);
+              },
+            },
+          ],
+        });
+      }
+      clearSelectedItems();
+    }
+    if (currentUserDevice === "mobile") {
+      e.stopPropagation();
+
+      setMobileMoreIconData({
         options: [
           {
+            optionName: "Edit",
+            icon: <PenIcon className="mobile-dropdown-menu-icon" />,
+            onOptionClick: () => {
+              setEditingResearch({ ...item, currentFolder });
+              setIsUploadResearchModalOpen(true);
+              clearSelectedItems();
+              setIsMobileModalOpen(false);
+            },
+          },
+          {
+            optionName: "View",
+            icon: <ViewIcon className="mobile-dropdown-menu-icon" />,
+            onOptionClick: () => {
+              handleViewClick(item);
+              clearSelectedItems();
+              setIsMobileModalOpen(false);
+            },
+          },
+          {
             optionName: "Download",
-            icon: <DownloadLightGreyIcon className="dropdown-menu-icon" />,
+            icon: <DownloadIcon className="mobile-dropdown-menu-icon" />,
             onOptionClick: () => {
               handleDownload(item);
-              setActiveDropdownIndex(null);
+              clearSelectedItems();
+              setIsMobileModalOpen(false);
             },
           },
           {
             optionName: "Delete",
-            icon: <DeleteIconRed className="dropdown-menu-icon-red" />,
+            icon: <DeleteIconRed className="mobile-dropdown-menu-icon-red" />,
             onOptionClick: () => {
               setDeleteType("single");
               setItemToDelete(item);
+              clearSelectedItems();
+              setIsMobileModalOpen(false);
               setIsDeleteModalOpen(true);
             },
           },
         ],
       });
+
+      setIsMobileModalOpen(true);
     }
-    clearSelectedItems();
   };
 
   const handleSaveResearchData = useCallback(
@@ -147,7 +210,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
       {tableData.length > 0 ? (
         <div className="folder-inner-list" ref={parentContainerRef}>
           <table className="folder-table">
-            {selectedItems.length === 0 && (
+            {selectedItems.length === 0 && currentUserDevice === "desktop" && (
               <thead>
                 <tr>
                   <th className="folder-table-header">Research</th>
@@ -160,7 +223,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
             )}
 
             <tbody>
-              {selectedItems.length > 0 && (
+              {selectedItems.length > 0 && currentUserDevice === "desktop" && (
                 <tr className="selected-actions-panel">
                   <td colSpan="5">
                     <div className="selected-actions">
@@ -213,76 +276,117 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                 </tr>
               )}
 
-              {tableData.map((item, index) => (
-                <tr
-                  key={index}
-                  className={`table-data-body-row ${
-                    selectedItems.includes(index) ? "selected" : ""
-                  }`}
-                >
-                  <td className="table-data-item">
-                    <div className="research-column">
-                      <div className="custom-folder-checkbox">
-                        <input
-                          type="checkbox"
-                          id={`checkbox-${index}`}
-                          onChange={() => handleCheckboxChange(index)}
-                          checked={selectedItems.includes(index)}
-                        />
-                        <label htmlFor={`checkbox-${index}`}></label>
+              {/* Desktop*/}
+              {currentUserDevice === "desktop" &&
+                tableData.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`table-data-body-row ${
+                      selectedItems.includes(index) ? "selected" : ""
+                    }`}
+                  >
+                    <td className="table-data-item">
+                      <div className="research-column">
+                        <div className="custom-folder-checkbox">
+                          <input
+                            type="checkbox"
+                            id={`checkbox-${index}`}
+                            onChange={() => handleCheckboxChange(index)}
+                            checked={selectedItems.includes(index)}
+                          />
+                          <label htmlFor={`checkbox-${index}`}></label>
+                        </div>
+                        <div className="text-block">
+                          <p className="research-title">{item.title}</p>
+                          <p className="published-date">
+                            Published on{" "}
+                            {new Date(
+                              item.created_at || Date.now()
+                            ).toLocaleDateString("en-US")}
+                          </p>
+                        </div>
                       </div>
-                      <div className="text-block">
-                        <p className="research-title">{item.title}</p>
-                        <p className="published-date">
+                    </td>
+                    <td className="table-data-item">
+                      {getReportTypeName(item.report_type)}
+                    </td>
+                    <td className="table-data-item">
+                      {item.creator.first_name} {item.creator.last_name}
+                    </td>
+                    <td className="table-data-item">
+                      {new Date(item.publication_date).toLocaleDateString(
+                        "en-US"
+                      )}
+                    </td>
+                    <td className="table-data-item">
+                      <div className="actions-column">
+                        <div
+                          className="admin-portal-action-btn"
+                          onClick={() => {
+                            setEditingResearch({ ...item, currentFolder });
+                            setIsUploadResearchModalOpen(true);
+                            clearSelectedItems();
+                          }}
+                        >
+                          Edit
+                        </div>
+                        <div
+                          className="admin-portal-action-btn"
+                          onClick={() => {
+                            handleViewClick(item);
+                            clearSelectedItems();
+                          }}
+                        >
+                          View
+                        </div>
+                        <img
+                          src={moreIcon}
+                          className="more-icon"
+                          onClick={(e) => handleMoreClick(e, item, index)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+
+              {/* Mobile */}
+              {currentUserDevice === "mobile" &&
+                tableData.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`table-data-body-row ${
+                      selectedItems.includes(index) ? "selected" : ""
+                    }`}
+                  >
+                    <td className="table-data-item">
+                      <div>
+                        <div className="research-column">
+                          <div className="custom-folder-checkbox">
+                            <input
+                              type="checkbox"
+                              id={`checkbox-${index}`}
+                              onChange={() => handleCheckboxChange(index)}
+                              checked={selectedItems.includes(index)}
+                            />
+                            <label htmlFor={`checkbox-${index}`}></label>
+                          </div>
+                          <p className="research-title">{item.title}</p>
+                        </div>
+                        <p className="mobile-publication-date">
                           Published on{" "}
                           {new Date(
                             item.created_at || Date.now()
                           ).toLocaleDateString("en-US")}
                         </p>
                       </div>
-                    </div>
-                  </td>
-                  <td className="table-data-item">
-                    {getReportTypeName(item.report_type)}
-                  </td>
-                  <td className="table-data-item">
-                    {item.creator.first_name} {item.creator.last_name}
-                  </td>
-                  <td className="table-data-item">
-                    {new Date(item.publication_date).toLocaleDateString(
-                      "en-US"
-                    )}
-                  </td>
-                  <td className="table-data-item">
-                    <div className="actions-column">
-                      <div
-                        className="admin-portal-action-btn"
-                        onClick={() => {
-                          setEditingResearch({ ...item, currentFolder });
-                          setIsUploadResearchModalOpen(true);
-                          clearSelectedItems();
-                        }}
-                      >
-                        Edit
-                      </div>
-                      <div
-                        className="admin-portal-action-btn"
-                        onClick={() => {
-                          handleViewClick(item);
-                          clearSelectedItems();
-                        }}
-                      >
-                        View
-                      </div>
                       <img
                         src={moreIcon}
                         className="more-icon"
                         onClick={(e) => handleMoreClick(e, item, index)}
                       />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
@@ -296,11 +400,33 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
           <div className="add-research-btn">
             <CustomButton
               label={"Add research"}
-              style={"red-shadow"}
+              style={"red-shadow add-research-mobile"}
               onClick={() => setIsUploadResearchModalOpen(true)}
             />
           </div>
         </div>
+      )}
+
+      {currentUserDevice === "mobile" && (
+        <MobileModalWrapper
+          isOpen={isMobileModalOpen}
+          onClose={() => setIsMobileModalOpen(false)}
+        >
+          <div className="mobile-options-list">
+            {mobileMoreIconData.options?.map((option) => (
+              <div
+                key={option.optionName}
+                className={`mobile-option-item ${
+                  option.optionName === "Delete" ? "delete-option" : ""
+                }`}
+                onClick={option.onOptionClick}
+              >
+                {option.icon}
+                <span>{option.optionName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
       )}
 
       {dropdownData && activeDropdownIndex !== null && (
@@ -314,7 +440,10 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
 
       <DeleteModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          clearSelectedItems();
+        }}
         itemToDelete={
           deleteType === "single"
             ? "the research"
@@ -354,6 +483,56 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
         onUpdateResearchData={handleUpdateResearchData}
         editingResearch={editingResearch}
       />
+
+      {/* mobile delete and download selected */}
+      {selectedItems.length > 0 &&
+        currentUserDevice === "mobile" &&
+        ReactDOM.createPortal(
+          <div className="mobile-selected-actions">
+            <div className="mobile-selected-items-wrapper">
+              <img
+                src={closeIcon}
+                alt="remove selected"
+                className="mobile-close-button-icon"
+                onClick={clearSelectedItems}
+              />
+              <p className="mobile-selected-folder-items">
+                {`${selectedItems.length} ${
+                  selectedItems.length === 1 ? "item" : "items"
+                } selected`}
+              </p>
+            </div>
+            <div className="mobile-folder-research-button-container">
+              <button
+                className="mobile-research-button download-all"
+                onClick={() =>
+                  handleDownloadAll(
+                    selectedItems.map((index) => tableData[index]),
+                    clearSelectedItems
+                  )
+                }
+              >
+                <DownloadIcon
+                  alt="Download all"
+                  className="mobile-button-icon download-all"
+                />
+              </button>
+              <button
+                className="mobile-research-button download-all"
+                onClick={() => {
+                  setDeleteType("multiple");
+                  setIsDeleteModalOpen(true);
+                }}
+              >
+                <DeleteIconRed
+                  alt="Delete all"
+                  className="mobile-button-icon mobile-dropdown-menu-icon-red"
+                />
+              </button>{" "}
+            </div>
+          </div>,
+          document.getElementById("mobile-portal")
+        )}
     </>
   );
 };

@@ -67,14 +67,20 @@ body {
     width: 16px;
     height: 16px;
   }
-  .mobile-dropdown-menu-icon  {
+  .mobile-dropdown-menu-icon {
     stroke: $text-color-neutral !important;
     width: 14px;
     height: 14px;
-  } .chosen-option-icon {
-    stroke:  $delete-red-color !important;
   }
-  
+  .mobile-dropdown-menu-icon-red {
+    stroke: $delete-red-color !important;
+    width: 14px;
+    height: 14px;
+  }
+  .chosen-option-icon {
+    stroke: $delete-red-color !important;
+  }
+
   .dropdown-menu-icon-red {
     stroke: $delete-red-color !important;
     width: 16px;
@@ -109,6 +115,11 @@ body {
   }
   .big-lock-icon {
     stroke: $text-color-accent !important;
+  }
+  .action-bar-plus-icon {
+    stroke: $home-page-light !important;
+    height: 12px;
+    width: 20px;
   }
 }
 
@@ -128,10 +139,15 @@ body {
     width: 14px;
     height: 14px;
   }
-  .chosen-option-icon {
-    stroke:  $delete-red-color !important;
+  .mobile-dropdown-menu-icon-red {
+    stroke: $delete-red-color !important;
+    width: 14px;
+    height: 14px;
   }
-  
+  .chosen-option-icon {
+    stroke: $delete-red-color !important;
+  }
+
   .dropdown-menu-icon-red {
     stroke: $delete-red-color !important;
     width: 16px;
@@ -166,5 +182,11 @@ body {
   }
   .big-lock-icon {
     stroke: $primary-color !important;
+  }
+
+  .action-bar-plus-icon {
+    stroke: $home-page-light !important;
+    height: 12px;
+    width: 20px;
   }
 }

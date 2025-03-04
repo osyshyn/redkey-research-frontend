@@ -160,6 +160,11 @@ const Header = () => {
     setIsResearchDropdownOpen((prev) => !prev);
   };
 
+  const handleNavigateToUserManagement = () => {
+    dispatch(clearResearchFilters());
+    navigate("/admin/user-management");
+  };
+
   const adminResearchDropdownOptions = [
     {
       optionName: "All",
@@ -344,10 +349,7 @@ const roleData = rolesConfig[user?.role]; */}
               className={`nav-link ${
                 location.pathname === "/admin/user-management" ? "active" : ""
               }`}
-              onClick={() => {
-                dispatch(clearResearchFilters());
-                navigate("/admin/user-management");
-              }}
+              onClick={handleNavigateToUserManagement}
             >
               User management
             </span>
@@ -375,9 +377,10 @@ const roleData = rolesConfig[user?.role]; */}
           onProfileClick={handleProfileClick}
           onContactUsClick={handleContactUsClick}
           onLogoutClick={handleLogoutClick}
+          onUserManagementClick={handleNavigateToUserManagement}
           currentUser={user}
           researchOptions={
-            user?.role === 3
+            user?.role === 1
               ? userResearchDropdownOptions
               : adminResearchDropdownOptions
           }

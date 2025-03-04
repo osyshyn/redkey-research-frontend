@@ -55,3 +55,88 @@
   width: 24px;
   height: 24px;
 }
+
+.mobile-statuses-list {
+  width: fit-content;
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.mobile-status-item {
+  font-family: $font-family-satoshi;
+  font-size: 12px;
+  font-weight: $font-weight-medium;
+  line-height: 18px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  gap: 5px;
+  cursor: pointer;
+
+  &.active {
+    color: $status-active-green;
+    background-color: rgba(37, 122, 0, 0.2);
+    border-radius: 20px;
+
+    &:hover {
+      background-color: rgba(28, 93, 1, 0.2);
+    }
+  }
+
+  &.closed {
+    color: $text-color-neutral;
+    background-color: $background-dark-light;
+    border-radius: 20px;
+
+    &:hover {
+      background-color: #424242;
+    }
+  }
+
+  &.rejected {
+    color: #ff8b8b;
+    background-color: rgba(231, 0, 0, 0.2);
+    border-radius: 20px;
+
+    &:hover {
+      background-color: rgba(122, 0, 0, 0.2);
+    }
+  }
+
+  &.watchlist {
+    color: #00c5ff;
+    background-color: rgba(33, 88, 205, 0.2);
+    border-radius: 20px;
+
+    &:hover {
+      background-color: rgba(4, 45, 134, 0.3);
+    }
+  }
+}
+
+[data-theme-mode="light"] {
+  .mobile-status-item {
+    &.closed {
+      color: $background-dark-light;
+      background-color: $input-border-gray-darker;
+      &:hover {
+        background-color: $secondary-color;
+      }
+    }
+    &.rejected {
+      color: #ff4949;
+      background-color: rgba(231, 0, 0, 0.2);
+      &:hover {
+        background-color: rgba(122, 0, 0, 0.2);
+      }
+    }
+    &.watchlist {
+      color: #3083cc;
+      background-color: rgba(33, 88, 205, 0.2);
+      &:hover {
+        background-color: rgba(4, 45, 134, 0.3);
+      }
+    }
+  }
+}

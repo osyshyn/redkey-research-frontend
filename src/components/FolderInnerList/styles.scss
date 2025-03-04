@@ -374,6 +374,12 @@
 }
 
 
+.mobile-folder-research-button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 @media screen and (max-width: 480px) {
   .folder-icon {
     width: 35px;
@@ -383,7 +389,7 @@
 
   .folder-table-empty {
     max-height: 280px;
-    min-height: 150px;
+    min-height: 200px;
   }
 
   .folder-table-empty p {

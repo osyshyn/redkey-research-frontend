@@ -6,6 +6,8 @@ import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearc
 import NewUserModal from "../NewUserModal/NewUserModal";
 import FirmsModal from "../FirmsModal/FirmsModal";
 
+import MobileActionAddIcon from "../../assets/icons/mobile-action-add-button.svg?react";
+
 import "./styles.scss";
 
 const ActionBar = ({
@@ -17,6 +19,8 @@ const ActionBar = ({
 }) => {
   const [isFirmsModalOpen, setIsFirmsModalOpen] = useState(false);
   const currentUserDevice = useDeviceType();
+  console.log("currentUserDevice", currentUserDevice, buttons);
+
   return (
     <>
       <div className="action-bar">
@@ -28,25 +32,37 @@ const ActionBar = ({
             {...searchPanelProps}
             componentType={componentType}
           />
-          <div className="action-bar-buttons">
-            {buttons.map((btn, idx) => (
-              <CustomButton
-                key={idx}
-                label={btn.label}
-                style={btn.style}
-                onClick={btn.onClick}
-              />
-            ))}
-          </div>
+          {/* desktop buttons */}
+          {currentUserDevice === "desktop" && (
+            <div className="action-bar-buttons">
+              {buttons.map((btn, idx) => (
+                <CustomButton
+                  key={idx}
+                  label={btn.label}
+                  style={btn.style}
+                  onClick={btn.onClick}
+                />
+              ))}
+            </div>
+          )}
+          {/* mobile buttons */}
+          {currentUserDevice === "mobile" && (
+            <CustomButton
+              label={<MobileActionAddIcon className="action-bar-plus-icon" />}
+              style="red-shadow"
+            />
+          )}
         </div>
-        {componentType === "admin_portal" && (
-          <FolderAndResearchModals {...modalsProps} />
-        )}
-        {componentType === "user_management" && (
-          <NewUserModal {...modalsProps} />
-        )}
+        {currentUserDevice === "desktop" &&
+          componentType === "admin_portal" && (
+            <FolderAndResearchModals {...modalsProps} />
+          )}
+        {currentUserDevice === "desktop" &&
+          componentType === "user_management" && (
+            <NewUserModal {...modalsProps} />
+          )}
       </div>
-      {componentType === "admin_portal" && (
+      {currentUserDevice === "desktop" && componentType === "admin_portal" && (
         <div className="firm-button">
           <CustomButton
             label="+ Add/remove research team"

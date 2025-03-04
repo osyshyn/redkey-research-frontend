@@ -16,6 +16,7 @@ import FolderInnerList from "../../../components/FolderInnerList/FolderInnerList
 import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
 import Loader from "../../../components/Loader/Loader";
+import DocumentPreview from "../../../components/DocumentPreview/DocumentPreview";
 
 import closeIcon from "../../../assets/icons/close-icon.svg";
 
@@ -49,8 +50,6 @@ const AdminPortal = () => {
   useEffect(() => {
     dispatch(getFirms());
   }, [dispatch]);
-
-  
 
   const folderOptions = useMemo(
     () =>
@@ -177,12 +176,14 @@ const AdminPortal = () => {
     <>
       <Header />
       <ActionBar
-      title={
-  currentFirm?.name === "All"
-    ? "All Researches"
-    : `${currentFirm?.name.charAt(0).toUpperCase() + currentFirm?.name.slice(1)} Research`
-}
-
+        title={
+          currentFirm?.name === "All"
+            ? "All Researches"
+            : `${
+                currentFirm?.name.charAt(0).toUpperCase() +
+                currentFirm?.name.slice(1)
+              } Research`
+        }
         componentType={"admin_portal"}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
@@ -265,24 +266,11 @@ const AdminPortal = () => {
             {showPreview &&
               selectedDocument &&
               selectedDocument?.file?.type === "file" && (
-                <div className="document-preview">
-                  <img
-                    src={closeIcon}
-                    alt="Close"
-                    className="close-icon"
-                    onClick={closePreview}
-                  />
-                  <Document
-                    file={`${import.meta.env.VITE_API_URL}/${
-                      selectedDocument.file.path
-                    }`}
-                    onLoadSuccess={onLoadSuccess}
-                  >
-                    {Array.from(new Array(numPages), (el, index) => (
-                      <Page key={index} pageNumber={index + 1} scale={0.9} />
-                    ))}
-                  </Document>
-                </div>
+                <DocumentPreview
+                  showPreview={showPreview}
+                  selectedDocument={selectedDocument}
+                  onClose={closePreview}
+                />
               )}
           </div>
 
