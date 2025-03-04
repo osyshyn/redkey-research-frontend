@@ -26,11 +26,13 @@ const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
   };
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    if (currentUserDevice === "mobile") {
+      document.body.style.overflow = "hidden";
+    }
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, []);
+  }, [currentUserDevice]);
 
   if (currentUserDevice === "mobile") {
     return ReactDOM.createPortal(

@@ -325,6 +325,13 @@
   }
 }
 
+.research-title {
+  max-width: 230px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 @media screen and (max-width: 480px) {
   .folder-inner-list {
     max-height: 280px;

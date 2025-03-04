@@ -44,3 +44,37 @@ export const reportTypeOptions = [
   { value: REPORT_TYPES.WATCH_LIST_WEEKLY, label: "Watch List Weekly" },
   { value: REPORT_TYPES.REJECT, label: "Reject" },
 ];
+
+
+
+
+export const dropdownFolderOptions = [
+  {
+    icon: "company-filter", 
+    label: "Companies",
+    value: "companies",
+  },
+  {
+    icon: "status-filter", 
+    label: "Status",
+    value: "status",
+  },
+  {
+    icon: "calendar-filter", 
+    label: "Initiation date",
+    value: "initiation_date",
+  },
+];
+
+export const dropdownUserManagementOptions = [
+  {
+    icon: "registered-by", 
+    label: "Registered by",
+    value: "registered_by",
+  },
+  {
+    icon: "status-filter", 
+    label: "Accesses",
+    value: "accesses",
+  },
+];

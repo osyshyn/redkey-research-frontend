@@ -279,3 +279,21 @@ h2.react-datepicker__current-month {
     }
   }
 }
+
+@media screen and (max-width: 480px) {
+  .react-datepicker__input {
+    padding-left: 15px !important;
+    font-size: 10px !important;
+  }
+
+  .react-datepicker-popper {
+    position: absolute;
+    left: -50px !important;
+    top: 0px;
+    transform: translate(-50.5px, 42.5px);
+    will-change: transform;
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

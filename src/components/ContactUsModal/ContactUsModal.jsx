@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-
+import useDeviceType from "../../hooks/useDeviceType";
 import CustomModal from "../CustomModal/CustomModal";
 
 import PhoneIcon from "../../assets/icons/phone-icon.svg?react";
@@ -12,6 +12,8 @@ const ContactUsModal = ({ isOpen = false, onClose = () => {} }) => {
   const modalRoot = document.getElementById("modal-root");
   const phoneNumber = "646-631-0560";
   const [copySuccess, setCopySuccess] = useState("Copy");
+
+  const currentUserDevice = useDeviceType();
 
   const handleCopy = async () => {
     try {
@@ -31,8 +33,13 @@ const ContactUsModal = ({ isOpen = false, onClose = () => {} }) => {
           <CustomModal
             isOpen={isOpen}
             onClose={onClose}
-            modalTitle={"Any questions? Contact us."}
+            modalTitle={
+              currentUserDevice === "desktop"
+                ? "Any questions? Contact us."
+                : "Contact us"
+            }
           >
+            {currentUserDevice === "mobile" && <p className="mobile-contact-us-title-info">Any questions? Contact us.</p>}
             <p className="contact-us-under-title-info">
               Our team of specialists is available during business hours.
             </p>

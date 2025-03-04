@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useDeviceType from "../../hooks/useDeviceType";
 import { requestGetAccess } from "../../store/slices/authSlice";
@@ -12,11 +12,20 @@ import "./styles.scss";
 
 const UserSubscriptionModal = () => {
   const [isAccessRequested, setIsAccessRequested] = useState(false);
+  const [showAccessMessage, setShowAccessMessage] = useState(false);
 
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.auth);
   const currentFirm = useSelector((state) => state.firm.currentFirm);
   const currentUserDevice = useDeviceType();
+
+  useEffect(() => {
+    if (isAccessRequested) {
+      setShowAccessMessage(true);
+      const timer = setTimeout(() => setShowAccessMessage(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAccessRequested]);
 
   const handleRequestAccess = () => {
     dispatch(requestGetAccess(currentFirm))
@@ -115,9 +124,16 @@ const UserSubscriptionModal = () => {
             </button>
           </div>
         </div>
-        {isAccessRequested && (
+        {/* {isAccessRequested && (
           <div className="skeleton-access-message">
             <img src={redDoneCircleIcon} />
+            Thank you for inquiry. We will reach out to you soon.
+          </div>
+        )} */}
+
+        {showAccessMessage && (
+          <div className="skeleton-access-message">
+            <img src={redDoneCircleIcon} alt="Success" />
             Thank you for inquiry. We will reach out to you soon.
           </div>
         )}

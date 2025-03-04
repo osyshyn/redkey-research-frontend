@@ -128,3 +128,20 @@
   width: 14px;
   height: 14px;
 }
+
+@media screen and (max-width: 480px) {
+  .custom-dropdown-field {
+    font-size: 12px !important;
+  }
+
+  .custom-dropdown-menu {
+    max-height: 150px !important;
+
+    .custom-dropdown-item {
+      font-size: 12px !important;
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

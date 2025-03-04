@@ -65,7 +65,15 @@
   height: 16px;
 }
 
-
-.input-hide-label{
+.input-hide-label {
   visibility: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  .custom-input {
+    margin-top: 40px;
+  }
+}
+
+@media screen and (max-width: 375px) {
 }

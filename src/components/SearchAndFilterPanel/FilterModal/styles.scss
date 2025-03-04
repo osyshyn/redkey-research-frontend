@@ -25,7 +25,6 @@
   gap: 24px;
 }
 
-
 .quick-filters {
   width: 100%;
   display: flex;
@@ -67,7 +66,6 @@
   cursor: pointer;
 }
 
-
 .all-filters {
   width: 100%;
   display: flex;
@@ -106,7 +104,7 @@
 }
 
 .add-filter-button {
-  font-family: Satoshi;
+  font-family: $font-family-satoshi;
   font-size: 14px;
   font-weight: $font-weight-medium;
   line-height: 16px;
@@ -115,19 +113,16 @@
   margin-top: 20px;
 }
 
-
 .filter-modal-footer {
   width: 97%;
   display: flex;
   justify-content: flex-end;
-  margin-top: 21px;
+  margin-top: 40px;
 }
-
 
 .apply-filters-button:hover {
   background-color: $secondary-background;
 }
-
 
 .close-modal-button {
   position: absolute;
@@ -138,4 +133,26 @@
   font-size: 20px;
   color: $white;
   cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  .filter-modal-clear-all {
+    margin-top: 24px;
+    top: 0;
+  }
+
+  .clear-all {
+    font-size: 12px;
+  }
+
+  .filter-option {
+    grid-template-columns: 45% 45% 5%;
+  }
+
+  .add-filter-button {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 375px) {
 }
