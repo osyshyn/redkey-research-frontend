@@ -90,7 +90,7 @@ const MobileDropdownMenu = ({
             />
             <span>Profile</span>
           </div>
-          {currentUser?.role === 3 && (
+          {currentUser?.role === 1 && (
             <div className="mobile-menu-option-item" onClick={onContactUsClick}>
               <PhoneIcon
                 className="mobile-dropdown-menu-icon"

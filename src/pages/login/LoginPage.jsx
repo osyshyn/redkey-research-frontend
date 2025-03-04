@@ -40,9 +40,9 @@ const LoginPage = () => {
     if (status === "succeeded" && user) {
       console.log('UUUUUU', user);
       
-      if (user.role === 1 || user.role === 2) {
+      if (user.role === 3 || user.role === 2) {
         navigate("/admin/portal");
-      } else if (user.role === 3) {
+      } else if (user.role === 1) {
         navigate("/user/portal");
       } 
     }
