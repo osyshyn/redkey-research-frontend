@@ -311,7 +311,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                       {getReportTypeName(item.report_type)}
                     </td>
                     <td className="table-data-item">
-                      {item.creator.first_name} {item.creator.last_name}
+                      {item?.creator?.first_name} {item?.creator?.last_name}
                     </td>
                     <td className="table-data-item">
                       {new Date(item.publication_date).toLocaleDateString(
