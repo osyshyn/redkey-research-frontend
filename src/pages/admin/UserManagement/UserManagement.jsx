@@ -8,11 +8,18 @@ import {
 import { createNewUser } from "../../../store/slices/userManagementSlice";
 import { clearUserManagementFilters } from "../../../store/slices/filterSlice";
 
+import useDeviceType from "../../../hooks/useDeviceType";
+
 import Header from "../../../components/Header/Header";
 import UserManagementTable from "../../../components/UserManagementTable/UserManagementTable";
 import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
 import Loader from "../../../components/Loader/Loader";
+import MobileModalWrapper from "../../../components/MobileModalWrapper/MobileModalWrapper";
+
+import MobileActionAddIcon from "../../../assets/icons/mobile-action-add-button.svg?react";
+import PlusIcon from "../../../assets/icons/plus-icon.svg?react";
+import FileUploadIcon from "../../../assets/icons/file-upload-icon.svg?react";
 
 import "./styles.scss";
 
@@ -23,7 +30,13 @@ const UserManagement = () => {
 
   const [isCreateNewUserModalOpen, setIsCreateNewUserModalOpen] =
     useState(false);
+
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [mobileActionAddData, setMobileActionAddData] = useState({
+    options: [],
+  });
   const dispatch = useDispatch();
+  const currentUserDevice = useDeviceType();
 
   const { users, loading, error } = useSelector(
     (state) => state.userManagement
@@ -106,6 +119,32 @@ const UserManagement = () => {
     setCurrentPage(1);
   };
 
+  const handleOpenMobileModal = () => {
+    // e.stopPropagation();
+
+    setMobileActionAddData({
+      options: [
+        {
+          optionName: "Create new user",
+          icon: <PlusIcon className="mobile-dropdown-menu-icon" />,
+          onOptionClick: () => {
+            setIsCreateNewUserModalOpen(true)
+          },
+        },
+        {
+          optionName: "Export report",
+          icon: <FileUploadIcon className="mobile-dropdown-menu-icon" />,
+          onOptionClick: () => {
+            const event = new CustomEvent("trigger-pdf-export");
+            document.dispatchEvent(event);
+          },
+        },
+      ],
+    });
+
+    setIsMobileModalOpen(true);
+  };
+
   return (
     <>
       <Header />
@@ -134,6 +173,11 @@ const UserManagement = () => {
             onClick: () => setIsCreateNewUserModalOpen(true),
           },
         ]}
+        mobileButton={{
+          label: <MobileActionAddIcon className="action-bar-plus-icon" />,
+          style: "red-shadow",
+          onClick: handleOpenMobileModal,
+        }}
         modalsProps={{
           isCreateNewUserModalOpen: isCreateNewUserModalOpen,
           onCloseCreateNewUserModal: () => setIsCreateNewUserModalOpen(false),
@@ -145,26 +189,63 @@ const UserManagement = () => {
       ) : (
         <>
           {currentUsers.length > 0 ? (
-            <div className="user-management-table-wrapper">
-              <UserManagementTable
-                tableData={currentUsers}
-                onUpdateUser={handleUpdateUser}
-              />
-              {currentUsers.length >= 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalItems={searchInFilteredUsers.length}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={handlePageChange}
-                  onItemsPerPageChange={handleItemsPerPageChange}
-                  itemsPerPageOptions={[8, 16, 24]}
+            <>
+              <div className="user-management-table-wrapper">
+                <UserManagementTable
+                  tableData={currentUsers}
+                  onUpdateUser={handleUpdateUser}
                 />
+                {currentUsers.length >= 1 &&
+                  currentUserDevice === "desktop" && (
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={searchInFilteredUsers.length}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={handlePageChange}
+                      onItemsPerPageChange={handleItemsPerPageChange}
+                      itemsPerPageOptions={[8, 16, 24]}
+                    />
+                  )}
+              </div>
+              {currentUsers.length >= 1 && currentUserDevice === "mobile" && (
+                <div className="pagination-user-management-container">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalItems={searchInFilteredUsers.length}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                    itemsPerPageOptions={[8, 16, 24]}
+                  />
+                </div>
               )}
-            </div>
+            </>
           ) : (
             <p className="no-users-message">No users available to display</p>
           )}
         </>
+      )}
+
+      {currentUserDevice === "mobile" && (
+        <MobileModalWrapper
+          isOpen={isMobileModalOpen}
+          onClose={() => setIsMobileModalOpen(false)}
+        >
+          <div className="mobile-options-list">
+            {mobileActionAddData.options?.map((option) => (
+              <div
+                key={option.optionName}
+                className={`mobile-option-item ${
+                  option.optionName === "Delete" ? "delete-option" : ""
+                }`}
+                onClick={option.onOptionClick}
+              >
+                {option.icon}
+                <span>{option.optionName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
       )}
     </>
   );

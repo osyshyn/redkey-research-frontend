@@ -10,12 +10,12 @@ const CustomDropdown = ({
   onChange,
   value,
   showLabel = "",
-  iconComponent: IconComponent = null
+  iconComponent: IconComponent = null,
+  filterStyles = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log('iconComponent', IconComponent);
-  
+  console.log("iconComponent", IconComponent);
 
   const handleOptionClick = (option) => {
     onChange(option);
@@ -28,7 +28,7 @@ const CustomDropdown = ({
         <label className={`custom-dropdown-label ${showLabel}`}>{label}</label>
       )}
       <div
-        className="custom-dropdown-field"
+        className={`custom-dropdown-field ${filterStyles}`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <div className="dropdown-icon-value-container">
@@ -51,7 +51,7 @@ const CustomDropdown = ({
           {options.map((option, index) => (
             <div
               key={option.value?.id ? option.value.id : option.value || index}
-              className="custom-dropdown-item"
+              className={`custom-dropdown-item ${filterStyles}`}
               onClick={() => handleOptionClick(option)}
             >
               {option.label || option}

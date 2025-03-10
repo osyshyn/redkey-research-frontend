@@ -159,6 +159,7 @@ const FilterModal = ({
                 onChange={(option) => handleFilterTypeChange(index, option)}
                 showLabel="hide-label"
                 iconComponent={iconComponents[filter.type?.icon]}
+                filterStyles="filter-modal"
               />
 
               {filter.type?.value === "initiation_date" ? (
@@ -175,6 +176,7 @@ const FilterModal = ({
                   onChange={(dates) => handleFilterValueChange(index, dates)}
                   showLabel="date-picker-hide-label"
                   isRange={true}
+                  filterStyles="filter-modal"
                 />
               ) : (
                 <CustomDropdown
@@ -194,6 +196,7 @@ const FilterModal = ({
                   value={filter.value}
                   onChange={(option) => handleFilterValueChange(index, option)}
                   showLabel="hide-label"
+                  filterStyles="filter-modal"
                 />
               )}
 

@@ -5,8 +5,11 @@ import CustomButton from "../CustomButton/CustomButton";
 import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearchModals";
 import NewUserModal from "../NewUserModal/NewUserModal";
 import FirmsModal from "../FirmsModal/FirmsModal";
+import MobileModalWrapper from "../MobileModalWrapper/MobileModalWrapper";
 
-import MobileActionAddIcon from "../../assets/icons/mobile-action-add-button.svg?react";
+// import MobileActionAddIcon from "../../assets/icons/mobile-action-add-button.svg?react";
+// import FileUploadIcon from "../../assets/icons/file-upload-icon.svg?react";
+// import FolderIcon from "../../assets/icons/folder-icon.svg?react";
 
 import "./styles.scss";
 
@@ -15,9 +18,17 @@ const ActionBar = ({
   componentType = "",
   searchPanelProps,
   buttons = [],
+  mobileButton = {},
   modalsProps = {},
+  adminDesktopAddFirmProps = {},
 }) => {
-  const [isFirmsModalOpen, setIsFirmsModalOpen] = useState(false);
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [mobileActionAddData, setMobileActionAddData] = useState({
+    options: [],
+  });
+
+  const { setIsFirmsModalOpen } = adminDesktopAddFirmProps;
+
   const currentUserDevice = useDeviceType();
   console.log("currentUserDevice", currentUserDevice, buttons);
 
@@ -48,19 +59,18 @@ const ActionBar = ({
           {/* mobile buttons */}
           {currentUserDevice === "mobile" && (
             <CustomButton
-              label={<MobileActionAddIcon className="action-bar-plus-icon" />}
-              style="red-shadow"
+              label={mobileButton.label}
+              style={mobileButton.style}
+              onClick={mobileButton.onClick}
             />
           )}
         </div>
-        {currentUserDevice === "desktop" &&
-          componentType === "admin_portal" && (
-            <FolderAndResearchModals {...modalsProps} />
-          )}
-        {currentUserDevice === "desktop" &&
-          componentType === "user_management" && (
-            <NewUserModal {...modalsProps} />
-          )}
+        {componentType === "admin_portal" && (
+          <FolderAndResearchModals {...modalsProps} />
+        )}
+        {componentType === "user_management" && (
+          <NewUserModal {...modalsProps} />
+        )}
       </div>
       {currentUserDevice === "desktop" && componentType === "admin_portal" && (
         <div className="firm-button">
@@ -74,11 +84,26 @@ const ActionBar = ({
         </div>
       )}
 
-      {isFirmsModalOpen && (
-        <FirmsModal
-          isOpen={isFirmsModalOpen}
-          onClose={() => setIsFirmsModalOpen(false)}
-        />
+      {currentUserDevice === "mobile" && (
+        <MobileModalWrapper
+          isOpen={isMobileModalOpen}
+          onClose={() => setIsMobileModalOpen(false)}
+        >
+          <div className="mobile-options-list">
+            {mobileActionAddData.options?.map((option) => (
+              <div
+                key={option.optionName}
+                className={`mobile-option-item ${
+                  option.optionName === "Delete" ? "delete-option" : ""
+                }`}
+                onClick={option.onOptionClick}
+              >
+                {option.icon}
+                <span>{option.optionName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
       )}
     </>
   );

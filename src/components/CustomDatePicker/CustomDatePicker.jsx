@@ -12,6 +12,7 @@ const CustomDatePicker = ({
   onChange,
   showLabel = "",
   isRange = false,
+  filterStyles = ""
 }) => {
   const [range, setRange] = useState([null, null]);
   const [startDate, endDate] = range;
@@ -46,7 +47,8 @@ const CustomDatePicker = ({
           selectsRange={isRange}
           dateFormat="dd/MM/yy"
           placeholderText={placeholder}
-          className="react-datepicker__input"
+          className={`react-datepicker__input ${filterStyles ? "filter-modal" : ""}`}
+          popperClassName={filterStyles ? "filter-modal" : ""}
           showMonthDropdown
           showYearDropdown
           yearDropdownItemNumber={5}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
+import useDeviceType from "../../hooks/useDeviceType";
 import CustomModal from "../CustomModal/CustomModal";
 import CustomInput from "../CustomInput/CustomInput";
 import CustomButton from "../CustomButton/CustomButton";
@@ -19,6 +20,8 @@ const ProfileSettingsModal = ({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [profileDataError, setProfileDataError] = useState("");
+
+  const currentUserDevice = useDeviceType();
 
   const modalRoot = document.getElementById("modal-root");
 
@@ -69,7 +72,13 @@ const ProfileSettingsModal = ({
             {mode === "profile" ? (
               // ======== PROFILE SETTINGS =========
               <>
-                <div className="profile-first-last-name">
+                <div
+                  className={`${
+                    currentUserDevice === "desktop"
+                      ? "profile-first-last-name"
+                      : ""
+                  }`}
+                >
                   <CustomInput
                     label="Name"
                     placeholder="First name"
@@ -91,7 +100,12 @@ const ProfileSettingsModal = ({
                         last_name: e.target.value,
                       })
                     }
-                    showLabel="input-hide-label"
+                    // showLabel="input-hide-label"
+                    showLabel={`${
+                    currentUserDevice === "desktop"
+                      ? "input-hide-label"
+                      : ""
+                  }`}
                   />
                 </div>
                 <CustomInput

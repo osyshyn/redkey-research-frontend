@@ -132,14 +132,14 @@
 }
 
 @media screen and (max-width: 480px) {
-  .custom-dropdown-field {
+  .custom-dropdown-field.filter-modal {
     font-size: 12px !important;
   }
 
   .custom-dropdown-menu {
     max-height: 150px !important;
 
-    .custom-dropdown-item {
+    .custom-dropdown-item.filter-modal {
       font-size: 12px !important;
     }
   }

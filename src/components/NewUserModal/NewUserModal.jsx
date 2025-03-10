@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getFirms } from "../../store/slices/firmSlice";
 
+import useDeviceType from "../../hooks/useDeviceType";
+
 import CustomModal from "../CustomModal/CustomModal";
 import CustomInput from "../CustomInput/CustomInput";
 import CustomDropdown from "../CustomDropdown/CustomDropdown";
@@ -34,14 +36,10 @@ const NewUserModal = ({
 
   const [userAccess, setUserAccess] = useState([]);
 
+  const currentUserDevice = useDeviceType();
+
   const dispatch = useDispatch();
   const firmsList = useSelector((state) => state.firm.firms);
-
-  // const userTypeOptions = [
-  //   { value: USER_TYPES.CLIENT, label: "Client" },
-  //   { value: USER_TYPES.ADMIN, label: "Admin" },
-  //   { value: USER_TYPES.SUPER_ADMIN, label: "Super admin" },
-  // ];
 
   useEffect(() => {
     dispatch(getFirms());
@@ -147,7 +145,11 @@ const NewUserModal = ({
             onClose={onCloseCreateNewUserModal}
             modalTitle={editingUser ? "Edit user" : "Create new user"}
           >
-            <div className="profile-first-last-name">
+            <div
+              className={`${
+                currentUserDevice === "desktop" ? "profile-first-last-name" : ""
+              }`}
+            >
               <CustomInput
                 label="Name"
                 placeholder="First name"
@@ -169,7 +171,9 @@ const NewUserModal = ({
                     last_name: e.target.value,
                   })
                 }
-                showLabel="input-hide-label"
+                showLabel={`${
+                  currentUserDevice === "desktop" ? "input-hide-label" : ""
+                }`}
               />
             </div>
             <CustomInput
@@ -184,7 +188,11 @@ const NewUserModal = ({
               }
             />
 
-            <div className="user-type-firm">
+            <div
+              className={`${
+                currentUserDevice === "desktop" ? "user-type-firm" : ""
+              }`}
+            >
               <CustomDropdown
                 label="User type"
                 placeholder="Select user type"

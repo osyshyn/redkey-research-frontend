@@ -281,12 +281,12 @@ h2.react-datepicker__current-month {
 }
 
 @media screen and (max-width: 480px) {
-  .react-datepicker__input {
+  .react-datepicker__input.filter-modal {
     padding-left: 15px !important;
     font-size: 10px !important;
   }
 
-  .react-datepicker-popper {
+  .react-datepicker-popper.filter-modal {
     position: absolute;
     left: -50px !important;
     top: 0px;

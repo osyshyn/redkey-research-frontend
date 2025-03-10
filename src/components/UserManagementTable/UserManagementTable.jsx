@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
 import { deleteUsers } from "../../store/slices/userManagementSlice";
+
+import useDeviceType from "../../hooks/useDeviceType";
 
 import CustomButton from "../CustomButton/CustomButton";
 import DeleteModal from "../DeleteModal/DeleteModal";
 import DropdownModalWrapper from "../DropdownModalWrapper/DropdownModalWrapper";
 import NewUserModal from "../NewUserModal/NewUserModal";
 import ChangeUserPasswordModal from "../ChangeUserPasswordModal/ChangeUserPasswordModal";
+import MobileModalWrapper from "../MobileModalWrapper/MobileModalWrapper";
 
 import { getUserTypeName } from "../../utils/userHelpers";
 import { generateUserReport } from "../../utils/pdfUtils";
@@ -36,11 +40,47 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
     useState(false);
   const [currentUserData, setCurrentUserData] = useState(null);
 
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [mobileMoreIconData, setMobileMoreIconData] = useState({
+    options: [],
+  });
+
   const dropdownRef = useRef(null);
   const parentContainerRef = useRef(null);
   const scrollRefs = useRef([]);
 
+  const currentUserDevice = useDeviceType();
+
   const dispatch = useDispatch();
+  const getDropdownOptions = (item) => [
+    {
+      optionName: "Edit profile and accesses",
+      icon: <PenIcon className="dropdown-menu-icon" />,
+      onOptionClick: () => {
+        setEditingUser(item);
+        setIsUpdateUserModalOpen(true);
+        clearSelectedItems();
+      },
+    },
+    {
+      optionName: "Change password",
+      icon: <PasswordIcon className="dropdown-menu-icon" />,
+      onOptionClick: () => {
+        setIsChangeUserPasswordModalOpen(true);
+        setCurrentUserData(item);
+        clearSelectedItems();
+      },
+    },
+    {
+      optionName: "Delete",
+      icon: <DeleteIconRed className="dropdown-menu-icon-red" />,
+      onOptionClick: () => {
+        setDeleteType("single");
+        setItemToDelete(item);
+        setIsDeleteModalOpen(true);
+      },
+    },
+  ];
 
   console.log("tableData", tableData);
 
@@ -83,53 +123,36 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
   const handleMoreClick = (e, item, index) => {
     console.log("e, item, index", e, item, index);
 
-    const position = e.target.getBoundingClientRect();
-    const parentPosition = parentContainerRef.current.getBoundingClientRect();
+    if (currentUserDevice === "desktop") {
+      const position = e.target.getBoundingClientRect();
+      const parentPosition = parentContainerRef.current.getBoundingClientRect();
 
-    const relativeTop = position.top - parentPosition.top + 110;
-    const relativeLeft = position.left - parentPosition.left - 210;
+      const relativeTop = position.top - parentPosition.top + 110;
+      const relativeLeft = position.left - parentPosition.left - 210;
 
-    if (activeDropdownIndex === index) {
-      setActiveDropdownIndex(null);
-    } else {
-      setActiveDropdownIndex(index);
-      setDropdownData({
-        position: {
-          top: relativeTop,
-          left: relativeLeft,
-        },
-        options: [
-          {
-            optionName: "Edit profile and accesses",
-            icon: <PenIcon className="dropdown-menu-icon" />,
-            onOptionClick: () => {
-              setEditingUser(item);
-              setIsUpdateUserModalOpen(true);
-              clearSelectedItems();
-            },
+      if (activeDropdownIndex === index) {
+        setActiveDropdownIndex(null);
+      } else {
+        setActiveDropdownIndex(index);
+        setDropdownData({
+          position: {
+            top: relativeTop,
+            left: relativeLeft,
           },
-          {
-            optionName: "Change password",
-            icon: <PasswordIcon className="dropdown-menu-icon" />,
-            onOptionClick: () => {
-              setIsChangeUserPasswordModalOpen(true);
-              setCurrentUserData(item);
-              clearSelectedItems();
-            },
-          },
-          {
-            optionName: "Delete",
-            icon: <DeleteIconRed className="dropdown-menu-icon-red" />,
-            onOptionClick: () => {
-              setDeleteType("single");
-              setItemToDelete(item);
-              setIsDeleteModalOpen(true);
-            },
-          },
-        ],
-      });
+          options: getDropdownOptions(item),
+        });
+      }
+      clearSelectedItems();
     }
-    clearSelectedItems();
+    if (currentUserDevice === "mobile") {
+      e.stopPropagation();
+
+      setMobileMoreIconData({
+        options: getDropdownOptions(item),
+      });
+
+      setIsMobileModalOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -145,13 +168,19 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
 
   return (
     <>
+      { currentUserDevice === "mobile" && (
+        <div className="mobile-user-management-table-header-wrapper">
+          <p className="mobile-user-management-table-header">Name</p>
+          <p className="mobile-user-management-table-header">Actions</p>
+        </div>
+      )}
       {tableData.length > 0 ? (
         <div
           className="user-management-table-container"
           ref={parentContainerRef}
         >
           <table className="user-management-table">
-            {selectedItems.length === 0 && (
+            {selectedItems.length === 0 && currentUserDevice === "desktop" && (
               <thead>
                 <tr>
                   <th className="user-management-table-header">Name</th>
@@ -166,7 +195,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
             )}
 
             <tbody>
-              {selectedItems.length > 0 && (
+              {selectedItems.length > 0 && currentUserDevice === "desktop" &&  (
                 <tr className="selected-actions-panel">
                   <td colSpan="7">
                     <div className="selected-actions">
@@ -205,114 +234,158 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
                 </tr>
               )}
 
-              {tableData.map((item, index) => (
-                <tr
-                  key={index}
-                  className={`table-data-body-row ${
-                    selectedItems.includes(index) ? "selected" : ""
-                  }`}
-                >
-                  <td className="table-data-item">
-                    <div className="user-column">
-                      <div className="custom-user-management-checkbox">
-                        <input
-                          type="checkbox"
-                          id={`checkbox-${index}`}
-                          onChange={() => handleCheckboxChange(index)}
-                          checked={selectedItems.includes(index)}
-                        />
-                        <label htmlFor={`checkbox-${index}`}></label>
+              {/* desktop */}
+              {currentUserDevice === "desktop" &&
+                tableData.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`table-data-body-row ${
+                      selectedItems.includes(index) ? "selected" : ""
+                    }`}
+                  >
+                    <td className="table-data-item">
+                      <div className="user-column">
+                        <div className="custom-user-management-checkbox">
+                          <input
+                            type="checkbox"
+                            id={`checkbox-${index}`}
+                            onChange={() => handleCheckboxChange(index)}
+                            checked={selectedItems.includes(index)}
+                          />
+                          <label htmlFor={`checkbox-${index}`}></label>
+                        </div>
+                        <div className="text-block">
+                          <p>
+                            {item.first_name} {item.last_name}
+                          </p>
+                          <p className="user-management-email">{item.email}</p>
+                        </div>
                       </div>
-                      <div className="text-block">
-                        <p>
-                          {item.first_name} {item.last_name}
-                        </p>
-                        <p className="user-management-email">{item.email}</p>
+                    </td>
+                    <td className="table-data-item">
+                      {item.company || "firm"}
+                    </td>
+                    <td className="table-data-item">
+                      {getUserTypeName(item.role)}
+                    </td>
+
+                    <td className="table-data-item">
+                      <div className="user-column">
+                        <div className="text-block">
+                          <p>
+                            {new Date(
+                              item.created_at || Date.now()
+                            ).toLocaleDateString("en-US")}
+                          </p>
+                          <p className="user-management-created-by">
+                            by {""}
+                            {item.creator
+                              ? `${item.creator.first_name} ${item.creator.last_name}`
+                              : `${item.first_name} ${item.last_name}`}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="table-data-item">{item.company || "firm"}</td>
-                  <td className="table-data-item">
-                    {getUserTypeName(item.role)}
-                  </td>
+                    </td>
 
-                  <td className="table-data-item">
-                    <div className="user-column">
-                      <div className="text-block">
-                        <p>
-                          {new Date(
-                            item.created_at || Date.now()
-                          ).toLocaleDateString("en-US")}
-                        </p>
-                        <p className="user-management-created-by">
-                          by {""}
-                          {item.creator
-                            ? `${item.creator.first_name} ${item.creator.last_name}`
-                            : `${item.first_name} ${item.last_name}`}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
+                    <td className="table-data-item">
+                      {item.last_login
+                        ? new Date(item.last_login).toLocaleDateString("en-US")
+                        : new Date(item.created_at).toLocaleDateString("en-US")}
+                    </td>
 
-                  <td className="table-data-item">
-                    {item.last_login
-                      ? new Date(item.last_login).toLocaleDateString("en-US")
-                      : new Date(item.created_at).toLocaleDateString("en-US")}
-                  </td>
+                    <td className="table-data-item">
+                      <div className="user-management-scroll-container">
+                        {item.access.length > 4 && (
+                          <button
+                            className="scroll-btn left"
+                            onClick={() => scroll(-100, index)}
+                          >
+                            <img src={arrowLeftIcon} alt="Scroll Left" />
+                          </button>
+                        )}
 
-                  <td className="table-data-item">
-                    <div className="user-management-scroll-container">
-                      {item.access.length > 4 && (
-                        <button
-                          className="scroll-btn left"
-                          onClick={() => scroll(-100, index)}
+                        <div
+                          className="user-management-access-list"
+                          ref={(el) => (scrollRefs.current[index] = el)}
                         >
-                          <img src={arrowLeftIcon} alt="Scroll Left" />
-                        </button>
-                      )}
+                          {item.access.length > 0 ? (
+                            item.access.map((access, idx) => (
+                              <div
+                                key={idx}
+                                className="user-management-access-item"
+                              >
+                                {access?.firm?.name}
+                              </div>
+                            ))
+                          ) : (
+                            <span className="user-management-no-data">
+                              No data
+                            </span>
+                          )}
+                        </div>
 
-                      <div
-                        className="user-management-access-list"
-                        ref={(el) => (scrollRefs.current[index] = el)}
-                      >
-                        {item.access.length > 0 ? (
-                          item.access.map((access, idx) => (
-                            <div
-                              key={idx}
-                              className="user-management-access-item"
-                            >
-                              {access?.firm?.name}
-                            </div>
-                          ))
-                        ) : (
-                          <span className="user-management-no-data">
-                            No data
-                          </span>
+                        {item.access.length > 4 && (
+                          <button
+                            className="scroll-btn right"
+                            onClick={() => scroll(100, index)}
+                          >
+                            <img src={arrowRightIcon} alt="Scroll Right" />
+                          </button>
                         )}
                       </div>
+                    </td>
 
-                      {item.access.length > 4 && (
-                        <button
-                          className="scroll-btn right"
-                          onClick={() => scroll(100, index)}
-                        >
-                          <img src={arrowRightIcon} alt="Scroll Right" />
-                        </button>
-                      )}
-                    </div>
-                  </td>
+                    <td className="table-data-item">
+                      <div className="actions-column">
+                        <img
+                          src={moreIcon}
+                          className="more-icon"
+                          onClick={(e) => handleMoreClick(e, item, index)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
 
-                  <td className="table-data-item">
-                    <div className="actions-column">
-                      <img
-                        src={moreIcon}
-                        className="more-icon"
-                        onClick={(e) => handleMoreClick(e, item, index)}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {/* mobile*/}
+              {currentUserDevice === "mobile" &&
+                tableData.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`table-data-body-row ${
+                      selectedItems.includes(index) ? "selected" : ""
+                    }`}
+                  >
+                    <td className="table-data-item">
+                      <div className="user-column">
+                        <div className="custom-user-management-checkbox">
+                          <input
+                            type="checkbox"
+                            id={`checkbox-${index}`}
+                            onChange={() => handleCheckboxChange(index)}
+                            checked={selectedItems.includes(index)}
+                          />
+                          <label htmlFor={`checkbox-${index}`}></label>
+                        </div>
+                        <div className="text-block">
+                          <p>
+                            {item.first_name} {item.last_name}
+                          </p>
+                          <p className="user-management-email">{item.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="table-data-item">
+                      <div className="actions-column">
+                        <img
+                          src={moreIcon}
+                          className="more-icon"
+                          onClick={(e) => handleMoreClick(e, item, index)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
@@ -330,6 +403,28 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
             />
           </div>
         </div>
+      )}
+
+      {currentUserDevice === "mobile" && (
+        <MobileModalWrapper
+          isOpen={isMobileModalOpen}
+          onClose={() => setIsMobileModalOpen(false)}
+        >
+          <div className="mobile-options-list">
+            {mobileMoreIconData.options?.map((option) => (
+              <div
+                key={option.optionName}
+                className={`mobile-option-item ${
+                  option.optionName === "Delete" ? "delete-option" : ""
+                }`}
+                onClick={option.onOptionClick}
+              >
+                {option.icon}
+                <span>{option.optionName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
       )}
 
       {dropdownData && activeDropdownIndex !== null && (
@@ -391,6 +486,41 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
           userData={currentUserData}
         />
       )}
+
+      {selectedItems.length > 0 &&
+        currentUserDevice === "mobile" &&
+        ReactDOM.createPortal(
+          <div className="mobile-selected-actions">
+            <div className="mobile-selected-items-wrapper">
+              <img
+                src={closeIcon}
+                alt="remove selected"
+                className="mobile-close-button-icon"
+                onClick={clearSelectedItems}
+              />
+              <p className="mobile-selected-folder-items">
+                {`${selectedItems.length} ${
+                  selectedItems.length === 1 ? "item" : "items"
+                } selected`}
+              </p>
+            </div>
+            <div className="mobile-folder-research-button-container">
+              <button
+                className="mobile-research-button download-all"
+                onClick={() => {
+                  setDeleteType("multiple");
+                  setIsDeleteModalOpen(true);
+                }}
+              >
+                <DeleteIconRed
+                  alt="Delete all"
+                  className="mobile-button-icon mobile-dropdown-menu-icon-red"
+                />
+              </button>
+            </div>
+          </div>,
+          document.getElementById("mobile-portal")
+        )}
     </>
   );
 };

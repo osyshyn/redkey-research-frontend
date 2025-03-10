@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
+import useDeviceType from "../../hooks/useDeviceType";
 import { useSelector, useDispatch } from "react-redux";
 import { resetCurrentFileId } from "../../store/slices/uploadSlice";
 import CustomModal from "../CustomModal/CustomModal";
@@ -32,6 +33,7 @@ const FolderAndResearchModals = ({
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
   const dispatch = useDispatch();
+  const currentUserDevice = useDeviceType();
 
   const currentFileId = useSelector((state) => state.upload.currentFileId);
   const firmsList = useSelector((state) => state.firm.firms);
@@ -153,7 +155,11 @@ const FolderAndResearchModals = ({
               value={researchTitle}
               onChange={(e) => setResearchTitle(e.target.value)}
             />
-            <div className="upload-company-firm">
+            <div
+              className={`${
+                currentUserDevice === "desktop" ? "upload-company-firm" : ""
+              }`}
+            >
               <CustomDropdown
                 label="Company"
                 placeholder="Select a company"
@@ -169,7 +175,11 @@ const FolderAndResearchModals = ({
                 onChange={(option) => setSelectedFirm(option)}
               />
             </div>
-            <div className="upload-modal-type-date">
+            <div 
+            className={`${
+                currentUserDevice === "desktop" ? "upload-modal-type-date" : ""
+              }`}
+            >
               <CustomDatePicker
                 label="Publication date"
                 placeholder="Select a date"

@@ -10,6 +10,9 @@ import {
   clearResearchFilters,
 } from "../../../store/slices/filterSlice";
 import { getFirms } from "../../../store/slices/firmSlice";
+
+import useDeviceType from "../../../hooks/useDeviceType";
+
 import Header from "../../../components/Header/Header";
 import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
 import FolderInnerList from "../../../components/FolderInnerList/FolderInnerList";
@@ -17,7 +20,13 @@ import Pagination from "../../../components/Pagination/Pagination";
 import ActionBar from "../../../components/ActionBar/ActionBar";
 import Loader from "../../../components/Loader/Loader";
 import DocumentPreview from "../../../components/DocumentPreview/DocumentPreview";
+import MobileModalWrapper from "../../../components/MobileModalWrapper/MobileModalWrapper";
+import FirmsModal from "../../../components/FirmsModal/FirmsModal";
 
+import MobileActionAddIcon from "../../../assets/icons/mobile-action-add-button.svg?react";
+import LoadIcon from "../../../assets/icons/load-icon.svg?react";
+import FolderIcon from "../../../assets/icons/folder-icon.svg?react";
+import PlusIcon from "../../../assets/icons/plus-icon.svg?react";
 import closeIcon from "../../../assets/icons/close-icon.svg";
 
 import { Document, Page, pdfjs } from "react-pdf";
@@ -40,12 +49,19 @@ const AdminPortal = () => {
   const [isUploadResearchModalOpen, setIsUploadResearchModalOpen] =
     useState(false);
 
+  const [isFirmsModalOpen, setIsFirmsModalOpen] = useState(false);
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [mobileActionAddData, setMobileActionAddData] = useState({
+    options: [],
+  });
+
   const dispatch = useDispatch();
 
   const { folders, foldersStatus } = useSelector((state) => state.research);
-
   const { researchFilters } = useSelector((state) => state.filters);
   const currentFirm = useSelector((state) => state.firm.currentFirm);
+
+  const currentUserDevice = useDeviceType();
 
   useEffect(() => {
     dispatch(getFirms());
@@ -172,6 +188,40 @@ const AdminPortal = () => {
     setShowPreview(false);
   };
 
+  const handleOpenMobileModal = () => {
+    // e.stopPropagation();
+
+    setMobileActionAddData({
+      options: [
+        {
+          optionName: "Upload research",
+          icon: <LoadIcon className="mobile-dropdown-menu-icon" />,
+          onOptionClick: () => {
+            setIsMobileModalOpen(false);
+            setIsUploadResearchModalOpen(true);
+          },
+        },
+        {
+          optionName: "Create folder",
+          icon: <FolderIcon className="mobile-dropdown-menu-icon" />,
+          onOptionClick: () => {
+            setIsMobileModalOpen(false);
+            setIsCreateFolderModalOpen(true);
+          },
+        },
+        {
+          optionName: "Add/remove research team",
+          icon: <PlusIcon className="mobile-dropdown-menu-icon" />,
+          onOptionClick: () => {
+            setIsFirmsModalOpen(true);
+          },
+        },
+      ],
+    });
+
+    setIsMobileModalOpen(true);
+  };
+
   return (
     <>
       <Header />
@@ -202,6 +252,11 @@ const AdminPortal = () => {
             onClick: () => setIsUploadResearchModalOpen(true),
           },
         ]}
+        mobileButton={{
+          label: <MobileActionAddIcon className="action-bar-plus-icon" />,
+          style: "red-shadow",
+          onClick: handleOpenMobileModal,
+        }}
         modalsProps={{
           isCreateFolderModalOpen,
           onCloseCreateFolderModal: () => setIsCreateFolderModalOpen(false),
@@ -211,6 +266,7 @@ const AdminPortal = () => {
           folderOptions,
           onSaveResearchData: handleSaveResearchData,
         }}
+        adminDesktopAddFirmProps={{ setIsFirmsModalOpen }}
       />
       {foldersStatus === "loading" ? (
         <Loader />
@@ -287,6 +343,35 @@ const AdminPortal = () => {
             </div>
           )}
         </>
+      )}
+
+      {currentUserDevice === "mobile" && (
+        <MobileModalWrapper
+          isOpen={isMobileModalOpen}
+          onClose={() => setIsMobileModalOpen(false)}
+        >
+          <div className="mobile-options-list">
+            {mobileActionAddData.options?.map((option) => (
+              <div
+                key={option.optionName}
+                className={`mobile-option-item ${
+                  option.optionName === "Delete" ? "delete-option" : ""
+                }`}
+                onClick={option.onOptionClick}
+              >
+                {option.icon}
+                <span>{option.optionName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
+      )}
+
+      {isFirmsModalOpen && (
+        <FirmsModal
+          isOpen={isFirmsModalOpen}
+          onClose={() => setIsFirmsModalOpen(false)}
+        />
       )}
     </>
   );

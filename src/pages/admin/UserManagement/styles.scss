@@ -55,3 +55,20 @@
   align-items: center;
   margin: 40px auto 0 auto;
 }
+
+.pagination-user-management-container {
+  padding: 0px 20px;
+}
+
+@media screen and (max-width: 480px) {
+  .user-management-table-wrapper {
+    flex: 1;
+    background: $primary-background;
+    margin: 14px 16px;
+    padding: 1px;
+    border-radius: $border-radius-medium;
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

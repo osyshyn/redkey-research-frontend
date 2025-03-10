@@ -351,6 +351,7 @@
   .folder-table-empty {
     max-height: 280px;
     min-height: 150px;
+    border-radius: 0 0 12px 12px !important;
   }
 
   .folder-table-empty p {
@@ -367,7 +368,6 @@
     align-items: self-end;
     padding: 24px 16px;
     height: 100px;
-    box-shadow: 0px 4px 6px #151515;
   }
 
   .mobile-selected-folder-items {

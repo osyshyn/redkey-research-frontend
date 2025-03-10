@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import useDeviceType from "../../hooks/useDeviceType";
 import closeIcon from "../../assets/icons/close-icon.svg";
 import backMobileIcon from "../../assets/icons/back-mobile-icon.svg";
@@ -7,6 +7,24 @@ import "./styles.scss";
 
 const CustomModal = ({ isOpen, onClose, modalTitle, style = {}, children }) => {
   const currentUserDevice = useDeviceType();
+
+  // for scroll purposes
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden"; // Блокируем скролл фона
+      document.body.style.position = "fixed";  // Фиксируем фон
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    }
+  
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    };
+  }, [isOpen]);
+  
+
   if (!isOpen) return null;
 
   return (

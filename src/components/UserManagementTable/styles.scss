@@ -358,6 +358,26 @@
   text-align: center;
 }
 
+.mobile-user-management-table-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  .mobile-user-management-table-header {
+    background-color: $primary-background;
+    color: $primary-color;
+    position: sticky;
+    top: -1px;
+    z-index: 1;
+    font-family: $font-family-satoshi;
+    font-size: 14px;
+    font-weight: $font-weight-bold;
+    line-height: 21px;
+    padding: 16.5px 20px;
+    text-align: left;
+    border-radius: 12px;
+  }
+}
+
 [data-theme-mode="light"] {
   .user-management-table {
     .user-column {
@@ -382,7 +402,35 @@
     }
   }
 
-.selected-actions-panel .selected-actions {
+  .selected-actions-panel .selected-actions {
     background-color: var(--input-border);
+  }
 }
+
+@media screen and (max-width: 480px) {
+  .user-management-table-container {
+    border-radius: 0 0 12px 12px;
+  }
+
+  tbody {
+    .table-data-body-row:first-child {
+      .table-data-item:first-child {
+        border-top-left-radius: 0 !important;
+      }
+      .table-data-item:last-child {
+        border-top-right-radius: 0 !important;
+      }
+    }
+    .table-data-body-row:last-child {
+      .table-data-item:first-child {
+        border-bottom-left-radius: 12px !important;
+      }
+      .table-data-item:last-child {
+        border-bottom-right-radius: 12px !important;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 375px) {
 }
