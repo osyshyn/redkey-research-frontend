@@ -70,13 +70,18 @@ const UserManagement = () => {
   });
 
   const searchInFilteredUsers = searchValue
-    ? filteredUsers.filter((user) =>
-        [user.first_name, user.last_name, user.email, user.company]
-          .filter(Boolean)
-          .some((field) =>
-            field.toLowerCase().includes(searchValue.toLowerCase())
-          )
-      )
+    ? filteredUsers.filter((user) => {
+        const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+        const normalizedSearch = searchValue.toLowerCase();
+
+        return (
+          [fullName, user.first_name, user.last_name, user.email, user.company]
+            .filter(Boolean)
+            .some((field) => field.toLowerCase().includes(normalizedSearch)) ||
+          fullName.startsWith(normalizedSearch) ||
+          fullName.includes(normalizedSearch)
+        );
+      })
     : filteredUsers;
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -128,7 +133,7 @@ const UserManagement = () => {
           optionName: "Create new user",
           icon: <PlusIcon className="mobile-dropdown-menu-icon" />,
           onOptionClick: () => {
-            setIsCreateNewUserModalOpen(true)
+            setIsCreateNewUserModalOpen(true);
           },
         },
         {

@@ -35,11 +35,18 @@ const FolderAndResearchModals = ({
   const [isFolderSaveDisabled, setIsFolderSaveDisabled] = useState(true);
   const [isDuplicateWarningOpen, setDuplicateWarningOpen] = useState(false);
 
+  const [folderNameError, setFolderNameError] = useState("");
+  const [researchNameError, setResearchNameError] = useState("");
+
+  const [hasFile, setHasFile] = useState(!!editingResearch?.file);
+
   const dispatch = useDispatch();
   const currentUserDevice = useDeviceType();
 
   const currentFileId = useSelector((state) => state.upload.currentFileId);
   const firmsList = useSelector((state) => state.firm.firms);
+
+  console.log("currentFileId", currentFileId);
 
   const firmsListOptions = useMemo(
     () =>
@@ -69,34 +76,75 @@ const FolderAndResearchModals = ({
     }
   }, [editingResearch]);
 
+  // useEffect(() => {
+  //   const isAllFieldsFilled =
+  //     researchTitle.trim() &&
+  //       !researchNameError &&
+  //       selectedFolder &&
+  //       selectedFirm &&
+  //       researchDate &&
+  //       reportType &&
+  //       (currentFileId !== null || hasFile || editingResearch?.file);
+  //   setIsSaveDisabled(!isAllFieldsFilled);
+  // }, [
+  //   researchTitle,
+  //   selectedFolder,
+  //   selectedFirm,
+  //   researchDate,
+  //   reportType,
+  //   currentFileId,
+  // hasFile, editingResearch?.file
+  // ]);
+
   useEffect(() => {
-    const isAllFieldsFilled =
-      (researchTitle.trim() &&
-        selectedFolder &&
-        selectedFirm &&
-        researchDate &&
-        reportType &&
-        currentFileId !== null) ||
-      editingResearch?.file;
-    setIsSaveDisabled(!isAllFieldsFilled);
+    const isMainFieldsFilled = 
+      researchTitle.trim() && 
+      !researchNameError && 
+      selectedFolder && 
+      selectedFirm && 
+      researchDate && 
+      reportType;
+  
+    const isFileValid = currentFileId !== null || hasFile;
+  
+    setIsSaveDisabled(!(isMainFieldsFilled && isFileValid));
   }, [
-    researchTitle,
+    researchTitle, 
+    researchNameError,
     selectedFolder,
     selectedFirm,
     researchDate,
     reportType,
     currentFileId,
+    hasFile
   ]);
 
   useEffect(() => {
-    const isFolderValid = folderName.trim().length > 0 && selectedFirmFolder;
+    const isFolderValid =
+      folderName.trim().length > 0 && selectedFirmFolder && !folderNameError;
     setIsFolderSaveDisabled(!isFolderValid);
-  }, [folderName, selectedFirmFolder]);
+  }, [folderName, selectedFirmFolder, folderNameError]);
 
   const handleFolderNameChange = (e) => {
     const value = e.target.value;
-    if (/^[a-zA-Z0-9 _.,-]*$/.test(value) && value.length <= 35) {
+
+    if (/^[a-zA-Z0-9 _.,-]*$/.test(value)) {
       setFolderName(value);
+      if (value.length > 40) {
+        setFolderNameError("Folder name cannot exceed 40 characters.");
+      } else {
+        setFolderNameError("");
+      }
+    }
+  };
+  const handleResearchNameChange = (e) => {
+    const value = e.target.value;
+
+    setResearchTitle(value);
+    if (value.length > 80) {
+      setResearchNameError("Research title cannot exceed 80 characters.");
+    } else {
+      setResearchNameError("");
     }
   };
 
@@ -124,6 +172,9 @@ const FolderAndResearchModals = ({
   };
 
   const handleSaveResearch = () => {
+    if (!currentFileId && !editingResearch?.file) {
+      return; 
+    }
     const researchData = {
       title: researchTitle,
       companyId: selectedFolder.value,
@@ -145,8 +196,11 @@ const FolderAndResearchModals = ({
     setResearchDate(null);
     setReportType(null);
     dispatch(resetCurrentFileId());
+    setHasFile(false);
     onCloseUploadResearchModal();
   };
+
+
 
   const modalRoot = document.getElementById("modal-root");
 
@@ -164,7 +218,11 @@ const FolderAndResearchModals = ({
               placeholder="Enter folder name"
               value={folderName}
               onChange={handleFolderNameChange}
+              error={folderNameError ? true : false}
             />
+            {folderNameError && (
+              <div className="error-text">{folderNameError}</div>
+            )}
             <CustomDropdown
               label="Firm"
               placeholder="Select a firm"
@@ -195,8 +253,12 @@ const FolderAndResearchModals = ({
               label="Title"
               placeholder="Enter research title"
               value={researchTitle}
-              onChange={(e) => setResearchTitle(e.target.value)}
+              onChange={handleResearchNameChange}
+              error={researchNameError ? true : false}
             />
+            {researchNameError && (
+              <div className="error-text">{researchNameError}</div>
+            )}
             <div
               className={`${
                 currentUserDevice === "desktop" ? "upload-company-firm" : ""
@@ -236,7 +298,7 @@ const FolderAndResearchModals = ({
                 onChange={(option) => setReportType(option)}
               />
             </div>
-            <FileUpload existingFile={editingResearch?.file || null} />
+            <FileUpload existingFile={editingResearch?.file || null}  onFileChange={setHasFile} />
 
             <div className="modal-actions-button">
               <CustomButton

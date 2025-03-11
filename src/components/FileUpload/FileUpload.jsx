@@ -12,7 +12,7 @@ import closeIcon from "../../assets/icons/close-icon.svg";
 
 import "./styles.scss";
 
-const FileUpload = ({ existingFile }) => {
+const FileUpload = ({ existingFile, onFileChange }) => {
   const dispatch = useDispatch();
   const currentFileId = useSelector((state) => state.upload.currentFileId);
 
@@ -20,13 +20,15 @@ const FileUpload = ({ existingFile }) => {
   const [uploadedFile, setUploadedFile] = useState(existingFile || null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isFileUploaded, setIsFileUploaded] = useState(!!existingFile);
+  const [formatError, setFormatError] = useState("");
 
   useEffect(() => {
     if (existingFile) {
       setUploadedFile(existingFile);
-      setIsFileUploaded(true);
+      setIsFileUploaded(true);       onFileChange?.(true);
     }
   }, [existingFile]);
+
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -40,10 +42,18 @@ const FileUpload = ({ existingFile }) => {
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
+
     const file = e.dataTransfer.files[0];
-    if (file) {
-      processFile(file);
+
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+      setFormatError("Only PDF files are allowed");
+      return;
     }
+
+    setFormatError("");
+    processFile(file);
   };
 
   const handleFileChange = (e) => {
@@ -82,6 +92,7 @@ const FileUpload = ({ existingFile }) => {
           dispatch(setCurrentFileId(response.payload.id));
         }
       });
+      onFileChange?.(true);
     };
 
     reader.readAsDataURL(file);
@@ -102,31 +113,36 @@ const FileUpload = ({ existingFile }) => {
     dispatch(resetCurrentFileId());
     setIsFileUploaded(false);
     setUploadedFile(null);
+    onFileChange?.(false);
   };
 
   return (
     <div>
       <p className="add-file-label">Add file</p>
       {!isFileUploaded && (
-        <div
-          className={`file-upload ${isDragging ? "dragging" : ""}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <input
-            type="file"
-            id="fileInput"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-          />
-          <label htmlFor="fileInput" className="file-upload-label">
-            <FileUploadIcon alt="Upload Icon" className="upload-icon" />
-            <p className="file-upload-text">
-              Drag & drop or click <br /> to choose a file
-            </p>
-          </label>
-        </div>
+        <>
+          <div
+            className={`file-upload ${isDragging ? "dragging" : ""}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              id="fileInput"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              accept="application/pdf"
+            />
+            <label htmlFor="fileInput" className="file-upload-label">
+              <FileUploadIcon alt="Upload Icon" className="upload-icon" />
+              <p className="file-upload-text">
+                Drag & drop or click <br /> to choose a file
+              </p>
+            </label>
+          </div>
+          {formatError && <p className="error-text">{formatError}</p>}
+        </>
       )}
 
       {isFileUploaded && uploadedFile && (
