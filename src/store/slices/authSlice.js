@@ -128,7 +128,11 @@ const authSlice = createSlice({
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    clearAuthError(state) {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -243,6 +247,8 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const { clearAuthError } = authSlice.actions;
 
 export const selectAuth = (state) => state.auth;
 

@@ -23,9 +23,9 @@ export const getFolders = createAsyncThunk(
 
 export const createFolder = createAsyncThunk(
   "research/createFolder",
-  async (folderName, { rejectWithValue }) => {
+  async ({ folderName, selectedFirmFolder },  { rejectWithValue }) => {
     try {
-      const response = await createFolderAPI(folderName);
+      const response = await createFolderAPI(folderName, selectedFirmFolder);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

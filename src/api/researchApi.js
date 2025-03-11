@@ -10,10 +10,11 @@ export const getFoldersAPI = async () => {
   }
 };
 
-export const createFolderAPI = async (folderName) => {
+export const createFolderAPI = async (folderName, selectedFirmFolder) => {
   try {
     const response = await axiosInstance.post("/admin/createFolder", {
       name: folderName,
+      firm: { id: selectedFirmFolder.value },
     });
     return response;
   } catch (error) {
@@ -64,8 +65,8 @@ export const createResearchAPI = async (researchData) => {
       },
     });
 
-    console.log('RESP',response);
-    
+    console.log("RESP", response);
+
     return response;
   } catch (error) {
     console.error("Error creating research:", error);

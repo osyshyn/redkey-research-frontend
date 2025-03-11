@@ -11,8 +11,8 @@ const CustomModal = ({ isOpen, onClose, modalTitle, style = {}, children }) => {
   // for scroll purposes
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // Блокируем скролл фона
-      document.body.style.position = "fixed";  // Фиксируем фон
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed"; 
     } else {
       document.body.style.overflow = "";
       document.body.style.position = "";

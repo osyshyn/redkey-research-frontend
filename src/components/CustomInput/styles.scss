@@ -46,6 +46,12 @@
       background-color: transparent;
       color: $text-color-accent;
     }
+    &.input-error {
+      border: 2px solid $delete-red-color;
+      border-radius: $border-radius-small;
+      background: $text-red-button-inner-light-color;
+      color: $delete-red-color;
+    }
   }
 }
 

@@ -166,10 +166,10 @@ const AdminPortal = () => {
   };
 
   const handleCreateFolder = useCallback(
-    (folderName) => {
+    (folderName, selectedFirmFolder) => {
       if (folderName.trim()) {
         dispatch(clearResearchFilters());
-        dispatch(createFolder(folderName));
+        dispatch(createFolder({ folderName, selectedFirmFolder }));
       }
     },
     [dispatch]

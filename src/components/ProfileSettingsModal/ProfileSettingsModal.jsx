@@ -102,10 +102,8 @@ const ProfileSettingsModal = ({
                     }
                     // showLabel="input-hide-label"
                     showLabel={`${
-                    currentUserDevice === "desktop"
-                      ? "input-hide-label"
-                      : ""
-                  }`}
+                      currentUserDevice === "desktop" ? "input-hide-label" : ""
+                    }`}
                   />
                 </div>
                 <CustomInput
@@ -143,6 +141,7 @@ const ProfileSettingsModal = ({
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
+                  error={passwordError ? true : false}
                 />
                 <CustomInput
                   label="Re-enter Password"
@@ -150,6 +149,7 @@ const ProfileSettingsModal = ({
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  error={passwordError ? true : false}
                 />
                 {passwordError && (
                   <p className="password-error-message">{passwordError}</p>

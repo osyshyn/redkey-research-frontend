@@ -34,6 +34,16 @@
     margin-top: -24px;
   }
 
+  .error-text {
+    margin-left: 16px;
+    color: $delete-red-color;
+    font-family: $font-family-satoshi;
+    font-size: 14px;
+    font-weight: $font-weight-normal;
+    line-height: 21px;
+    margin-top: 5px;
+  }
+
   .login-continue-button-wrapper {
     margin-top: 40px;
   }

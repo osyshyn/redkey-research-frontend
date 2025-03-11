@@ -28,9 +28,12 @@ const FolderAndResearchModals = ({
   const [researchTitle, setResearchTitle] = useState("");
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [selectedFirm, setSelectedFirm] = useState(null);
+  const [selectedFirmFolder, setSelectedFirmFolder] = useState(null);
   const [researchDate, setResearchDate] = useState(null);
   const [reportType, setReportType] = useState(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+  const [isFolderSaveDisabled, setIsFolderSaveDisabled] = useState(true);
+  const [isDuplicateWarningOpen, setDuplicateWarningOpen] = useState(false);
 
   const dispatch = useDispatch();
   const currentUserDevice = useDeviceType();
@@ -47,7 +50,7 @@ const FolderAndResearchModals = ({
     [firmsList]
   );
 
-  console.log("editingResearch", editingResearch);
+  console.log("editingResearch", editingResearch, folderOptions);
 
   useEffect(() => {
     if (editingResearch) {
@@ -84,6 +87,41 @@ const FolderAndResearchModals = ({
     reportType,
     currentFileId,
   ]);
+
+  useEffect(() => {
+    const isFolderValid = folderName.trim().length > 0 && selectedFirmFolder;
+    setIsFolderSaveDisabled(!isFolderValid);
+  }, [folderName, selectedFirmFolder]);
+
+  const handleFolderNameChange = (e) => {
+    const value = e.target.value;
+    if (/^[a-zA-Z0-9 _.,-]*$/.test(value) && value.length <= 35) {
+      setFolderName(value);
+    }
+  };
+
+  const handleCreateFolder = () => {
+    let newFolderName = folderName.trim();
+    if (!newFolderName) return;
+
+    const existingFolders = folderOptions.map((folder) => folder.label);
+
+    let index = 1;
+    let uniqueName = newFolderName;
+
+    while (existingFolders.includes(uniqueName)) {
+      uniqueName = `${newFolderName} (${index++})`;
+    }
+
+    onCreateFolder(uniqueName, selectedFirmFolder);
+    setFolderName("");
+    setSelectedFirmFolder(null);
+    onCloseCreateFolderModal();
+    if (existingFolders.includes(newFolderName)) {
+      setDuplicateWarningOpen(true);
+      return;
+    }
+  };
 
   const handleSaveResearch = () => {
     const researchData = {
@@ -125,17 +163,21 @@ const FolderAndResearchModals = ({
               label="Folder name"
               placeholder="Enter folder name"
               value={folderName}
-              onChange={(e) => setFolderName(e.target.value)}
+              onChange={handleFolderNameChange}
+            />
+            <CustomDropdown
+              label="Firm"
+              placeholder="Select a firm"
+              options={firmsListOptions}
+              value={selectedFirmFolder}
+              onChange={(option) => setSelectedFirmFolder(option)}
             />
             <div className="modal-actions-button">
               <CustomButton
                 label="Create"
                 style="red-shadow"
-                onClick={() => {
-                  onCreateFolder(folderName);
-                  setFolderName("");
-                  onCloseCreateFolderModal();
-                }}
+                disabled={isFolderSaveDisabled}
+                onClick={handleCreateFolder}
               />
             </div>
           </CustomModal>,
@@ -175,8 +217,8 @@ const FolderAndResearchModals = ({
                 onChange={(option) => setSelectedFirm(option)}
               />
             </div>
-            <div 
-            className={`${
+            <div
+              className={`${
                 currentUserDevice === "desktop" ? "upload-modal-type-date" : ""
               }`}
             >
@@ -207,6 +249,17 @@ const FolderAndResearchModals = ({
           </CustomModal>,
           modalRoot
         )}
+
+      <CustomModal
+        isOpen={isDuplicateWarningOpen}
+        onClose={() => setDuplicateWarningOpen(false)}
+        modalTitle="Duplicate Folder"
+      >
+        <p>
+          A folder with this name already exists. An index will be added
+          automatically.
+        </p>
+      </CustomModal>
     </>
   );
 };

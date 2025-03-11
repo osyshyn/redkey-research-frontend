@@ -6,7 +6,6 @@ import moreIcon from "../../../assets/icons/more-icon.svg";
 
 import "./styles.scss";
 
-const MAX_LENGTH = 30;
 const WORD_WRAP_THRESHOLD = 15;
 
 const FolderHeader = ({
@@ -33,7 +32,10 @@ const FolderHeader = ({
           alt={isFolderOpen ? "Expand" : "Collapse"}
           className="arrow-icon"
         />
-        <p className={`title ${hasVeryLongWord ? "truncate" : "multi-line"}`}>
+        <p
+          className={`title ${hasVeryLongWord ? "truncate" : "multi-line"}`}
+          title={title}
+        >
           {title}
         </p>
       </div>

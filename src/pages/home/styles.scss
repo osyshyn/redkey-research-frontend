@@ -122,3 +122,153 @@
   margin-top: 50px;
   color: $home-page-light;
 }
+
+@media screen and (max-width: 480px) {
+  .home-page-container {
+    margin-left: 7%;
+    overflow: hidden;
+    display: flex;
+    //   position: relative;
+  }
+  .main-door-home-icon {
+    display: block;
+  }
+
+  .home-login-button-wrapper {
+    position: absolute;
+    top: 160px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .key-graphic-icon {
+    width: 50px;
+    margin-bottom: 7px;
+  }
+
+  .request-access-login-button {
+    text-transform: uppercase;
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-medium;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+
+  .horizontal-line-login-button {
+    width: 160px;
+    margin: 7px;
+    border-top: 2px solid $home-page-light;
+    border-radius: 5px;
+    color: $home-page-light;
+  }
+
+  .home-page-header {
+    display: flex;
+    justify-content: center;
+  }
+  .burger-menu-icon {
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    align-self: center;
+    position: absolute;
+    left: 7%;
+  }
+  .redkey-logo-icon {
+    width: 130px;
+    margin: auto;
+    height: 130px;
+  }
+
+  // .teams-info-wrapper {
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: center;
+  //   align-items: center;
+  //   width: 80%;
+  //   width: 80;
+  //   margin: auto;
+  //   margin-top: -320px;
+  //   //   z-index: 10;
+  // }
+
+  .teams-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: auto;
+    margin-top: -320px;
+    margin-left: 7%;
+    background: #bf272d;
+
+    max-width: calc(100% - 7%);
+    box-sizing: border-box;
+  }
+
+  .teams-info-main-title {
+    text-transform: uppercase;
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-bold;
+    font-size: 20px;
+    letter-spacing: 5px;
+    margin-bottom: 40px;
+    width: 250px;
+    color: $home-page-light;
+    text-align: center;
+    transform: translateX(-7%);
+  }
+
+  .team-icon {
+    width: 47px;
+    height: 47px;
+    align-self: center;
+    margin: auto;
+  }
+  .teams-items-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    transform: translateX(-7%);
+  }
+
+  .team-item-container {
+    display: grid;
+    max-width: 200px;
+  }
+
+  .team-item-title {
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-bold;
+    font-size: 16px;
+    text-align: center;
+    margin: 10px auto;
+    color: $home-page-light;
+  }
+  .team-item-description {
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-normal;
+    font-size: 12px;
+    color: $home-page-light;
+  }
+
+  .footer-home-page {
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-medium;
+    font-size: 12px;
+    margin-top: 50px;
+    color: $home-page-light;
+    transform: translateX(-10%);
+    margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

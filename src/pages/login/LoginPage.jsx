@@ -5,6 +5,7 @@ import {
   getProfile,
   loginUser,
   selectAuth,
+  clearAuthError,
 } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -18,17 +19,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
-  console.log("ccc", currentTheme);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, status, error } = useSelector(selectAuth);
 
-  // useEffect(() => {
-  //   if (status === "succeeded") {
-  //     navigate("/admin/portal");
-  //   }
-  // }, [status, navigate]);
+  useEffect(() => {
+    dispatch(clearAuthError());
+  }, [dispatch]);
 
   useEffect(() => {
     if (status === "succeeded") {
@@ -38,13 +36,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (status === "succeeded" && user) {
-      console.log('UUUUUU', user);
-      
+      console.log("UUUUUU", user);
+
       if (user.role === 3 || user.role === 2) {
         navigate("/admin/portal");
       } else if (user.role === 1) {
         navigate("/user/portal");
-      } 
+      }
     }
   }, [status, user, navigate]);
 
@@ -52,7 +50,6 @@ const LoginPage = () => {
     try {
       await dispatch(loginUser({ email, password })).unwrap();
       await dispatch(getProfile()).unwrap();
-      // navigate("/admin/portal");
     } catch (err) {
       console.error("Login error:", err);
     }
@@ -76,6 +73,7 @@ const LoginPage = () => {
           placeholder="example@mail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={error ? true : false}
         />
         <CustomInput
           label="Password"
@@ -83,7 +81,9 @@ const LoginPage = () => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={error ? true : false}
         />
+        {error && <p className="error-text">Error: {error}</p>}
         <div className="login-continue-button-wrapper">
           <CustomButton
             label="Continue"
@@ -92,14 +92,12 @@ const LoginPage = () => {
             disabled={status === "loading"}
           />
         </div>
-        {error && <p className="error-text">Error: {error}</p>}
       </div>
       <div className="login-footer">
         <p className="help-text">
           Having trouble logging in?{" "}
           <Link className="text-red" to="/forgot-password">
-            {" "}
-            Click here
+            Click here{" "}
           </Link>{" "}
           to set up a new password
         </p>

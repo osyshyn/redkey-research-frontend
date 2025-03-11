@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAuth,
   forgotPasswordSendEmail,
+  clearAuthError,
 } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -22,6 +23,10 @@ const ForgotPasswordPage = () => {
   const dispatch = useDispatch();
 
   const { status, error } = useSelector(selectAuth);
+
+  useEffect(() => {
+    dispatch(clearAuthError());
+  }, [dispatch]);
 
   const handleSendEmail = async () => {
     setNotificationVisible(false);
@@ -55,7 +60,9 @@ const ForgotPasswordPage = () => {
           placeholder="example@mail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={error ? true : false}
         />
+        {error && <p className="error-text">Error: {error}</p>}
 
         <div className="send-email-button-wrapper">
           <CustomButton
@@ -65,7 +72,6 @@ const ForgotPasswordPage = () => {
             disabled={status === "loading"}
           />
         </div>
-        {error && <p className="error-text">Error: {error}</p>}
       </div>
       <Link className="back-to-login-text-red" to="/login">
         Back to log in

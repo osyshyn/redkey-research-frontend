@@ -19,6 +19,11 @@ const HomePage = () => {
     navigate("/login");
   };
 
+  const handleRequestAccessClick = () => {
+    window.location.href =
+      "mailto:info@redkeyresearch.com?subject=Research%20Inquiry&body=I'd%20like%20to%20be%20contacted%20about%20Redkey's%20research%20services.";
+  };
+
   return (
     <>
       <div className="home-page-header">
@@ -31,7 +36,12 @@ const HomePage = () => {
 
       <div className="home-login-button-wrapper">
         <img src={keyGraphicIcon} className="key-graphic-icon" />
-        <p className="request-access-login-button">Request access</p>
+        <p
+          className="request-access-login-button"
+          onClick={handleRequestAccessClick}
+        >
+          Request access
+        </p>
         <hr className="horizontal-line-login-button" />
         <p className="request-access-login-button" onClick={handleLoginClick}>
           Login

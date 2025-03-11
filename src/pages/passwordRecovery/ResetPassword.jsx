@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { selectAuth, changePassword } from "../../store/slices/authSlice";
+import {
+  selectAuth,
+  changePassword,
+  clearAuthError,
+} from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import logoBig from "../../assets/images/logo-big.png";
@@ -17,6 +21,10 @@ const ResetPassword = () => {
   const { status, error } = useSelector(selectAuth);
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
+
+  useEffect(() => {
+    dispatch(clearAuthError());
+  }, [dispatch]);
 
   const handlePasswordChange = (event) => {
     setPasswords({
@@ -83,6 +91,7 @@ const ResetPassword = () => {
           name="new_password"
           value={passwords.new_password}
           onChange={handlePasswordChange}
+          error={passwordError ? true : false}
         />
 
         <CustomInput
@@ -92,6 +101,7 @@ const ResetPassword = () => {
           name="confirm_password"
           value={passwords.confirm_password}
           onChange={handlePasswordChange}
+          error={passwordError ? true : false}
         />
         {passwordError && <p className="error-text">{passwordError}</p>}
         <div className="reset-password-save-button-wrapper">
