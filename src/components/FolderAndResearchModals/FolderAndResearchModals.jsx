@@ -23,6 +23,7 @@ const FolderAndResearchModals = ({
   onSaveResearchData = () => {},
   onUpdateResearchData = () => {},
   editingResearch = null,
+  // folders = [],
 }) => {
   const [folderName, setFolderName] = useState("");
   const [researchTitle, setResearchTitle] = useState("");
@@ -45,6 +46,7 @@ const FolderAndResearchModals = ({
 
   const currentFileId = useSelector((state) => state.upload.currentFileId);
   const firmsList = useSelector((state) => state.firm.firms);
+  const { folders } = useSelector((state) => state.research);
 
   console.log("currentFileId", currentFileId);
 
@@ -59,6 +61,8 @@ const FolderAndResearchModals = ({
 
   console.log("editingResearch", editingResearch, folderOptions);
 
+  console.log("reportType", reportType);
+
   useEffect(() => {
     if (editingResearch) {
       setResearchTitle(editingResearch.title || "");
@@ -72,51 +76,35 @@ const FolderAndResearchModals = ({
           ? new Date(editingResearch.publication_date)
           : null
       );
-      setReportType(getReportTypeName(editingResearch.report_type) || null);
+      // setReportType(editingResearch.report_type || null);
+      const initialReportType = reportTypeOptions.find(
+        option => option.value === editingResearch.report_type
+      );
+      setReportType(initialReportType || null);
     }
   }, [editingResearch]);
 
-  // useEffect(() => {
-  //   const isAllFieldsFilled =
-  //     researchTitle.trim() &&
-  //       !researchNameError &&
-  //       selectedFolder &&
-  //       selectedFirm &&
-  //       researchDate &&
-  //       reportType &&
-  //       (currentFileId !== null || hasFile || editingResearch?.file);
-  //   setIsSaveDisabled(!isAllFieldsFilled);
-  // }, [
-  //   researchTitle,
-  //   selectedFolder,
-  //   selectedFirm,
-  //   researchDate,
-  //   reportType,
-  //   currentFileId,
-  // hasFile, editingResearch?.file
-  // ]);
-
   useEffect(() => {
-    const isMainFieldsFilled = 
-      researchTitle.trim() && 
-      !researchNameError && 
-      selectedFolder && 
-      selectedFirm && 
-      researchDate && 
+    const isMainFieldsFilled =
+      researchTitle.trim() &&
+      !researchNameError &&
+      selectedFolder &&
+      selectedFirm &&
+      researchDate &&
       reportType;
-  
+
     const isFileValid = currentFileId !== null || hasFile;
-  
+
     setIsSaveDisabled(!(isMainFieldsFilled && isFileValid));
   }, [
-    researchTitle, 
+    researchTitle,
     researchNameError,
     selectedFolder,
     selectedFirm,
     researchDate,
     reportType,
     currentFileId,
-    hasFile
+    hasFile,
   ]);
 
   useEffect(() => {
@@ -173,7 +161,7 @@ const FolderAndResearchModals = ({
 
   const handleSaveResearch = () => {
     if (!currentFileId && !editingResearch?.file) {
-      return; 
+      return;
     }
     const researchData = {
       title: researchTitle,
@@ -183,6 +171,8 @@ const FolderAndResearchModals = ({
       reportType: reportType.value,
       fileId: currentFileId || editingResearch?.file?.id,
     };
+
+    console.log("researchData", researchData);
 
     if (editingResearch) {
       onUpdateResearchData({ ...researchData, id: editingResearch.id });
@@ -200,7 +190,21 @@ const FolderAndResearchModals = ({
     onCloseUploadResearchModal();
   };
 
+  console.log("firmsListOptions", folderOptions, firmsListOptions, folders);
 
+  const filteredFirms = folders
+    .filter((folder) => folder.id === selectedFolder?.value)
+    .map((folder) => folder.firm);
+
+  const firmOptions = firmsListOptions.filter((firm) => {
+    return filteredFirms.some((filteredFirm) => filteredFirm.id === firm.value);
+  });
+
+  useEffect(() => {
+    if (!editingResearch) {
+      setSelectedFirm(null);
+    }
+  }, [selectedFolder]);
 
   const modalRoot = document.getElementById("modal-root");
 
@@ -274,7 +278,7 @@ const FolderAndResearchModals = ({
               <CustomDropdown
                 label="Firm"
                 placeholder="Select a firm"
-                options={firmsListOptions}
+                options={firmOptions}
                 value={selectedFirm}
                 onChange={(option) => setSelectedFirm(option)}
               />
@@ -294,11 +298,14 @@ const FolderAndResearchModals = ({
                 label="Report type"
                 placeholder="Select report type"
                 options={reportTypeOptions}
-                value={reportType}
+               value={reportType}
                 onChange={(option) => setReportType(option)}
               />
             </div>
-            <FileUpload existingFile={editingResearch?.file || null}  onFileChange={setHasFile} />
+            <FileUpload
+              existingFile={editingResearch?.file || null}
+              onFileChange={setHasFile}
+            />
 
             <div className="modal-actions-button">
               <CustomButton

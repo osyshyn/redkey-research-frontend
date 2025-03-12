@@ -7,6 +7,7 @@ import {
   createFirm,
   deleteFirm,
   updateFirm,
+  setCurrentFirm,
 } from "../../store/slices/firmSlice";
 
 import CustomButton from "../CustomButton/CustomButton";
@@ -20,13 +21,14 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
   const modalRoot = document.getElementById("modal-root");
   const dispatch = useDispatch();
   const firmsList = useSelector((state) => state.firm.firms);
+  const currentFirmState = useSelector((state) => state.firm.currentFirm);
 
   const [isCreateFirmModalOpen, setIsCreateFirmModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [firmItemToDelete, setFirmItemToDelete] = useState(null);
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [currentFirm, setCurrentFirm] = useState(null);
+  const [currentFirmItem, setCurrentFirmItem] = useState(null);
   const [firmName, setFirmName] = useState("");
 
   useEffect(() => {
@@ -43,7 +45,7 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
 
   const handleOpenEditModal = (firm) => {
     setIsEditMode(true);
-    setCurrentFirm(firm);
+    setCurrentFirmItem(firm);
     setFirmName(firm.name);
     setIsCreateFirmModalOpen(true);
   };
@@ -51,13 +53,13 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
   const handleCloseCreateModal = () => {
     setIsCreateFirmModalOpen(false);
     setIsEditMode(false);
-    setCurrentFirm(null);
+    setCurrentFirmItem(null);
     setFirmName("");
   };
 
   const handleSaveFirm = () => {
     if (isEditMode) {
-      dispatch(updateFirm({ id: currentFirm.id, name: firmName }));
+      dispatch(updateFirm({ id: currentFirmItem.id, name: firmName }));
     } else {
       dispatch(createFirm(firmName));
     }
@@ -65,8 +67,13 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
   };
 
   const handleDeleteFirm = () => {
+    console.log("currentFirmState", currentFirmState, [firmItemToDelete.id]);
+
     dispatch(deleteFirm([firmItemToDelete.id]));
     setIsDeleteModalOpen(false);
+    if (currentFirmState.id === firmItemToDelete.id) {
+      dispatch(setCurrentFirm({ name: "All" }));
+    }
   };
 
   return (
@@ -146,7 +153,7 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
         <DeleteModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
-          itemToDelete={firmItemToDelete?.name || "the firm"}
+          itemToDelete={firmItemToDelete?.name}
           deleteButtonTitle="Delete Firm"
           onDelete={handleDeleteFirm}
         />

@@ -1,12 +1,17 @@
 import axiosInstance from "./index";
+import Cookies from 'js-cookie';
 
 export const loginAPI = async (credentials) => {
   try {
     const response = await axiosInstance.post("/auth/login", credentials);
     const { access_token, refresh_token } = response.data;
 
-    localStorage.setItem("access_token", access_token);
-    localStorage.setItem("refresh_token", refresh_token);
+    // localStorage.setItem("access_token", access_token);
+    // localStorage.setItem("refresh_token", refresh_token);
+
+    Cookies.set('access_token', access_token, { expires: 7, secure: true, sameSite: 'Strict' });
+    Cookies.set('refresh_token', refresh_token, { expires: 7, secure: true, sameSite: 'Strict' });
+
 
     console.log(response);
 
@@ -21,8 +26,11 @@ export const logoutAPI = async () => {
   try {
     await axiosInstance.post("/auth/logout");
 
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    // localStorage.removeItem("access_token");
+    // localStorage.removeItem("refresh_token");
+    Cookies.remove('access_token');
+    Cookies.remove('refresh_token');
+
     localStorage.removeItem("selectedTheme");
     localStorage.removeItem("currentFirm");
 

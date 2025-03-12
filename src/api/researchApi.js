@@ -59,7 +59,7 @@ export const createResearchAPI = async (researchData) => {
         id: researchData.firmId || 1,
       },
       publication_date: researchData.date || new Date().toISOString(),
-      report_type: researchData.reportType || 1,
+      report_type: researchData.reportType,
       file: {
         id: researchData.fileId,
       },

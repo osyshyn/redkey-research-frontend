@@ -68,7 +68,11 @@ const UserPortal = () => {
     [folders]
   );
 
-  const filteredFolders = folders
+  const foldersFilteredByFirm = folders.filter(
+    (folder) => folder.firm.id === currentFirm.id
+  );
+
+  const filteredFolders = foldersFilteredByFirm
     .filter((folder) => {
       return researchFilters.every((filter) => {
         const filterType = filter.type.value;
@@ -127,10 +131,10 @@ const UserPortal = () => {
   );
 
   useEffect(() => {
-    if (folders.length === 0 && foldersStatus !== "loading") {
+    if (foldersStatus === "idle") {
       dispatch(getFolders());
     }
-  }, [dispatch, folders, foldersStatus]);
+  }, [dispatch, foldersStatus]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -171,6 +175,18 @@ const UserPortal = () => {
       </>
     );
   }
+
+  useEffect(() => {
+    const totalPages = Math.ceil(searchInFilteredFolders.length / itemsPerPage);
+
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+
+    if (searchInFilteredFolders.length === 0) {
+      setCurrentPage(1);
+    }
+  }, [searchInFilteredFolders, itemsPerPage, currentPage]);
 
   return (
     <>
@@ -257,24 +273,3 @@ const UserPortal = () => {
 };
 
 export default UserPortal;
-
-{
-  /* <div className="document-preview">
-                  <img
-                    src={closeIcon}
-                    alt="Close"
-                    className="close-icon"
-                    onClick={closePreview}
-                  />
-                  <Document
-                    file={`${import.meta.env.VITE_API_URL}/${
-                      selectedDocument.file.path
-                    }`}
-                    onLoadSuccess={onLoadSuccess}
-                  >
-                    {Array.from(new Array(numPages), (el, index) => (
-                      <Page key={index} pageNumber={index + 1} scale={0.9} />
-                    ))}
-                  </Document>
-                </div> */
-}

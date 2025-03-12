@@ -63,6 +63,8 @@ const AdminPortal = () => {
 
   const currentUserDevice = useDeviceType();
 
+  console.log("FOLDERS", folders, currentFirm);
+
   useEffect(() => {
     dispatch(getFirms());
   }, [dispatch]);
@@ -83,7 +85,14 @@ const AdminPortal = () => {
     [dispatch]
   );
 
-  const filteredFolders = folders
+  const foldersFilteredByFirm = folders.filter((folder) => {
+    if (currentFirm.name === "All") {
+      return true;
+    }
+    return folder.firm.id === currentFirm?.id;
+  });
+
+  const filteredFolders = foldersFilteredByFirm
     .filter((folder) => {
       return researchFilters.every((filter) => {
         const filterType = filter.type.value;
@@ -142,10 +151,10 @@ const AdminPortal = () => {
   );
 
   useEffect(() => {
-    if (folders.length === 0 && foldersStatus !== "loading") {
+    if (foldersStatus === "idle") {
       dispatch(getFolders());
     }
-  }, [dispatch, folders, foldersStatus]);
+  }, [dispatch, foldersStatus]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -222,6 +231,18 @@ const AdminPortal = () => {
     setIsMobileModalOpen(true);
   };
 
+  useEffect(() => {
+    const totalPages = Math.ceil(searchInFilteredFolders.length / itemsPerPage);
+
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+
+    if (searchInFilteredFolders.length === 0) {
+      setCurrentPage(1);
+    }
+  }, [searchInFilteredFolders, itemsPerPage, currentPage]);
+
   return (
     <>
       <Header />
@@ -270,6 +291,14 @@ const AdminPortal = () => {
       />
       {foldersStatus === "loading" ? (
         <Loader />
+      ) : folders.length === 0 ? (
+        <div className="folders-and-document-container">
+          <div className="folders-container">
+            <p className="no-folders-message">
+              No folders available to display
+            </p>
+          </div>
+        </div>
       ) : (
         <>
           <div className="folders-and-document-container">
