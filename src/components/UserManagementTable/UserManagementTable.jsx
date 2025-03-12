@@ -168,7 +168,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
 
   return (
     <>
-      { currentUserDevice === "mobile" && (
+      {currentUserDevice === "mobile" && (
         <div className="mobile-user-management-table-header-wrapper">
           <p className="mobile-user-management-table-header">Name</p>
           <p className="mobile-user-management-table-header">Actions</p>
@@ -195,7 +195,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
             )}
 
             <tbody>
-              {selectedItems.length > 0 && currentUserDevice === "desktop" &&  (
+              {selectedItems.length > 0 && currentUserDevice === "desktop" && (
                 <tr className="selected-actions-panel">
                   <td colSpan="7">
                     <div className="selected-actions">
@@ -309,17 +309,19 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
                           ref={(el) => (scrollRefs.current[index] = el)}
                         >
                           {item.access.length > 0 ? (
-                            item.access.map((access, idx) => (
-                              <div
-                                key={idx}
-                                className="user-management-access-item"
-                              >
-                                {access?.firm?.name}
-                              </div>
-                            ))
+                            item.access
+                              .filter((access) => access.value === true)
+                              .map((access, idx) => (
+                                <div
+                                  key={idx}
+                                  className="user-management-access-item"
+                                >
+                                  {access?.firm?.name}
+                                </div>
+                              ))
                           ) : (
                             <span className="user-management-no-data">
-                              No data
+                              No accesses
                             </span>
                           )}
                         </div>
