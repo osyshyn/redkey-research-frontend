@@ -69,7 +69,7 @@ const UserPortal = () => {
   );
 
   const foldersFilteredByFirm = folders.filter(
-    (folder) => folder.firm.id === currentFirm.id
+    (folder) => folder?.firm.id === currentFirm?.id
   );
 
   const filteredFolders = foldersFilteredByFirm

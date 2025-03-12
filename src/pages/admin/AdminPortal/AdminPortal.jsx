@@ -86,10 +86,10 @@ const AdminPortal = () => {
   );
 
   const foldersFilteredByFirm = folders.filter((folder) => {
-    if (currentFirm.name === "All") {
+    if (currentFirm?.name === "All") {
       return true;
     }
-    return folder.firm.id === currentFirm?.id;
+    return folder?.firm?.id === currentFirm?.id;
   });
 
   const filteredFolders = foldersFilteredByFirm
