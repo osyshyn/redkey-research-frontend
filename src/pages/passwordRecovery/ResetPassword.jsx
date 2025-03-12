@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   selectAuth,
   changePassword,
@@ -19,6 +19,8 @@ const ResetPassword = () => {
   });
   const [passwordError, setPasswordError] = useState("");
   const { status, error } = useSelector(selectAuth);
+
+  const dispatch = useDispatch();
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
 
