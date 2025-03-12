@@ -55,17 +55,17 @@ const Header = () => {
       dispatch(getProfile());
     }
 
-    if (location.pathname === "/admin/portal" && firmsList.length > 0) {
-      const currentFirm = { name: "All" };
-      if (currentFirm) {
-        dispatch(setCurrentFirm(currentFirm));
-      }
-    } else if (location.pathname === "/user/portal" && firmsList.length > 0) {
-      const currentFirm = user?.access[0].firm;
-      if (currentFirm) {
-        dispatch(setCurrentFirm(currentFirm));
-      }
-    }
+    // if (location.pathname === "/admin/portal" && firmsList.length > 0) {
+    //   const currentFirm = { name: "All" };
+    //   if (currentFirm) {
+    //     dispatch(setCurrentFirm(currentFirm));
+    //   }
+    // } else if (location.pathname === "/user/portal" && firmsList.length > 0) {
+    //   const currentFirm = user?.access[0].firm;
+    //   if (currentFirm) {
+    //     dispatch(setCurrentFirm(currentFirm));
+    //   }
+    // }
   }, [dispatch, location.pathname]);
 
   useEffect(() => {
