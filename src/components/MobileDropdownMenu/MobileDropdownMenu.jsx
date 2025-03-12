@@ -136,26 +136,3 @@ const MobileDropdownMenu = ({
 };
 
 export default MobileDropdownMenu;
-
-{
-  /* 
-      { isMenuOpen && currentUserDevice === "mobile" && ( 
-        <MobileModalWrapper
-          isOpen={isMenuOpen}
-          onClose={() => setIsMenuOpen(false)}
-        >
-          <div className="mobile-options-list">
-            {mobileMoreiconData.options?.map((option) => (
-              <div
-                key={option.optionName}
-                className="mobile-option-item"
-                onClick={option.onOptionClick}
-              >
-                {option.icon}
-                <span>{option.optionName}</span>
-              </div>
-            ))}
-          </div>
-        </MobileModalWrapper>
-      )} */
-}
