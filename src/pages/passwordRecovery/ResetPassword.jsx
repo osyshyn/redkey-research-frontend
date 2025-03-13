@@ -26,7 +26,6 @@
 
 //   const token = new URLSearchParams(window.location.search).get("token");
 //   console.log('token', token);
-  
 
 //   useEffect(() => {
 //     dispatch(clearAuthError());
@@ -126,8 +125,6 @@
 
 // export default ResetPassword;
 
-
-
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -149,7 +146,7 @@ const ResetPassword = () => {
     confirm_password: "",
   });
   const [passwordError, setPasswordError] = useState("");
-  const [isTokenValid, setIsTokenValid] = useState(null); 
+  const [isTokenValid, setIsTokenValid] = useState(null);
   const { status, error } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const currentTheme = document.body.getAttribute("data-theme-mode");
@@ -202,7 +199,6 @@ const ResetPassword = () => {
     const passwordData = {
       new_password: passwords.new_password,
       confirm_password: passwords.confirm_password,
-      token, // Передаем токен на бэкенд для валидации
     };
 
     dispatch(changePassword(passwordData))
@@ -229,7 +225,9 @@ const ResetPassword = () => {
       />
       <h1 className="title">Reset Password</h1>
       {isTokenValid === false ? (
-        <p className="error-text">Invalid or expired token. Please request a new password reset.</p>
+        <p className="error-text">
+          Invalid or expired token. Please request a new password reset.
+        </p>
       ) : (
         <div className="form">
           <CustomInput
