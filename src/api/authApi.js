@@ -63,6 +63,9 @@ export const checkForgotTokenAPI = async (token) => {
     const response = await axiosInstance.get(
       `auth/CheckForgotToken?token=${token}`
     );
+
+    console.log('token response', response);
+    
     return response.data;
   } catch (error) {
     console.error("Error checking forgot token:", error);
