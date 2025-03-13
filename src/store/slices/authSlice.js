@@ -229,7 +229,8 @@ const authSlice = createSlice({
 
       .addCase(changeProfile.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        // state.user = action.payload;
+        state.user = { ...state.user, ...action.payload };
       })
 
       .addCase(changeProfile.rejected, (state, action) => {
