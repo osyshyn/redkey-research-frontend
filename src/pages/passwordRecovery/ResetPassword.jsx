@@ -145,6 +145,7 @@ const ResetPassword = () => {
     new_password: "",
     confirm_password: "",
   });
+  const [tokenResponse, setTokenResponse] = useState(null);
   const [passwordError, setPasswordError] = useState("");
   const [isTokenValid, setIsTokenValid] = useState(null);
   const { status, error } = useSelector(selectAuth);
@@ -158,7 +159,10 @@ const ResetPassword = () => {
 
     if (token) {
       checkForgotTokenAPI(token)
-        .then(() => setIsTokenValid(true))
+        .then((response) => {
+          setTokenResponse(response);
+          setIsTokenValid(true);
+        })
         .catch(() => setIsTokenValid(false));
     } else {
       setIsTokenValid(false);
@@ -199,8 +203,9 @@ const ResetPassword = () => {
     const passwordData = {
       new_password: passwords.new_password,
       confirm_password: passwords.confirm_password,
+      user_id: tokenResponse.id,
+      reset_password: false,
     };
-
     dispatch(changePassword(passwordData))
       .unwrap()
       .then(() => {
@@ -248,7 +253,9 @@ const ResetPassword = () => {
             onChange={handlePasswordChange}
             error={!!passwordError}
           />
-          {passwordError && <p className="error-text">Error: {passwordError}</p>}
+          {passwordError && (
+            <p className="error-text">Error: {passwordError}</p>
+          )}
           <div className="reset-password-save-button-wrapper">
             <CustomButton
               label="Save"
