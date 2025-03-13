@@ -58,6 +58,18 @@ export const changePasswordAPI = async (passwords) => {
   }
 };
 
+export const checkForgotTokenAPI = async (token) => {
+  try {
+    const response = await axiosInstance.get(
+      `auth/CheckForgotToken?token=${token}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error checking forgot token:", error);
+    throw error;
+  }
+};
+
 export const changeFirstOrResetPasswordAPI = async (passwordUserData) => {
   try {
     console.log("HELLO", passwordUserData);
