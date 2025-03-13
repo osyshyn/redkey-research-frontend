@@ -53,14 +53,14 @@ const UserPortal = () => {
     }
   }, [currentFirm, user]);
 
-  const folderOptions = useMemo(
-    () =>
-      folders.map((folder) => ({
-        value: folder.id,
-        label: folder.name,
-      })),
-    [folders]
-  );
+  // const folderOptions = useMemo(
+  //   () =>
+  //     folders.map((folder) => ({
+  //       value: folder.id,
+  //       label: folder.name,
+  //     })),
+  //   [folders]
+  // );
 
   const foldersFilteredByFirm = folders.filter(
     (folder) => folder?.firm.id === currentFirm?.id
@@ -193,7 +193,7 @@ const UserPortal = () => {
         searchPanelProps={{
           onSearchChange: handleSearchChange,
           onFiltersChange: handleFiltersChange,
-          folderOptions: folderOptions,
+          // folderOptions: folderOptions,
         }}
       />
       {foldersStatus === "loading" ? (

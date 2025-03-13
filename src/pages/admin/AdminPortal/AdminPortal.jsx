@@ -259,7 +259,7 @@ const AdminPortal = () => {
         searchPanelProps={{
           onSearchChange: handleSearchChange,
           onFiltersChange: handleFiltersChange,
-          folderOptions: folderOptions,
+          // folderOptions: folderOptions,
         }}
         buttons={[
           {

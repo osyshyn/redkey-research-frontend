@@ -13,7 +13,7 @@ import "./styles.scss";
 const SearchAndFilterPanel = ({
   onSearchChange,
   onFiltersChange,
-  folderOptions = [],
+  // folderOptions = [],
   users = [],
   firmsList = [],
   componentType,
@@ -101,7 +101,7 @@ const SearchAndFilterPanel = ({
           isOpen={isFilterModalOpen}
           onClose={handleFilterClose}
           onApply={handleFilterSave}
-          folderOptions={folderOptions}
+          // folderOptions={folderOptions}
           users={users}
           firmsList={firmsList}
           initialFilters={initialFilters}

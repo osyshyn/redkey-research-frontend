@@ -15,8 +15,6 @@ const CustomDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log("iconComponent", IconComponent);
-
   const handleOptionClick = (option) => {
     onChange(option);
     setIsOpen(false);

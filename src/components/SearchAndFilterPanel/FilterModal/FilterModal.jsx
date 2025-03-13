@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import CustomModal from "../../CustomModal/CustomModal";
 import CustomDropdown from "../../CustomDropdown/CustomDropdown";
@@ -8,6 +8,8 @@ import {
   dropdownUserManagementOptions,
   dropdownFolderOptions,
 } from "../../../constants/constants";
+
+import { useSelector } from "react-redux";
 
 import CloseIconGrey from "../../../assets/icons/close-icon-grey.svg?react";
 import StatusFilterIcon from "../../../assets/icons/status-filter-icon.svg?react";
@@ -21,7 +23,7 @@ const FilterModal = ({
   isOpen,
   onClose,
   onApply,
-  folderOptions = [],
+  // folderOptions = [],
   users,
   firmsList = [],
   initialFilters,
@@ -30,6 +32,31 @@ const FilterModal = ({
   const [additionalFilters, setAdditionalFilters] = useState(
     JSON.parse(JSON.stringify(initialFilters || []))
   );
+
+  const user = useSelector((state) => state.auth.user);
+  const { folders } = useSelector((state) => state.research);
+
+  const folderOptions = useMemo(() => {
+    if (user.role === 1) {
+      const allowedFirmIds = user.access
+        .filter((access) => access.value === true)
+        .map((access) => access.firm.id);
+
+      return folders
+        .filter((folder) => allowedFirmIds.includes(folder.firm.id))
+        .map((folder) => ({
+          value: folder.id,
+          label: folder.name,
+        }));
+    }
+
+    return folders.map((folder) => ({
+      value: folder.id,
+      label: folder.name,
+    }));
+  }, [folders, user]);
+
+  console.log("folderOptions", folderOptions, user, folders);
 
   const creators = users
     .map((user) => user.creator)
