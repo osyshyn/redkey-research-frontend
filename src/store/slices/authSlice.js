@@ -3,6 +3,7 @@ import {
   loginAPI,
   logoutAPI,
   changePasswordAPI,
+  changeResetPasswordAPI,
   changeFirstOrResetPasswordAPI,
   getProfileAPI,
   changeProfileAPI,
@@ -42,6 +43,19 @@ export const changePassword = createAsyncThunk(
   async (passwords, { rejectWithValue }) => {
     try {
       const data = await changePasswordAPI(passwords);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error changing password"
+      );
+    }
+  }
+);
+export const changeResetPassword = createAsyncThunk(
+  "auth/changePassword",
+  async (passwordData, { rejectWithValue }) => {
+    try {
+      const data = await changeResetPasswordAPI(passwordData);
       return data;
     } catch (error) {
       return rejectWithValue(

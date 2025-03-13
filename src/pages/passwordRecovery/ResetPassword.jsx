@@ -129,7 +129,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAuth,
-  changePassword,
+  changeResetPassword,
   clearAuthError,
 } from "../../store/slices/authSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
@@ -206,7 +206,7 @@ const ResetPassword = () => {
       user_id: tokenResponse.id,
       reset_password: false,
     };
-    dispatch(changePassword(passwordData))
+    dispatch(changeResetPassword(passwordData))
       .unwrap()
       .then(() => {
         setPasswords({ new_password: "", confirm_password: "" });

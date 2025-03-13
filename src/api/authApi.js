@@ -50,8 +50,17 @@ export const logoutAPI = async () => {
 
 export const changePasswordAPI = async (passwords) => {
   try {
-    // const response = await axiosInstance.post("user/changePassword", passwords);
-    const response = await axiosInstance.post("auth/changePassword", passwords);
+    const response = await axiosInstance.post("user/changePassword", passwords);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error changing password:", error);
+    throw error;
+  }
+};
+export const changeResetPasswordAPI = async (passwordData) => {
+  try {
+    const response = await axiosInstance.post("auth/changePassword", passwordData);
     return response.data;
   } catch (error) {
     console.error("Error changing password:", error);
