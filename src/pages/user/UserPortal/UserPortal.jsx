@@ -14,13 +14,7 @@ import DocumentPreview from "../../../components/DocumentPreview/DocumentPreview
 
 import closeIcon from "../../../assets/icons/close-icon.svg";
 
-// import { Document, Page, pdfjs } from "react-pdf";
-// import "react-pdf/dist/Page/AnnotationLayer.css";
-// import "react-pdf/dist/Page/TextLayer.css";
-
 import "./styles.scss";
-
-// pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 const UserPortal = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -167,15 +161,6 @@ const UserPortal = () => {
     setShowPreview(false);
   };
 
-  if (showAccessDenied) {
-    return (
-      <>
-        <Header />
-        {foldersStatus === "loading" ? <Loader /> : <UserSubscriptionModal />}
-      </>
-    );
-  }
-
   useEffect(() => {
     const totalPages = Math.ceil(searchInFilteredFolders.length / itemsPerPage);
 
@@ -187,6 +172,15 @@ const UserPortal = () => {
       setCurrentPage(1);
     }
   }, [searchInFilteredFolders, itemsPerPage, currentPage]);
+
+  if (showAccessDenied) {
+    return (
+      <>
+        <Header />
+        {foldersStatus === "loading" ? <Loader /> : <UserSubscriptionModal />}
+      </>
+    );
+  }
 
   return (
     <>

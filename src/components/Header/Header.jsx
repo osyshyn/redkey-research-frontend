@@ -66,7 +66,7 @@ const Header = () => {
     //     dispatch(setCurrentFirm(currentFirm));
     //   }
     // }
-  }, [dispatch, location.pathname]);
+  }, [dispatch]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("selectedTheme");

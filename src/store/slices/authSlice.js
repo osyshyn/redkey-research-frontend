@@ -3,6 +3,7 @@ import {
   loginAPI,
   logoutAPI,
   changePasswordAPI,
+  changeFirstOrResetPasswordAPI,
   getProfileAPI,
   changeProfileAPI,
   forgotPasswordSendEmailAPI,
@@ -45,6 +46,20 @@ export const changePassword = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Error changing password"
+      );
+    }
+  }
+);
+
+export const changeFirstOrResetPassword = createAsyncThunk(
+  "auth/changeFirstOrResetPassword",
+  async (passwordUserData, { rejectWithValue }) => {
+    try {
+      const data = await changeFirstOrResetPasswordAPI(passwordUserData);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error changing/resetting password"
       );
     }
   }
@@ -175,6 +190,18 @@ const authSlice = createSlice({
       })
 
       .addCase(changePassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(changeFirstOrResetPassword.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(changeFirstOrResetPassword.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(changeFirstOrResetPassword.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

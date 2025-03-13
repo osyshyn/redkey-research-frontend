@@ -1,17 +1,24 @@
 import axiosInstance from "./index";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 export const loginAPI = async (credentials) => {
   try {
     const response = await axiosInstance.post("/auth/login", credentials);
-    const { access_token, refresh_token } = response.data;
+    const { access_token, refresh_token, reset_password } = response.data;
 
     // localStorage.setItem("access_token", access_token);
-    // localStorage.setItem("refresh_token", refresh_token);
+    localStorage.setItem("reset_password", reset_password);
 
-    Cookies.set('access_token', access_token, { expires: 7, secure: true, sameSite: 'Strict' });
-    Cookies.set('refresh_token', refresh_token, { expires: 7, secure: true, sameSite: 'Strict' });
-
+    Cookies.set("access_token", access_token, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+    });
+    Cookies.set("refresh_token", refresh_token, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+    });
 
     console.log(response);
 
@@ -28,8 +35,8 @@ export const logoutAPI = async () => {
 
     // localStorage.removeItem("access_token");
     // localStorage.removeItem("refresh_token");
-    Cookies.remove('access_token');
-    Cookies.remove('refresh_token');
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
 
     localStorage.removeItem("selectedTheme");
     localStorage.removeItem("currentFirm");
@@ -44,6 +51,23 @@ export const logoutAPI = async () => {
 export const changePasswordAPI = async (passwords) => {
   try {
     const response = await axiosInstance.post("user/changePassword", passwords);
+    return response.data;
+  } catch (error) {
+    console.error("Error changing password:", error);
+    throw error;
+  }
+};
+
+export const changeFirstOrResetPasswordAPI = async (passwordUserData) => {
+  try {
+    console.log("HELLO", passwordUserData);
+
+    const response = await axiosInstance.post(
+      "auth/changePassword",
+      passwordUserData
+    );
+    const { reset_password } = response.data;
+    localStorage.setItem("reset_password", reset_password);
     return response.data;
   } catch (error) {
     console.error("Error changing password:", error);

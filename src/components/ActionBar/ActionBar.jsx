@@ -57,13 +57,14 @@ const ActionBar = ({
             </div>
           )}
           {/* mobile buttons */}
-          {currentUserDevice === "mobile" && (
-            <CustomButton
-              label={mobileButton.label}
-              style={mobileButton.style}
-              onClick={mobileButton.onClick}
-            />
-          )}
+          {currentUserDevice === "mobile" &&
+            componentType !== "user_portal" && (
+              <CustomButton
+                label={mobileButton.label}
+                style={mobileButton.style}
+                onClick={mobileButton.onClick}
+              />
+            )}
         </div>
         {componentType === "admin_portal" && (
           <FolderAndResearchModals {...modalsProps} />

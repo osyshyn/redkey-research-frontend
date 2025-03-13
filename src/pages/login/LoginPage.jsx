@@ -20,6 +20,8 @@ const LoginPage = () => {
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
 
+  const userResetPassword = localStorage.getItem("reset_password");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, status, error } = useSelector(selectAuth);
@@ -36,15 +38,19 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (status === "succeeded" && user) {
-      console.log("UUUUUU", user);
+      console.log("UUUUUU", user, userResetPassword);
 
-      if (user.role === 3 || user.role === 2) {
+      if (user.role !== 3 && userResetPassword === 'true') {
+        navigate("/set-your-password");
+      } else if (user.role === 3) {
         navigate("/admin/portal");
-      } else if (user.role === 1) {
+      } else if (user.role === 2 && userResetPassword === 'false') {
+        navigate("/admin/portal");
+      } else if (user.role === 1 && userResetPassword === 'false') {
         navigate("/user/portal");
       }
     }
-  }, [status, user, navigate]);
+  }, [status, user, navigate, userResetPassword]);
 
   const handleLogin = async () => {
     try {
