@@ -24,6 +24,10 @@ const ResetPassword = () => {
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
 
+  const token = new URLSearchParams(window.location.search).get("token");
+  console.log('token', token);
+  
+
   useEffect(() => {
     dispatch(clearAuthError());
   }, [dispatch]);
