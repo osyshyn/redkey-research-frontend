@@ -65,6 +65,11 @@ export const checkForgotTokenAPI = async (token) => {
     );
 
     console.log('token response', response);
+    Cookies.set("access_token", token, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+    });
     
     return response.data;
   } catch (error) {

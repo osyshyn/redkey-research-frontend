@@ -248,7 +248,7 @@ const ResetPassword = () => {
             onChange={handlePasswordChange}
             error={!!passwordError}
           />
-          {passwordError && <p className="error-text">{passwordError}</p>}
+          {passwordError && <p className="error-text">Error: {passwordError}</p>}
           <div className="reset-password-save-button-wrapper">
             <CustomButton
               label="Save"
@@ -257,7 +257,6 @@ const ResetPassword = () => {
               disabled={status === "loading" || isTokenValid === null}
             />
           </div>
-          {error && <p className="error-text">Error: {error}</p>}
         </div>
       )}
     </div>
