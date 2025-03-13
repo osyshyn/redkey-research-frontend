@@ -60,7 +60,7 @@ export const updateFirm = createAsyncThunk(
 
 const loadCurrentFirm = () => {
   const storedFirm = localStorage.getItem("currentFirm");
-  return storedFirm ? JSON.parse(storedFirm) : {name:'All'};
+  return storedFirm ? JSON.parse(storedFirm) : null;
 };
 
 

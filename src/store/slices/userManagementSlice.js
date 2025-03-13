@@ -87,7 +87,8 @@ const userManagementSlice = createSlice({
       })
       .addCase(createNewUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.users.push(action.payload);
+        // state.users.push(action.payload);
+        state.users.unshift(action.payload);
       })
       .addCase(createNewUser.rejected, (state, action) => {
         state.loading = false;

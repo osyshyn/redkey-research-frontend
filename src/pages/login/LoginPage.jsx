@@ -7,6 +7,7 @@ import {
   selectAuth,
   clearAuthError,
 } from "../../store/slices/authSlice";
+import { setCurrentFirm } from "../../store/slices/firmSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import logoBig from "../../assets/images/logo-big.png";
@@ -40,13 +41,22 @@ const LoginPage = () => {
     if (status === "succeeded" && user) {
       console.log("UUUUUU", user, userResetPassword);
 
-      if (user.role !== 3 && userResetPassword === 'true') {
+      if (user.role !== 3 && userResetPassword === "true") {
         navigate("/set-your-password");
       } else if (user.role === 3) {
         navigate("/admin/portal");
-      } else if (user.role === 2 && userResetPassword === 'false') {
+        dispatch(setCurrentFirm({ name: "All" }));
+      } else if (user.role === 2 && userResetPassword === "false") {
         navigate("/admin/portal");
-      } else if (user.role === 1 && userResetPassword === 'false') {
+        dispatch(setCurrentFirm({ name: "All" }));
+      } else if (user.role === 1 && userResetPassword === "false") {
+        const activeAccess = user.access.find(
+          (access) => access.value === true
+        );
+        if (activeAccess) {
+          dispatch(setCurrentFirm(activeAccess.firm));
+        }
+
         navigate("/user/portal");
       }
     }

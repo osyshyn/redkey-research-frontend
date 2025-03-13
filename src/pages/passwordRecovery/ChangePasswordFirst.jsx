@@ -6,6 +6,7 @@ import {
   changeFirstOrResetPassword,
   clearAuthError,
 } from "../../store/slices/authSlice";
+import { setCurrentFirm } from "../../store/slices/firmSlice";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import logoBig from "../../assets/images/logo-big.png";
@@ -77,9 +78,16 @@ const ChangePasswordFirst = () => {
         .then(() => {
           setPasswords("");
           setPasswordError("");
-          if (user.role === 2 && userResetPassword === "false") {
+          if (user.role === 2) {
+            dispatch(setCurrentFirm({ name: "All" }));
             navigate("/admin/portal");
-          } else if (user.role === 1 && userResetPassword === "false") {
+          } else if (user.role === 1) {
+            const activeAccess = user.access.find(
+              (access) => access.value === true
+            );
+            if (activeAccess) {
+              dispatch(setCurrentFirm(activeAccess.firm));
+            }
             navigate("/user/portal");
           }
         })
@@ -121,7 +129,7 @@ const ChangePasswordFirst = () => {
           onChange={handlePasswordChange}
           error={passwordError ? true : false}
         />
-        {passwordError && <p className="error-text">{passwordError}</p>}
+        {passwordError && <p className="error-text">Error: {passwordError}</p>}
         <div className="reset-password-save-button-wrapper">
           <CustomButton
             label="Save new password"
@@ -130,7 +138,6 @@ const ChangePasswordFirst = () => {
             disabled={status === "loading"}
           />
         </div>
-        {error && <p className="error-text">Error: {error}</p>}
       </div>
     </div>
   );
