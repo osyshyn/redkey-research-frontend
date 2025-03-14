@@ -78,7 +78,7 @@ const FolderAndResearchModals = ({
       );
       // setReportType(editingResearch.report_type || null);
       const initialReportType = reportTypeOptions.find(
-        option => option.value === editingResearch.report_type
+        (option) => option.value === editingResearch.report_type
       );
       setReportType(initialReportType || null);
     }
@@ -128,11 +128,13 @@ const FolderAndResearchModals = ({
   const handleResearchNameChange = (e) => {
     const value = e.target.value;
 
-    setResearchTitle(value);
-    if (value.length > 80) {
-      setResearchNameError("Research title cannot exceed 80 characters.");
-    } else {
-      setResearchNameError("");
+    if (/^[a-zA-Z0-9 _.,-]*$/.test(value)) {
+      setResearchTitle(value);
+      if (value.length > 80) {
+        setResearchNameError("Research title cannot exceed 80 characters.");
+      } else {
+        setResearchNameError("");
+      }
     }
   };
 
@@ -298,7 +300,7 @@ const FolderAndResearchModals = ({
                 label="Report type"
                 placeholder="Select report type"
                 options={reportTypeOptions}
-               value={reportType}
+                value={reportType}
                 onChange={(option) => setReportType(option)}
               />
             </div>

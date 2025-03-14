@@ -44,9 +44,15 @@
     width: 4px;
   }
 
+  &::-webkit-scrollbar-track {
+    margin: 55px 0 0 0;
+    background: transparent;
+  }
+
   &::-webkit-scrollbar-thumb {
     background-color: #888;
     border-radius: 4px;
+    // min-height: 40px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
