@@ -127,6 +127,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   selectAuth,
   changeResetPassword,
@@ -145,6 +146,8 @@ const ResetPassword = () => {
     new_password: "",
     confirm_password: "",
   });
+  const [isNotificationVisible, setNotificationVisible] = useState(false);
+  const [isBackToLoginVisible, setIsBackToLoginVisible] = useState(false);
   const [tokenResponse, setTokenResponse] = useState(null);
   const [passwordError, setPasswordError] = useState("");
   const [isTokenValid, setIsTokenValid] = useState(null);
@@ -178,6 +181,8 @@ const ResetPassword = () => {
   };
 
   const handleSave = () => {
+    setNotificationVisible(false);
+    setIsBackToLoginVisible(false);
     if (!isTokenValid) {
       setPasswordError("Invalid or expired token.");
       return;
@@ -211,9 +216,12 @@ const ResetPassword = () => {
       .then(() => {
         setPasswords({ new_password: "", confirm_password: "" });
         setPasswordError("");
+        setNotificationVisible(true);
+        setIsBackToLoginVisible(true);
       })
       .catch((error) => {
         setPasswordError(error);
+        setNotificationVisible(false);
       });
   };
 
@@ -265,6 +273,24 @@ const ResetPassword = () => {
             />
           </div>
         </div>
+      )}
+
+      {isNotificationVisible && (
+        <div className="notification">
+          <img
+            className="notification-icon"
+            src={forgotPasswordNotificationIcon}
+            alt="Notification Icon"
+          />
+          <p className="notification-text">
+            Your password changed successfully! Keep it safe and secure
+          </p>
+        </div>
+      )}
+      {isBackToLoginVisible && (
+        <Link className="back-to-login-text-red" to="/login">
+          Back to log in
+        </Link>
       )}
     </div>
   );

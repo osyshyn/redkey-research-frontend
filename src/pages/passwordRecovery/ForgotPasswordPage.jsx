@@ -86,7 +86,9 @@ const ForgotPasswordPage = () => {
           <p className="notification-text">
             Thanks! An email was sent to verify your account. If you don’t
             receive an email, please{" "}
-            <span className="text-red">contact support</span>
+            <a href="mailto:info@redkeyresearch.com" className="text-red">
+              contact support
+            </a>
           </p>
         </div>
       )}

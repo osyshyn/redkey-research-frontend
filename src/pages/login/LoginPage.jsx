@@ -118,7 +118,7 @@ const LoginPage = () => {
           to set up a new password
         </p>
         <p className="support-text">
-          If you need help <span className="text-red">contact support.</span>
+          If you need help <a href="mailto:info@redkeyresearch.com" className="text-red">contact support.</a>
         </p>
       </div>
     </div>
