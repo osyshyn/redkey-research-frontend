@@ -239,9 +239,14 @@ const ResetPassword = () => {
       />
       <h1 className="title">Reset Password</h1>
       {isTokenValid === false ? (
-        <p className="error-text">
-          Invalid or expired token. Please request a new password reset.
-        </p>
+        <>
+          <p className="error-text">
+            Invalid or expired token. Please request a new password reset.
+          </p>
+          <Link className="back-to-login-text-red" to="/login">
+            Back to log in
+          </Link>
+        </>
       ) : (
         <div className="form">
           <CustomInput
