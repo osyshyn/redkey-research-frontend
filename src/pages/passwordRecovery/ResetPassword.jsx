@@ -136,6 +136,7 @@ import {
 import CustomInput from "../../components/CustomInput/CustomInput";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import { checkForgotTokenAPI } from "../../api/authApi";
+import forgotPasswordNotificationIcon from "../../assets/icons/red-done-circle-icon.svg";
 import logoBig from "../../assets/images/logo-big.png";
 import logoLightBig from "../../assets/images/logo-light-big.png";
 
