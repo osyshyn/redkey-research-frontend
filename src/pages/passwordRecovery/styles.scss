@@ -1,6 +1,7 @@
 @use "../../assets/styles/variables" as *;
 
-.forgot-password-page {
+.forgot-password-page,
+.reset-password-page {
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -284,7 +284,7 @@ const ResetPassword = () => {
             alt="Notification Icon"
           />
           <p className="notification-text">
-            Your password changed successfully! Keep it safe and secure
+            Your password changed successfully!
           </p>
         </div>
       )}
