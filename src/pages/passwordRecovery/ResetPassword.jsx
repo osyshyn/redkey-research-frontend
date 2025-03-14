@@ -149,7 +149,12 @@ const ResetPassword = () => {
               label="Save"
               style="red-shadow"
               onClick={handleSave}
-              disabled={status === "loading" || isTokenValid === null}
+              disabled={
+                status === "loading" ||
+                isTokenValid === null ||
+                !passwords.new_password ||
+                !passwords.confirm_password
+              }
             />
           </div>
         </div>

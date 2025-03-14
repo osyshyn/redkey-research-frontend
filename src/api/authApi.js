@@ -40,6 +40,7 @@ export const logoutAPI = async () => {
 
     localStorage.removeItem("selectedTheme");
     localStorage.removeItem("currentFirm");
+    localStorage.removeItem("reset_password");
 
     console.log("User logged out successfully");
   } catch (error) {
@@ -60,7 +61,10 @@ export const changePasswordAPI = async (passwords) => {
 };
 export const changeResetPasswordAPI = async (passwordData) => {
   try {
-    const response = await axiosInstance.post("auth/changePassword", passwordData);
+    const response = await axiosInstance.post(
+      "auth/changePassword",
+      passwordData
+    );
     return response.data;
   } catch (error) {
     console.error("Error changing password:", error);
