@@ -31,11 +31,11 @@ const LoginPage = () => {
     dispatch(clearAuthError());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (status === "succeeded") {
-      dispatch(getProfile());
-    }
-  }, [status, dispatch]);
+  // useEffect(() => {
+  //   if (status === "succeeded") {
+  //     dispatch(getProfile());
+  //   }
+  // }, [status, dispatch]);
 
   useEffect(() => {
     if (status === "succeeded" && user) {
