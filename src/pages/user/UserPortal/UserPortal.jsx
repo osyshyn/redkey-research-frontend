@@ -106,16 +106,31 @@ const UserPortal = () => {
       return hasDueDateFilter ? folder.research.length > 0 : true;
     });
 
+  // const searchInFilteredFolders = searchValue
+  //   ? filteredFolders
+  //       .map((folder) => ({
+  //         ...folder,
+  //         research: folder.research.filter((item) =>
+  //           item.title.toLowerCase().includes(searchValue.toLowerCase())
+  //         ),
+  //       }))
+  //       .filter((folder) => folder.research.length > 0)
+  //   : filteredFolders;
+
   const searchInFilteredFolders = searchValue
-    ? filteredFolders
-        .map((folder) => ({
-          ...folder,
-          research: folder.research.filter((item) =>
-            item.title.toLowerCase().includes(searchValue.toLowerCase())
-          ),
-        }))
-        .filter((folder) => folder.research.length > 0)
-    : filteredFolders;
+  ? filteredFolders
+      .map((folder) => ({
+        ...folder,
+        research: folder.research.filter((item) =>
+          item.title.toLowerCase().includes(searchValue.toLowerCase())
+        ),
+      }))
+      .filter(
+        (folder) =>
+          folder.research.length > 0 ||
+          folder.name.toLowerCase().includes(searchValue.toLowerCase()) 
+      )
+  : filteredFolders;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

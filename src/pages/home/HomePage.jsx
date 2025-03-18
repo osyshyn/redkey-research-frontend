@@ -16,6 +16,9 @@ import teamPacificIcon from "../../assets/homepage-icons/Teams_Pacific.svg";
 import DefaultResearchIcon from "../../assets/icons/default-research-icon.svg?react";
 import MailIcon from "../../assets/icons/mail-icon.svg?react";
 import PhoneIcon from "../../assets/icons/phone-icon.svg?react";
+import AntrimResearchIcon from "../../assets/icons/antrim-research-icon.svg?react";
+import LafitteResearchIcon from "../../assets/icons/lafitte-research-icon.svg?react";
+import PrytaniaResearchIcon from "../../assets/icons/prytania-research-icon.svg?react";
 
 import "./styles.scss";
 
@@ -23,19 +26,20 @@ const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const mobileMenuData = [
     {
-      optionName: "BK Partners",
+      optionName: "Pacific Square Research",
       icon: <DefaultResearchIcon className="mobile-home-menu-icon" />,
-      onOptionClick: () => {
-        window.open("https://bkresearch.com/", "_blank", "noopener noreferrer");
-      },
     },
     {
-      optionName: "Email: info@redkeyresearch.com",
-      icon: <MailIcon className="mobile-home-menu-icon" />,
+      optionName: "Lafitte Research",
+      icon: <LafitteResearchIcon className="mobile-home-menu-icon" />,
     },
     {
-      optionName: "Phone: 646-631-0560",
-      icon: <PhoneIcon className="mobile-home-menu-icon" />,
+      optionName: "Prytania Research",
+      icon: <PrytaniaResearchIcon className="mobile-home-menu-icon" />,
+    },
+    {
+      optionName: "Antrim Research",
+      icon: <AntrimResearchIcon className="mobile-home-menu-icon" />,
     },
   ];
 
@@ -83,9 +87,19 @@ const HomePage = () => {
         </p>
       </div>
 
-      <div className="teams-info-wrapper">
-        <div>
+      <div
+        className={
+          currentUserDevice === "desktop"
+            ? "teams-info-wrapper"
+            : "teams-info-wrapper-mobile"
+        }
+      >
+        <div className="teams-container">
           <p className="teams-info-main-title">The redkey research teams</p>
+          <div className="contact-info">
+            <p>Email: info@redkeyresearch.com</p>
+            <p>Phone: 646-631-0560</p>
+          </div>
           <div className="teams-items-wrapper">
             <div className="team-item-container">
               <img src={teamPacificIcon} className="team-icon" />
@@ -126,22 +140,41 @@ const HomePage = () => {
       </div>
 
       {currentUserDevice === "desktop" ? (
-        <div className={`burger-menu ${isMenuOpen ? "open" : ""}`}>
-          <button className="close-btn" onClick={() => setIsMenuOpen(false)}>
-            ✖
-          </button>
-          <a
-            href="https://bkresearch.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            BK Partners
-          </a>
-          <div className="contact-info">
-            <p>Email: info@redkeyresearch.com</p>
-            <p>Phone: 646-631-0560</p>
+        isMenuOpen && (
+          <div className="main-dropdown-menu">
+            <button className="close-btn" onClick={() => setIsMenuOpen(false)}>
+              ✖
+            </button>
+            <div className="home-menu-item">
+              <DefaultResearchIcon
+                className="mobile-home-menu-icon"
+                alt="Profile Icon"
+              />
+              <span>Pacific Square Research</span>
+            </div>
+            <div className="home-menu-item">
+              <LafitteResearchIcon
+                className="mobile-home-menu-icon"
+                alt="Profile Icon"
+              />
+              <span>Lafitte Research</span>
+            </div>
+            <div className="home-menu-item">
+              <PrytaniaResearchIcon
+                className="mobile-home-menu-icon"
+                alt="Profile Icon"
+              />
+              <span>Prytania Research</span>
+            </div>
+            <div className="home-menu-item">
+              <AntrimResearchIcon
+                className="mobile-home-menu-icon"
+                alt="Profile Icon"
+              />
+              <span>Antrim Research</span>
+            </div>
           </div>
-        </div>
+        )
       ) : (
         <MobileModalWrapper
           isOpen={isMenuOpen}

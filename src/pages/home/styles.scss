@@ -63,14 +63,22 @@
 }
 
 .teams-info-wrapper {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // width: 80%;
+  // width: 80;
+  // margin: auto;
+  // margin-top: -320px;
+  // //   z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 80%;
-  width: 80;
-  margin: auto;
-  margin-top: -320px;
-  //   z-index: 10;
+  position: absolute;
+  top: 100vh;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
 .teams-info-main-title {
@@ -79,7 +87,7 @@
   font-weight: $font-weight-bold;
   font-size: 20px;
   letter-spacing: 7px;
-  margin-bottom: 40px;
+  // margin-bottom: 40px;
   color: $home-page-light;
 }
 
@@ -123,62 +131,105 @@
   color: $home-page-light;
 }
 
-.burger-menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 10;
+.header-container {
+  position: relative;
 }
 
-.burger-menu {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 300px;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: left 0.3s ease-in-out;
-  z-index: 11;
+.main-dropdown-menu {
+  position: absolute;
+  top: 100px;
+  left: 10%;
+  padding: 25px 25px 15px 15px;
+  min-width: 250px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+  background: var(--accent-color);
+  border: 1px solid var(--primary-background);
+  border-radius: 10px;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25),
+    0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
   .close-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 10px;
+    right: 10px;
     background: none;
     border: none;
     color: white;
-    font-size: 24px;
+    font-size: 15px;
     cursor: pointer;
   }
 
-  a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-  }
-  .contact-info {
-    position: absolute;
-    bottom: 20px;
-    color: $white;
-    font-size: 14px;
-    margin-bottom: 10px;
+  .home-menu-item {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 10px;
+    padding: 10px 16px;
+    margin: 0 10px;
+    font-family: $font-family-satoshi;
+    font-size: 16px;
+    font-weight: $font-weight-normal;
+    line-height: 24px;
+    color: $text-color-neutral;
+
+    span {
+      font-family: $font-family-satoshi;
+      font-size: 14px;
+    }
   }
 
-  .contact-info a {
-    color: $white;
-    text-decoration: none;
+  p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-family: $font-family-satoshi;
+    font-size: 16px;
+    font-weight: $font-weight-normal;
+    line-height: 24px;
+    color: $text-color-neutral;
+
+    &:hover {
+      background: $secondary-background;
+      border-radius: 8px;
+    }
   }
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  color: white;
+
+  .menu-icon {
+    width: 18px;
+    height: 18px;
+    stroke: white;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-info {
+  color: $white;
+  font-size: 14px;
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 35px;
 }
 
 .burger-menu.open {
@@ -190,6 +241,21 @@
   width: 14px;
   height: 14px;
 }
+
+// @media screen and (max-width: 1024px) {
+//   .teams-info-wrapper {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     width: 80%;
+//     width: 80;
+//     margin: auto;
+//     margin-top: -320px;
+//     //   z-index: 10;
+
+//   }
+
+// }
 
 @media screen and (max-width: 768px) {
   .home-page-container {
@@ -253,19 +319,26 @@
     height: 130px;
   }
 
-  .teams-info-wrapper {
+  .teams-info-wrapper-mobile {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     margin: auto;
-    margin-top: -320px;
+    position: absolute;
+    top: 100vh;
     margin-left: 7%;
     background: #bf272d;
-
     max-width: calc(100% - 7%);
     box-sizing: border-box;
+  }
+
+  .teams-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .teams-info-main-title {
