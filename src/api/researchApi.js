@@ -10,11 +10,12 @@ export const getFoldersAPI = async () => {
   }
 };
 
-export const createFolderAPI = async (folderName, selectedFirmFolder) => {
+export const createFolderAPI = async (folderName, selectedFirmFolder, folderStockTicker) => {
   try {
     const response = await axiosInstance.post("/admin/createFolder", {
       name: folderName,
       firm: { id: selectedFirmFolder.value },
+      stock_ticker : folderStockTicker
     });
     return response;
   } catch (error) {

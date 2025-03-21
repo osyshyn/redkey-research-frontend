@@ -22,7 +22,7 @@ const UserPortal = () => {
   // const [numPages, setNumPages] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const [showAccessDenied, setShowAccessDenied] = useState(false);
 
@@ -62,7 +62,14 @@ const UserPortal = () => {
   //   [folders]
   // );
 
-  const foldersFilteredByFirm = folders.filter(
+  const sortedFolders = [...folders].sort((a, b) => {
+    const statusOrder = { 1: 0, 4: 1, 3: 2, 2: 3 };
+    const orderA = statusOrder[a.status] ?? Infinity;
+    const orderB = statusOrder[b.status] ?? Infinity;
+    return orderA - orderB;
+  });
+
+  const foldersFilteredByFirm = sortedFolders.filter(
     (folder) => folder?.firm.id === currentFirm?.id
   );
 
@@ -118,19 +125,19 @@ const UserPortal = () => {
   //   : filteredFolders;
 
   const searchInFilteredFolders = searchValue
-  ? filteredFolders
-      .map((folder) => ({
-        ...folder,
-        research: folder.research.filter((item) =>
-          item.title.toLowerCase().includes(searchValue.toLowerCase())
-        ),
-      }))
-      .filter(
-        (folder) =>
-          folder.research.length > 0 ||
-          folder.name.toLowerCase().includes(searchValue.toLowerCase()) 
-      )
-  : filteredFolders;
+    ? filteredFolders
+        .map((folder) => ({
+          ...folder,
+          research: folder.research.filter((item) =>
+            item.title.toLowerCase().includes(searchValue.toLowerCase())
+          ),
+        }))
+        .filter(
+          (folder) =>
+            folder.research.length > 0 ||
+            folder.name.toLowerCase().includes(searchValue.toLowerCase())
+        )
+    : filteredFolders;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -199,7 +206,7 @@ const UserPortal = () => {
 
   return (
     <>
-      <Header />
+      <Header componentType={"user_portal"} />
       <ActionBar
         title={`${
           currentFirm?.name.charAt(0).toUpperCase() + currentFirm?.name.slice(1)
@@ -213,6 +220,14 @@ const UserPortal = () => {
       />
       {foldersStatus === "loading" ? (
         <Loader />
+      ) : folders.length === 0 ? (
+        <div className="folders-and-document-container">
+          <div className="folders-container">
+            <p className="no-folders-message">
+              No folders available to display
+            </p>
+          </div>
+        </div>
       ) : (
         <>
           <div className="folders-and-document-container">
@@ -271,7 +286,7 @@ const UserPortal = () => {
                 itemsPerPage={itemsPerPage}
                 onPageChange={handlePageChange}
                 onItemsPerPageChange={handleItemsPerPageChange}
-                itemsPerPageOptions={[3, 6, 10]}
+                itemsPerPageOptions={[10, 15, 20]}
               />
             </div>
           )}

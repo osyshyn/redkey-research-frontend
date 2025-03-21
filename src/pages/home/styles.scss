@@ -4,7 +4,13 @@
   margin-left: 10%;
   overflow: hidden;
   display: flex;
-  //   position: relative;
+}
+.home-page-container-background {
+  margin-left: 10%;
+  overflow: hidden;
+  display: flex;
+  background-color: #bf272d;
+  height: 220px;
 }
 .main-door-home-icon {
   display: block;
@@ -87,7 +93,7 @@
   font-weight: $font-weight-bold;
   font-size: 20px;
   letter-spacing: 7px;
-  // margin-bottom: 40px;
+  margin-bottom: 30px;
   color: $home-page-light;
 }
 
@@ -101,6 +107,7 @@
   display: flex;
   gap: 30px;
   align-items: flex-start;
+  margin-bottom: 40px;
 }
 
 .team-item-container {
@@ -171,6 +178,7 @@
     font-weight: $font-weight-normal;
     line-height: 24px;
     color: $text-color-neutral;
+    cursor: pointer;
 
     span {
       font-family: $font-family-satoshi;
@@ -227,8 +235,9 @@
   color: $white;
   font-size: 14px;
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  margin-top: 10px;
+  // margin-top: 10px;
   margin-bottom: 35px;
 }
 
@@ -277,6 +286,16 @@
     align-items: center;
     width: 100%;
     flex-direction: column;
+  }
+
+  .contact-info {
+    color: $white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 35px;
+    font-weight: 400;
+    font-size: 12px;
   }
 
   .key-graphic-icon {

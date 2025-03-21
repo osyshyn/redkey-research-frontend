@@ -19,7 +19,7 @@ const FolderAndResearchModals = ({
 
   isUploadResearchModalOpen = false,
   onCloseUploadResearchModal = () => {},
-  folderOptions = [],
+  // folderOptions = [],
   onSaveResearchData = () => {},
   onUpdateResearchData = () => {},
   editingResearch = null,
@@ -30,6 +30,7 @@ const FolderAndResearchModals = ({
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [selectedFirm, setSelectedFirm] = useState(null);
   const [selectedFirmFolder, setSelectedFirmFolder] = useState(null);
+  const [folderStockTicker, setFolderStockTicker] = useState(null);
   const [researchDate, setResearchDate] = useState(null);
   const [reportType, setReportType] = useState(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
@@ -37,6 +38,7 @@ const FolderAndResearchModals = ({
   const [isDuplicateWarningOpen, setDuplicateWarningOpen] = useState(false);
 
   const [folderNameError, setFolderNameError] = useState("");
+  const [folderStockTickerError, setFolderStockTickerError] = useState("");
   const [researchNameError, setResearchNameError] = useState("");
 
   const [hasFile, setHasFile] = useState(!!editingResearch?.file);
@@ -47,6 +49,7 @@ const FolderAndResearchModals = ({
   const currentFileId = useSelector((state) => state.upload.currentFileId);
   const firmsList = useSelector((state) => state.firm.firms);
   const { folders } = useSelector((state) => state.research);
+  const currentFirm = useSelector((state) => state.firm.currentFirm);
 
   console.log("currentFileId", currentFileId);
 
@@ -59,9 +62,50 @@ const FolderAndResearchModals = ({
     [firmsList]
   );
 
+  // const filteredFolderOptions = useMemo(() => {
+  //   if (!selectedFirm) return folders;
+
+  //   return folders.filter((folder) => folder.firm.id === selectedFirm.value);
+  // }, [folders, selectedFirm]);
+
+  // const folderOptions = useMemo(
+  //   () =>
+  //     filteredFolderOptions.map((folder) => ({
+  //       value: folder.id,
+  //       label: folder.name,
+  //     })),
+  //   [filteredFolderOptions]
+  // );
+
+  const filteredFolderOptions = useMemo(() => {
+    if (!selectedFirm) return [];
+    return folders.filter((folder) => folder.firm?.id === selectedFirm.value);
+  }, [folders, selectedFirm]);
+
+  const folderOptions = useMemo(
+    () =>
+      filteredFolderOptions.map((folder) => ({
+        value: folder.id,
+        label: folder.name,
+      })),
+    [filteredFolderOptions]
+  );
+
+  console.log("filteredFolderOptions", filteredFolderOptions);
+
   console.log("editingResearch", editingResearch, folderOptions);
 
   console.log("reportType", reportType);
+
+  useEffect(() => {
+    if (!editingResearch && currentFirm) {
+      const defaultFirm = firmsListOptions.find(
+        (firm) => firm.value === currentFirm.id
+      );
+      setSelectedFirm(defaultFirm || null);
+      setSelectedFirmFolder(defaultFirm || null);
+    }
+  }, [currentFirm, editingResearch, firmsListOptions]);
 
   useEffect(() => {
     if (editingResearch) {
@@ -109,9 +153,19 @@ const FolderAndResearchModals = ({
 
   useEffect(() => {
     const isFolderValid =
-      folderName.trim().length > 0 && selectedFirmFolder && !folderNameError;
+      folderName.trim().length > 0 &&
+      selectedFirmFolder &&
+      !folderNameError &&
+      folderStockTicker &&
+      !folderStockTickerError;
     setIsFolderSaveDisabled(!isFolderValid);
-  }, [folderName, selectedFirmFolder, folderNameError]);
+  }, [
+    folderName,
+    selectedFirmFolder,
+    folderNameError,
+    folderStockTicker,
+    folderStockTickerError,
+  ]);
 
   const handleFolderNameChange = (e) => {
     const value = e.target.value;
@@ -125,6 +179,26 @@ const FolderAndResearchModals = ({
       }
     }
   };
+
+  const handleSelectFirm = (option) => {
+    setSelectedFirm(option);
+    setSelectedFolder(null);
+  };
+
+  const handleStockTickerChange = (e) => {
+    const value = e.target.value.replace(/[^A-Z0-9]/g, "");
+
+    if (e.target.value !== value) {
+      setFolderStockTickerError(
+        "Only uppercase letters and numbers are allowed."
+      );
+    } else {
+      setFolderStockTickerError("");
+    }
+
+    setFolderStockTicker(value);
+  };
+
   const handleResearchNameChange = (e) => {
     const value = e.target.value;
 
@@ -139,26 +213,33 @@ const FolderAndResearchModals = ({
   };
 
   const handleCreateFolder = () => {
-    let newFolderName = folderName.trim();
-    if (!newFolderName) return;
+    // let newFolderName = folderName.trim();
+    // if (!newFolderName) return;
 
-    const existingFolders = folderOptions.map((folder) => folder.label);
+    // const existingFolders = folderOptions.map((folder) => folder.label);
 
-    let index = 1;
-    let uniqueName = newFolderName;
+    // let index = 1;
+    // let uniqueName = newFolderName;
 
-    while (existingFolders.includes(uniqueName)) {
-      uniqueName = `${newFolderName} (${index++})`;
-    }
+    // while (existingFolders.includes(uniqueName)) {
+    //   uniqueName = `${newFolderName} (${index++})`;
+    // }
+    console.log(
+      "folderName, selectedFirmFolder, folderStockTicker",
+      folderName,
+      selectedFirmFolder,
+      folderStockTicker
+    );
 
-    onCreateFolder(uniqueName, selectedFirmFolder);
+    onCreateFolder(folderName, selectedFirmFolder, folderStockTicker);
     setFolderName("");
+    setFolderStockTicker("");
     setSelectedFirmFolder(null);
     onCloseCreateFolderModal();
-    if (existingFolders.includes(newFolderName)) {
-      setDuplicateWarningOpen(true);
-      return;
-    }
+    // if (existingFolders.includes(newFolderName)) {
+    //   setDuplicateWarningOpen(true);
+    //   return;
+    // }
   };
 
   const handleSaveResearch = () => {
@@ -194,19 +275,15 @@ const FolderAndResearchModals = ({
 
   console.log("firmsListOptions", folderOptions, firmsListOptions, folders);
 
-  const filteredFirms = folders
-    .filter((folder) => folder.id === selectedFolder?.value)
-    .map((folder) => folder.firm);
+  // const filteredFirms = folders
+  //   .filter((folder) => folder.id === selectedFolder?.value)
+  //   .map((folder) => folder.firm);
 
-  const firmOptions = firmsListOptions.filter((firm) => {
-    return filteredFirms.some((filteredFirm) => filteredFirm.id === firm.value);
-  });
+  // const firmOptions = firmsListOptions.filter((firm) => {
+  //   return filteredFirms.some((filteredFirm) => filteredFirm.id === firm.value);
+  // });
 
-  useEffect(() => {
-    if (!editingResearch) {
-      setSelectedFirm(null);
-    }
-  }, [selectedFolder]);
+  const firmOptions = firmsListOptions;
 
   const modalRoot = document.getElementById("modal-root");
 
@@ -229,6 +306,7 @@ const FolderAndResearchModals = ({
             {folderNameError && (
               <div className="error-text">{folderNameError}</div>
             )}
+
             <CustomDropdown
               label="Firm"
               placeholder="Select a firm"
@@ -236,6 +314,16 @@ const FolderAndResearchModals = ({
               value={selectedFirmFolder}
               onChange={(option) => setSelectedFirmFolder(option)}
             />
+            <CustomInput
+              label="Stock ticker"
+              placeholder="Enter stock ticker"
+              value={folderStockTicker}
+              onChange={handleStockTickerChange}
+              error={folderStockTickerError ? true : false}
+            />
+            {folderStockTickerError && (
+              <div className="error-text">{folderStockTickerError}</div>
+            )}
             <div className="modal-actions-button">
               <CustomButton
                 label="Create"
@@ -271,18 +359,20 @@ const FolderAndResearchModals = ({
               }`}
             >
               <CustomDropdown
+                label="Firm"
+                placeholder="Select a firm"
+                options={firmOptions}
+                value={selectedFirm}
+                // onChange={(option) => setSelectedFirm(option)}
+                onChange={(option) => handleSelectFirm(option)}
+              />
+              <CustomDropdown
                 label="Company"
                 placeholder="Select a company"
                 options={folderOptions}
                 value={selectedFolder}
                 onChange={(option) => setSelectedFolder(option)}
-              />
-              <CustomDropdown
-                label="Firm"
-                placeholder="Select a firm"
-                options={firmOptions}
-                value={selectedFirm}
-                onChange={(option) => setSelectedFirm(option)}
+                searchable={true}
               />
             </div>
             <div
@@ -321,7 +411,7 @@ const FolderAndResearchModals = ({
           modalRoot
         )}
 
-      <CustomModal
+      {/* <CustomModal
         isOpen={isDuplicateWarningOpen}
         onClose={() => setDuplicateWarningOpen(false)}
         modalTitle="Duplicate Folder"
@@ -330,7 +420,7 @@ const FolderAndResearchModals = ({
           A folder with this name already exists. An index will be added
           automatically.
         </p>
-      </CustomModal>
+      </CustomModal> */}
     </>
   );
 };

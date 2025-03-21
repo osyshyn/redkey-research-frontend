@@ -13,6 +13,7 @@ import ProfileSettingsModal from "../ProfileSettingsModal/ProfileSettingsModal";
 import ContactUsModal from "../ContactUsModal/ContactUsModal";
 import ResearchFilesDropdown from "../ResearchFilesDropdown/ResearchFilesDropdown";
 import MobileDropdownMenu from "../MobileDropdownMenu/MobileDropdownMenu";
+import FirmsModal from "../FirmsModal/FirmsModal";
 
 import { getThemeName } from "../../utils/userHelpers";
 
@@ -23,10 +24,12 @@ import logoLightHeader from "../../assets/images/logo-light-big.png";
 
 import "./styles.scss";
 
-const Header = () => {
+const Header = ({componentType}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isContactUsModalOpen, setIsContactUsModalOpen] = useState(false);
+
+  const [isFirmsModalOpen, setIsFirmsModalOpen] = useState(false);
 
   const [isResearchDropdownOpen, setIsResearchDropdownOpen] = useState(false);
   const [researchDropdownPosition, setResearchDropdownPosition] = useState({
@@ -256,6 +259,8 @@ const Header = () => {
           onContactUsClick={handleContactUsClick}
           onLogoutClick={handleLogoutClick}
           currentUser={user}
+          adminDesktopAddFirmProps={{setIsFirmsModalOpen}}
+          componentType={componentType}
         />
       )}
 
@@ -285,6 +290,13 @@ const Header = () => {
             last_name: user.last_name,
             email: user.email,
           }}
+        />
+      )}
+
+      {isFirmsModalOpen && (
+        <FirmsModal
+          isOpen={isFirmsModalOpen}
+          onClose={() => setIsFirmsModalOpen(false)}
         />
       )}
 

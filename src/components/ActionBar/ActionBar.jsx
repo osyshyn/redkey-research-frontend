@@ -20,14 +20,14 @@ const ActionBar = ({
   buttons = [],
   mobileButton = {},
   modalsProps = {},
-  adminDesktopAddFirmProps = {},
+  // adminDesktopAddFirmProps = {},
 }) => {
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
   const [mobileActionAddData, setMobileActionAddData] = useState({
     options: [],
   });
 
-  const { setIsFirmsModalOpen } = adminDesktopAddFirmProps;
+  // const { setIsFirmsModalOpen } = adminDesktopAddFirmProps;
 
   const currentUserDevice = useDeviceType();
   console.log("currentUserDevice", currentUserDevice, buttons);
@@ -73,7 +73,7 @@ const ActionBar = ({
           <NewUserModal {...modalsProps} />
         )}
       </div>
-      {currentUserDevice === "desktop" && componentType === "admin_portal" && (
+      {/* {currentUserDevice === "desktop" && componentType === "admin_portal" && (
         <div className="firm-button">
           <CustomButton
             label="+ Add/remove research team"
@@ -83,7 +83,7 @@ const ActionBar = ({
             }}
           />
         </div>
-      )}
+      )} */}
 
       {currentUserDevice === "mobile" && (
         <MobileModalWrapper

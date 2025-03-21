@@ -18,38 +18,59 @@
   }
 
   .custom-dropdown-field {
-    box-sizing: border-box;
+    position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 16px;
-    width: 100%;
+    padding: 0 16px;
     height: 43px;
     border: 1px solid $input-border;
     border-radius: $border-radius-small;
     background: transparent;
-    font-family: $font-family-satoshi;
-    font-size: 16px;
-    line-height: 150%;
-    color: $text-color-accent;
     cursor: pointer;
+    width: 100%;
 
     .placeholder {
       color: $secondary-color;
     }
 
-    .value {
+    .dropdown-search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: $font-family-satoshi;
+      font-size: 16px;
       color: $text-color-accent;
+      outline: none;
+      padding: 0;
+      height: 100%;
+      width: inherit;
+
+      &::placeholder {
+        color: $secondary-color;
+      }
+    }
+
+    .dropdown-display-value {
+      flex: 1;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100px;
+      color: $text-color-accent;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
-    &:focus,
-    &:hover {
-      outline: none;
-      border-color: $input-border-gray-darker;
+    .dropdown-icon {
+      margin-left: 8px;
+      transition: transform 0.2s ease;
+      width: 16px;
+      height: 16px;
+      color: $text-color-accent;
+
+      &.open {
+        transform: rotate(180deg);
+      }
     }
   }
 

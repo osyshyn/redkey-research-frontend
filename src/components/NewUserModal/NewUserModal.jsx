@@ -27,7 +27,7 @@ const NewUserModal = ({
     last_name: "",
     email: "",
   });
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState(userTypeOptions[0]?.value || "");
   const [firm, setFirm] = useState("");
 
   console.log("userTT", userType, firm);

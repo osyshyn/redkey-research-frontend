@@ -43,7 +43,7 @@ const AdminPortal = () => {
   const [numPages, setNumPages] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
   const [isUploadResearchModalOpen, setIsUploadResearchModalOpen] =
@@ -85,7 +85,15 @@ const AdminPortal = () => {
     [dispatch]
   );
 
-  const foldersFilteredByFirm = folders.filter((folder) => {
+  const sortedFolders = [...folders]
+  .sort((a, b) => {
+    const statusOrder = { 1: 0, 4: 1, 3: 2, 2: 3 };
+    const orderA = statusOrder[a.status] ?? Infinity;
+    const orderB = statusOrder[b.status] ?? Infinity;
+    return orderA - orderB;
+  });
+
+  const foldersFilteredByFirm = sortedFolders.filter((folder) => {
     if (currentFirm?.name === "All") {
       return true;
     }
@@ -144,20 +152,19 @@ const AdminPortal = () => {
   //   : filteredFolders;
 
   const searchInFilteredFolders = searchValue
-  ? filteredFolders
-      .map((folder) => ({
-        ...folder,
-        research: folder.research.filter((item) =>
-          item.title.toLowerCase().includes(searchValue.toLowerCase())
-        ),
-      }))
-      .filter(
-        (folder) =>
-          folder.research.length > 0 ||
-          folder.name.toLowerCase().includes(searchValue.toLowerCase()) 
-      )
-  : filteredFolders;
-
+    ? filteredFolders
+        .map((folder) => ({
+          ...folder,
+          research: folder.research.filter((item) =>
+            item.title.toLowerCase().includes(searchValue.toLowerCase())
+          ),
+        }))
+        .filter(
+          (folder) =>
+            folder.research.length > 0 ||
+            folder.name.toLowerCase().includes(searchValue.toLowerCase())
+        )
+    : filteredFolders;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -191,10 +198,10 @@ const AdminPortal = () => {
   };
 
   const handleCreateFolder = useCallback(
-    (folderName, selectedFirmFolder) => {
+    (folderName, selectedFirmFolder, folderStockTicker) => {
       if (folderName.trim()) {
         dispatch(clearResearchFilters());
-        dispatch(createFolder({ folderName, selectedFirmFolder }));
+        dispatch(createFolder({ folderName, selectedFirmFolder, folderStockTicker }));
       }
     },
     [dispatch]
@@ -261,7 +268,7 @@ const AdminPortal = () => {
 
   return (
     <>
-      <Header />
+      <Header        componentType={"admin_portal"}/>
       <ActionBar
         title={
           currentFirm?.name === "All"
@@ -303,7 +310,6 @@ const AdminPortal = () => {
           folderOptions,
           onSaveResearchData: handleSaveResearchData,
         }}
-        adminDesktopAddFirmProps={{ setIsFirmsModalOpen }}
       />
       {foldersStatus === "loading" ? (
         <Loader />
@@ -383,7 +389,7 @@ const AdminPortal = () => {
                 itemsPerPage={itemsPerPage}
                 onPageChange={handlePageChange}
                 onItemsPerPageChange={handleItemsPerPageChange}
-                itemsPerPageOptions={[3, 6, 10]}
+                itemsPerPageOptions={[10, 15, 20]}
               />
             </div>
           )}

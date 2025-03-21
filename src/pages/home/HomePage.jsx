@@ -26,20 +26,14 @@ const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const mobileMenuData = [
     {
-      optionName: "Pacific Square Research",
+      optionName: "Teams",
       icon: <DefaultResearchIcon className="mobile-home-menu-icon" />,
+      onOptionClick: () => scrollToSection("teams"),
     },
     {
-      optionName: "Lafitte Research",
-      icon: <LafitteResearchIcon className="mobile-home-menu-icon" />,
-    },
-    {
-      optionName: "Prytania Research",
-      icon: <PrytaniaResearchIcon className="mobile-home-menu-icon" />,
-    },
-    {
-      optionName: "Antrim Research",
-      icon: <AntrimResearchIcon className="mobile-home-menu-icon" />,
+      optionName: "Contact",
+      icon: <PhoneIcon className="mobile-home-menu-icon" />,
+      onOptionClick: () => scrollToSection("contact"),
     },
   ];
 
@@ -59,6 +53,17 @@ const HomePage = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      setIsMenuOpen(false); // Закрываем меню после клика
+    }
+  };
+
   return (
     <>
       <div className="home-page-header">
@@ -72,6 +77,9 @@ const HomePage = () => {
       <div className="home-page-container">
         <img src={mainDoorGraphicIcon} className="main-door-home-icon" />
       </div>
+      {currentUserDevice === "desktop" && (
+        <div className="home-page-container-background"></div>
+      )}
 
       <div className="home-login-button-wrapper">
         <img src={keyGraphicIcon} className="key-graphic-icon" />
@@ -95,45 +103,56 @@ const HomePage = () => {
         }
       >
         <div className="teams-container">
-          <p className="teams-info-main-title">The redkey research teams</p>
-          <div className="contact-info">
-            <p>Email: info@redkeyresearch.com</p>
-            <p>Phone: 646-631-0560</p>
-          </div>
+          <p className="teams-info-main-title" id="teams">
+            The redkey research teams
+          </p>
           <div className="teams-items-wrapper">
             <div className="team-item-container">
               <img src={teamPacificIcon} className="team-icon" />
               <p className="team-item-title">Pacific Square Research</p>
               <p className="team-item-description">
-                Experts in forensic and fundamental analysis, uncovering
-                companies with overstretretched business models and financial
-                discrepancies.
+                Short-selling veterans combining forensic accounting,
+                fundamental analysis, and rigorous primary research to uncover
+                accounting irregularities, hidden liabilities, and unsustainable
+                business practices.
               </p>
             </div>
             <div className="team-item-container">
               <img src={teamLafitteIcon} className="team-icon" />
               <p className="team-item-title">Lafitte Research</p>
               <p className="team-item-description">
-                Focused on software sector short research, providing
-                high-conviction ideas through proprietary data gathering.
+                Technology-sector specialists primarily focused on software,
+                delivering high-conviction short ideas driven by extensive due
+                diligence and deep fundamental analysis.
               </p>
             </div>
             <div className="team-item-container">
               <img src={teamPrytaniaIcon} className="team-icon" />
               <p className="team-item-title">Prytania Research</p>
               <p className="team-item-description">
-                Generating actionable short ideas in non-therapeutic healthcare
-                through deep industry diligence.
+                delivering actionable healthcare shorts by identifying
+                underappreciated risks and misunderstood industry dynamics
+                across medtech, devices, services, and other non-therapeutic
+                subsectors.
               </p>
             </div>
             <div className="team-item-container">
               <img src={teamAntrimIcon} className="team-icon" />
               <p className="team-item-title">Antrim Research</p>
               <p className="team-item-description">
-                Specializing in sourcing short ideas across cyclicals, offering
-                insight into emerging market shifts.
+                Industry generalists uncovering short opportunities across
+                sectors, leveraging deep analysis, primary research, and sharp
+                market insight to identify companies with deteriorating
+                financial and operational health.
               </p>
             </div>
+          </div>
+          <p className="teams-info-main-title" id="contact">
+            General Inquiries
+          </p>
+          <div className="contact-info">
+            <p>Email: info@redkeyresearch.com</p>
+            <p>Phone: 646-631-0560</p>
           </div>
           <footer className="footer-home-page">© 2025 Redkey Research</footer>
         </div>
@@ -145,33 +164,22 @@ const HomePage = () => {
             <button className="close-btn" onClick={() => setIsMenuOpen(false)}>
               ✖
             </button>
-            <div className="home-menu-item">
+            <div
+              className="home-menu-item"
+              onClick={() => scrollToSection("teams")}
+            >
               <DefaultResearchIcon
                 className="mobile-home-menu-icon"
-                alt="Profile Icon"
+                alt="Teams Icon"
               />
-              <span>Pacific Square Research</span>
+              <span>Teams</span>
             </div>
-            <div className="home-menu-item">
-              <LafitteResearchIcon
-                className="mobile-home-menu-icon"
-                alt="Profile Icon"
-              />
-              <span>Lafitte Research</span>
-            </div>
-            <div className="home-menu-item">
-              <PrytaniaResearchIcon
-                className="mobile-home-menu-icon"
-                alt="Profile Icon"
-              />
-              <span>Prytania Research</span>
-            </div>
-            <div className="home-menu-item">
-              <AntrimResearchIcon
-                className="mobile-home-menu-icon"
-                alt="Profile Icon"
-              />
-              <span>Antrim Research</span>
+            <div
+              className="home-menu-item"
+              onClick={() => scrollToSection("contact")}
+            >
+              <PhoneIcon className="mobile-home-menu-icon" alt="Contact Icon" />
+              <span>Contact</span>
             </div>
           </div>
         )

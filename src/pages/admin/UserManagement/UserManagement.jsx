@@ -26,7 +26,7 @@ import "./styles.scss";
 const UserManagement = () => {
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(8);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
 
   const [isCreateNewUserModalOpen, setIsCreateNewUserModalOpen] =
     useState(false);
@@ -152,7 +152,7 @@ const UserManagement = () => {
 
   return (
     <>
-      <Header />
+      <Header   componentType={"user_management"}/>
       <ActionBar
         title="User management"
         componentType={"user_management"}
@@ -208,7 +208,7 @@ const UserManagement = () => {
                       itemsPerPage={itemsPerPage}
                       onPageChange={handlePageChange}
                       onItemsPerPageChange={handleItemsPerPageChange}
-                      itemsPerPageOptions={[8, 16, 24]}
+                      itemsPerPageOptions={[25, 50, 100]}
                     />
                   )}
               </div>
@@ -220,7 +220,7 @@ const UserManagement = () => {
                     itemsPerPage={itemsPerPage}
                     onPageChange={handlePageChange}
                     onItemsPerPageChange={handleItemsPerPageChange}
-                    itemsPerPageOptions={[8, 16, 24]}
+                    itemsPerPageOptions={[25, 50, 100]}
                   />
                 </div>
               )}
