@@ -2,6 +2,8 @@
 
 .magic-login-container {
   display: flex;
+  flex-direction: column;
+  gap: 60px;
   align-items: center;
   justify-content: center;
   height: 100vh;
@@ -36,6 +38,10 @@
   }
 }
 
+.logo-big {
+  height: 72px;
+}
+
 @media screen and (max-width: 768px) {
   .notification {
     display: flex;
@@ -53,5 +59,8 @@
       font-size: 14px;
       text-align: start;
     }
+  }
+  .logo-big {
+    height: 55px;
   }
 }

@@ -109,7 +109,8 @@ import {
   selectAuth,
 } from "../../store/slices/authSlice";
 import { setCurrentFirm } from "../../store/slices/firmSlice";
-
+import logoBig from "../../assets/images/logo-big.png";
+import logoLightBig from "../../assets/images/logo-light-big.png";
 import forgotPasswordNotificationIcon from "../../assets/icons/red-done-circle-icon.svg";
 
 import "./styles.scss";
@@ -119,6 +120,7 @@ const MagicLoginPage = () => {
   const token = searchParams.get("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currentTheme = document.body.getAttribute("data-theme-mode");
   const { user, status, error } = useSelector(selectAuth);
 
   useEffect(() => {
@@ -171,6 +173,44 @@ const MagicLoginPage = () => {
 
     if (error) {
       return (
+        <>
+          <img
+            className="logo-big"
+            src={
+              currentTheme === "dark" || currentTheme === null
+                ? logoBig
+                : logoLightBig
+            }
+            alt="Logo"
+          />
+          <div className="notification">
+            <img
+              className="notification-icon"
+              src={forgotPasswordNotificationIcon}
+              alt="Notification Icon"
+            />
+            <p className="notification-text">
+              Authentication Error Please try again or{" "}
+              <a href="mailto:info@redkeyresearch.com" className="text-red">
+                contact support
+              </a>
+            </p>
+          </div>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <img
+          className="logo-big"
+          src={
+            currentTheme === "dark" || currentTheme === null
+              ? logoBig
+              : logoLightBig
+          }
+          alt="Logo"
+        />
         <div className="notification">
           <img
             className="notification-icon"
@@ -178,27 +218,11 @@ const MagicLoginPage = () => {
             alt="Notification Icon"
           />
           <p className="notification-text">
-            Authentication Error Please try again or{" "}
-            <a href="mailto:info@redkeyresearch.com" className="text-red">
-              contact support
-            </a>
+            Invalid Authentication link. Please check your email for a valid
+            magic link.
           </p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="notification">
-        <img
-          className="notification-icon"
-          src={forgotPasswordNotificationIcon}
-          alt="Notification Icon"
-        />
-        <p className="notification-text">
-          Invalid Authentication Link. Please check your email for a valid magic
-          link.
-        </p>
-      </div>
+        </div>{" "}
+      </>
     );
   };
 
