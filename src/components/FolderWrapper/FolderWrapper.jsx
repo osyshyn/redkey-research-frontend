@@ -27,6 +27,8 @@ const FolderWrapper = ({
   status,
   children,
   componentType,
+  stockTicker,
+  earliestResearchDate
 }) => {
   const [isFolderOpen, setIsFolderOpen] = useState(true);
   const [currentStatus, setCurrentStatus] = useState(status);
@@ -157,6 +159,8 @@ const FolderWrapper = ({
         isFolderOpen={isFolderOpen}
         folderMoreIconRef={folderMoreIconRef}
         componentType={componentType}
+        stockTicker={stockTicker}
+        earliestResearchDate={earliestResearchDate}
       />
 
       <div className={`folder-contents ${isFolderOpen ? "open" : "closed"}`}>

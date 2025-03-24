@@ -116,7 +116,9 @@ const researchSlice = createSlice({
       })
       .addCase(getFolders.fulfilled, (state, action) => {
         state.foldersStatus = "succeeded";
-        state.folders = action.payload;
+        // state.folders = action.payload;
+        state.folders = action.payload.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
       })
       .addCase(getFolders.rejected, (state, action) => {
         state.foldersStatus = "failed";

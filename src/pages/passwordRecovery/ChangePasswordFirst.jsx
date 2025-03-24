@@ -23,7 +23,7 @@ const ChangePasswordFirst = () => {
   const [passwordError, setPasswordError] = useState("");
   const { user, status, error } = useSelector(selectAuth);
 
-  const userResetPassword = localStorage.getItem("reset_password");
+  // const userResetPassword = localStorage.getItem("reset_password");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

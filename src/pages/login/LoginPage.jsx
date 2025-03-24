@@ -23,7 +23,7 @@ const LoginPage = () => {
 
   const currentTheme = document.body.getAttribute("data-theme-mode");
 
-  const userResetPassword = localStorage.getItem("reset_password");
+  // const userResetPassword = localStorage.getItem("reset_password");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

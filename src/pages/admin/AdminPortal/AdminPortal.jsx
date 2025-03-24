@@ -85,8 +85,7 @@ const AdminPortal = () => {
     [dispatch]
   );
 
-  const sortedFolders = [...folders]
-  .sort((a, b) => {
+  const sortedFolders = [...folders].sort((a, b) => {
     const statusOrder = { 1: 0, 4: 1, 3: 2, 2: 3 };
     const orderA = statusOrder[a.status] ?? Infinity;
     const orderB = statusOrder[b.status] ?? Infinity;
@@ -201,7 +200,9 @@ const AdminPortal = () => {
     (folderName, selectedFirmFolder, folderStockTicker) => {
       if (folderName.trim()) {
         dispatch(clearResearchFilters());
-        dispatch(createFolder({ folderName, selectedFirmFolder, folderStockTicker }));
+        dispatch(
+          createFolder({ folderName, selectedFirmFolder, folderStockTicker })
+        );
       }
     },
     [dispatch]
@@ -268,7 +269,7 @@ const AdminPortal = () => {
 
   return (
     <>
-      <Header        componentType={"admin_portal"}/>
+      <Header componentType={"admin_portal"} />
       <ActionBar
         title={
           currentFirm?.name === "All"
@@ -330,6 +331,7 @@ const AdminPortal = () => {
                   <FolderWrapper
                     key={index}
                     title={folder.name}
+                    stockTicker={folder.stock_ticker}
                     folderId={folder.id}
                     // itemsAmount={folder.research.length}
                     itemsAmount={
@@ -340,6 +342,17 @@ const AdminPortal = () => {
                               researchItem?.firm?.id === currentFirm?.id &&
                               researchItem?.firm?.name === currentFirm?.name
                           ).length
+                    }
+                    earliestResearchDate={
+                      folder.research && folder.research.length > 0
+                        ? new Date(
+                            Math.min(
+                              ...folder.research.map(
+                                (item) => new Date(item.publication_date)
+                              )
+                            )
+                          ).toLocaleDateString("en-US")
+                        : "No researches yet"
                     }
                     status={folder.status}
                     componentType={"admin_portal"}

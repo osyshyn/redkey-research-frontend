@@ -1,4 +1,5 @@
 import React from "react";
+import useDeviceType from "../../../hooks/useDeviceType";
 import arrowDown from "../../../assets/icons/arrow-down.svg";
 import arrowUp from "../../../assets/icons/arrow-up.svg";
 import singleDotIcon from "../../../assets/icons/single-dot-icon.svg";
@@ -19,10 +20,14 @@ const FolderHeader = ({
   statusRef,
   folderMoreIconRef,
   componentType,
+  stockTicker,
+  earliestResearchDate,
 }) => {
   const hasVeryLongWord = title
     .split(" ")
     .some((word) => word.length > WORD_WRAP_THRESHOLD);
+
+  const currentUserDevice = useDeviceType();
 
   return (
     <div className={`folder-header ${isFolderOpen ? "open" : "closed"}`}>
@@ -39,10 +44,26 @@ const FolderHeader = ({
           {title}
         </p>
       </div>
-      <img src={singleDotIcon} className="single-dot-icon" />
-      <p className="items-amount">
-        {itemsAmount} {itemsAmount.toString() === "1" ? "item" : "items"}
-      </p>
+      {currentUserDevice === "desktop" && (
+        <>
+          <img src={singleDotIcon} className="single-dot-icon" />
+          <p className="items-amount">
+            {itemsAmount} {itemsAmount.toString() === "1" ? "item" : "items"}
+          </p>
+        </>
+      )}
+      {stockTicker && (
+        <>
+          <img src={singleDotIcon} className="single-dot-icon" />
+          <p className="items-amount">{stockTicker}</p>{" "}
+        </>
+      )}
+      {currentUserDevice === "desktop" && (
+        <>
+          <img src={singleDotIcon} className="single-dot-icon" />
+          <p className="items-amount">{earliestResearchDate}</p>
+        </>
+      )}
       <img src={singleDotIcon} className="single-dot-icon" />
       <p
         ref={statusRef}

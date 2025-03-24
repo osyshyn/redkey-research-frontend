@@ -40,7 +40,7 @@ export const logoutAPI = async () => {
 
     localStorage.removeItem("selectedTheme");
     localStorage.removeItem("currentFirm");
-    localStorage.removeItem("reset_password");
+    // localStorage.removeItem("reset_password");
 
     console.log("User logged out successfully");
   } catch (error) {

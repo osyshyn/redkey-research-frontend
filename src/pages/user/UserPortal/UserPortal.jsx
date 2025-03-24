@@ -237,6 +237,7 @@ const UserPortal = () => {
                   <FolderWrapper
                     key={index}
                     title={folder.name}
+                    stockTicker={folder.stock_ticker}
                     folderId={folder.id}
                     itemsAmount={
                       folder?.research?.filter(
@@ -244,6 +245,17 @@ const UserPortal = () => {
                           researchItem?.firm?.id === currentFirm?.id &&
                           researchItem?.firm?.name === currentFirm?.name
                       ).length
+                    }
+                    earliestResearchDate={
+                      folder.research && folder.research.length > 0
+                        ? new Date(
+                            Math.min(
+                              ...folder.research.map(
+                                (item) => new Date(item.publication_date)
+                              )
+                            )
+                          ).toLocaleDateString("en-US")
+                        : "No researches yet"
                     }
                     status={folder.status}
                     componentType={"user_portal"}
