@@ -141,42 +141,65 @@ const MagicLoginPage = () => {
     }
   }, [dispatch, token]);
 
+  // useEffect(() => {
+  //   if (status === "succeeded" && user) {
+  //     handleUserRedirect();
+  //   }
+  // }, [status, user]);
+
+  // const handleUserRedirect = () => {
+  //   console.log("Processing redirect for user:", user);
+
+  //   if (user.role === 3) {
+  //     dispatch(setCurrentFirm({ name: "All" }));
+  //     navigate("/admin/portal");
+  //   } else if (user.role === 2) {
+  //        dispatch(setCurrentFirm({ name: "All" }));
+  //   navigate("/admin/portal");
+  //   } else if (user.role === 1) {
+  //     handleUserPortalRedirect();
+  //   }
+  // };
+
   useEffect(() => {
     if (status === "succeeded" && user) {
-      handleUserRedirect();
+      console.log("UUUUUU", user, userResetPassword);
+
+      if (user.role !== 3) {
+        navigate("/set-your-password");
+      } else if (user.role === 3) {
+        navigate("/admin/portal");
+        dispatch(setCurrentFirm({ name: "All" }));
+      } else if (user.role === 2) {
+        navigate("/admin/portal");
+        dispatch(setCurrentFirm({ name: "All" }));
+      } else if (user.role === 1) {
+        const activeAccess = user.access.find(
+          (access) => access.value === true
+        );
+        if (activeAccess) {
+          dispatch(setCurrentFirm(activeAccess.firm));
+        }
+
+        navigate("/user/portal");
+      }
     }
-  }, [status, user]);
+  }, [status, user, navigate]);
 
-  const handleUserRedirect = () => {
-    console.log("Processing redirect for user:", user);
+  // const handleAdminRedirect = () => {
+  //   console.log("ADMIN REDIRECT");
 
-    if (user.role === 3) {
-      // handleAdminRedirect();
-      dispatch(setCurrentFirm({ name: "All" }));
-      navigate("/admin/portal");
-    } else if (user.role === 2) {
-      // handleAdminRedirect();  
-      //    dispatch(setCurrentFirm({ name: "All" }));
-    navigate("/admin/portal");
-    } else if (user.role === 1) {
-      handleUserPortalRedirect();
-    }
-  };
+  //   dispatch(setCurrentFirm({ name: "All" }));
+  //   navigate("/admin/portal");
+  // };
 
-  const handleAdminRedirect = () => {
-    console.log('ADMIN REDIRECT');
-    
-    dispatch(setCurrentFirm({ name: "All" }));
-    navigate("/admin/portal");
-  };
-
-  const handleUserPortalRedirect = () => {
-    const activeAccess = user.access.find((access) => access.value === true);
-    if (activeAccess) {
-      dispatch(setCurrentFirm(activeAccess.firm));
-    }
-    navigate("/user/portal");
-  };
+  // const handleUserPortalRedirect = () => {
+  //   const activeAccess = user.access.find((access) => access.value === true);
+  //   if (activeAccess) {
+  //     dispatch(setCurrentFirm(activeAccess.firm));
+  //   }
+  //   navigate("/user/portal");
+  // };
 
   const renderContent = () => {
     if (status === "loading") {
