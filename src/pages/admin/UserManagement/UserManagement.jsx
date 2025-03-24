@@ -20,6 +20,9 @@ import MobileModalWrapper from "../../../components/MobileModalWrapper/MobileMod
 import MobileActionAddIcon from "../../../assets/icons/mobile-action-add-button.svg?react";
 import PlusIcon from "../../../assets/icons/plus-icon.svg?react";
 import FileUploadIcon from "../../../assets/icons/file-upload-icon.svg?react";
+import forgotPasswordNotificationIcon from "../../../assets/icons/red-done-circle-icon.svg";
+import logoBig from "../../../assets/images/logo-big.png";
+import logoLightBig from "../../../assets/images/logo-light-big.png";
 
 import "./styles.scss";
 
@@ -44,6 +47,8 @@ const UserManagement = () => {
 
   const firmsList = useSelector((state) => state.firm.firms);
   const { userManagementFilters } = useSelector((state) => state.filters);
+  const { user } = useSelector((state) => state.auth);
+  const currentTheme = document.body.getAttribute("data-theme-mode");
 
   console.log("USERS", users);
 
@@ -150,9 +155,36 @@ const UserManagement = () => {
     setIsMobileModalOpen(true);
   };
 
+  if (user?.role === 1) {
+    return (
+      <div className="user-management-error-container">
+        <img
+          className="logo-big"
+          src={
+            currentTheme === "dark" || currentTheme === null
+              ? logoBig
+              : logoLightBig
+          }
+          alt="Logo"
+        />
+        <div className="notification">
+          <img
+            className="notification-icon"
+            src={forgotPasswordNotificationIcon}
+            alt="Notification Icon"
+          />
+          <p className="notification-text">
+            Unfortunately, you do not have the necessary permissions to access
+            this page.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <Header   componentType={"user_management"}/>
+      <Header componentType={"user_management"} />
       <ActionBar
         title="User management"
         componentType={"user_management"}

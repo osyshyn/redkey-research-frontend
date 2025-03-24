@@ -60,6 +60,48 @@
   padding: 0px 20px;
 }
 
+.user-management-error-container {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.logo-big {
+  height: 72px;
+}
+
+.notification {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px 22px;
+  border: 1px solid $input-border;
+  border-radius: 13px;
+  color: white;
+
+  .notification-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 16px;
+  }
+
+  .text-red {
+    color: $bright-red-color;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .notification-text {
+    font-family: $font-family-satoshi;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .user-management-table-wrapper {
     flex: 1;
@@ -67,6 +109,27 @@
     margin: 14px 16px;
     padding: 1px;
     border-radius: $border-radius-medium;
+  }
+
+  .notification {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 20px 22px;
+    border: 1px solid $input-border;
+    color: white;
+    position: absolute;
+    top: 0;
+    background: $accent-color;
+    // width: 120%;
+
+    .notification-text {
+      font-size: 14px;
+      text-align: start;
+    }
+  }
+  .logo-big {
+    height: 55px;
   }
 }
 
