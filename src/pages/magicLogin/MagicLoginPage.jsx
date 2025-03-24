@@ -33,10 +33,9 @@
 //   const navigate = useNavigate();
 //   const { user, status, error } = useSelector(selectAuth);
 
-
 //     useEffect(() => {
 //       dispatch(clearAuthError());
-  
+
 //       if (token) {
 //         checkMagicLink(token)
 //           .then((response) => {
@@ -48,7 +47,6 @@
 //         setIsTokenValid(false);
 //       }
 //     }, [dispatch, token]);
-
 
 //   // useEffect(() => {
 //   //   if (status === "succeeded") {
@@ -100,8 +98,6 @@
 
 // export default MagicLoginPage;
 
-
-
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -121,7 +117,7 @@ const MagicLoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, status, error } = useSelector(selectAuth);
-  const userResetPassword = localStorage.getItem("reset_password");
+  // const userResetPassword = localStorage.getItem("reset_password");
 
   useEffect(() => {
     const verifyMagicToken = async () => {
@@ -133,10 +129,8 @@ const MagicLoginPage = () => {
         }
 
         await dispatch(checkMagicLink({ token })).unwrap();
-        
-  
-        await dispatch(getProfile()).unwrap();
 
+        await dispatch(getProfile()).unwrap();
       } catch (err) {
         console.error("Magic link verification failed:", err);
       }
@@ -156,18 +150,18 @@ const MagicLoginPage = () => {
   const handleUserRedirect = () => {
     console.log("Processing redirect for user:", user);
 
-    if (user.role !== 3 && userResetPassword === "true") {
-      navigate("/set-your-password");
-    } else if (user.role === 3) {
+    if (user.role === 3) {
       handleAdminRedirect();
-    } else if (user.role === 2 && userResetPassword === "false") {
+    } else if (user.role === 2) {
       handleAdminRedirect();
-    } else if (user.role === 1 && userResetPassword === "false") {
+    } else if (user.role === 1) {
       handleUserPortalRedirect();
     }
   };
 
   const handleAdminRedirect = () => {
+    console.log('ADMIN REDIRECT');
+    
     dispatch(setCurrentFirm({ name: "All" }));
     navigate("/admin/portal");
   };
