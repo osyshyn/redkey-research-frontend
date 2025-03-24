@@ -6,9 +6,9 @@ import UserPortal from "./pages/user/UserPortal/UserPortal";
 import AdminPortal from "./pages/admin/AdminPortal/AdminPortal";
 import UserManagement from "./pages/admin/UserManagement/UserManagement";
 import LoginPage from "./pages/login/LoginPage";
-import ForgotPasswordPage from "./pages/passwordRecovery/ForgotPasswordPage";
-import ResetPassword from "./pages/passwordRecovery/ResetPassword";
-import ChangePasswordFirst from "./pages/passwordRecovery/ChangePasswordFirst";
+// import ForgotPasswordPage from "./pages/passwordRecovery/ForgotPasswordPage";
+// import ResetPassword from "./pages/passwordRecovery/ResetPassword";
+// import ChangePasswordFirst from "./pages/passwordRecovery/ChangePasswordFirst";
 import HomePage from "./pages/home/HomePage";
 import MagicLoginPage from "./pages/magicLogin/MagicLoginPage";
 

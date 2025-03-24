@@ -1,0 +1,57 @@
+@use "../../assets/styles/variables" as *;
+
+.magic-login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.notification {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px 22px;
+  border: 1px solid $input-border;
+  border-radius: 13px;
+  color: white;
+
+  .notification-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 16px;
+  }
+
+  .text-red {
+    color: $bright-red-color;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .notification-text {
+    font-family: $font-family-satoshi;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .notification {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 20px 22px;
+    border: 1px solid $input-border;
+    color: white;
+    position: absolute;
+    top: 0;
+    background: $accent-color;
+    // width: 120%;
+
+    .notification-text {
+      font-size: 14px;
+      text-align: start;
+    }
+  }
+}

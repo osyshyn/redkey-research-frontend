@@ -62,15 +62,15 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
         clearSelectedItems();
       },
     },
-    {
-      optionName: "Change password",
-      icon: <PasswordIcon className="dropdown-menu-icon" />,
-      onOptionClick: () => {
-        setIsChangeUserPasswordModalOpen(true);
-        setCurrentUserData(item);
-        clearSelectedItems();
-      },
-    },
+    // {
+    //   optionName: "Change password",
+    //   icon: <PasswordIcon className="dropdown-menu-icon" />,
+    //   onOptionClick: () => {
+    //     setIsChangeUserPasswordModalOpen(true);
+    //     setCurrentUserData(item);
+    //     clearSelectedItems();
+    //   },
+    // },
     {
       optionName: "Delete",
       icon: <DeleteIconRed className="dropdown-menu-icon-red" />,

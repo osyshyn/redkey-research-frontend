@@ -119,12 +119,12 @@ const ProfileSettingsModal = ({
                     {profileDataError}
                   </p>
                 )}
-                <p
+                {/* <p
                   className="change-password-link"
                   onClick={() => setMode("changePassword")}
                 >
                   Change Password
-                </p>
+                </p> */}
 
                 <CustomButton
                   label="Save Changes"

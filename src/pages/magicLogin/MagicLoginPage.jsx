@@ -109,6 +109,9 @@ import {
   selectAuth,
 } from "../../store/slices/authSlice";
 import { setCurrentFirm } from "../../store/slices/firmSlice";
+
+import forgotPasswordNotificationIcon from "../../assets/icons/red-done-circle-icon.svg";
+
 import "./styles.scss";
 
 const MagicLoginPage = () => {
@@ -168,27 +171,33 @@ const MagicLoginPage = () => {
 
     if (error) {
       return (
-        <div className="error-container">
-          <h2>Authentication Error</h2>
-          <p>{error}</p>
-          <p>Please try again or contact support.</p>
-        </div>
-      );
-    }
-
-    if (status === "succeeded") {
-      return (
-        <div className="success-container">
-          <h2>Authentication Successful!</h2>
-          <p>Redirecting to your dashboard...</p>
+        <div className="notification">
+          <img
+            className="notification-icon"
+            src={forgotPasswordNotificationIcon}
+            alt="Notification Icon"
+          />
+          <p className="notification-text">
+            Authentication Error Please try again or{" "}
+            <a href="mailto:info@redkeyresearch.com" className="text-red">
+              contact support
+            </a>
+          </p>
         </div>
       );
     }
 
     return (
-      <div className="invalid-container">
-        <h2>Invalid Authentication Link</h2>
-        <p>Please check your email for a valid magic link.</p>
+      <div className="notification">
+        <img
+          className="notification-icon"
+          src={forgotPasswordNotificationIcon}
+          alt="Notification Icon"
+        />
+        <p className="notification-text">
+          Invalid Authentication Link. Please check your email for a valid magic
+          link.
+        </p>
       </div>
     );
   };
