@@ -4,21 +4,21 @@ import Cookies from "js-cookie";
 export const loginAPI = async (credentials) => {
   try {
     const response = await axiosInstance.post("/auth/login", credentials);
-    const { access_token, refresh_token, reset_password } = response.data;
+    // const { access_token, refresh_token, reset_password } = response.data;
 
-    // localStorage.setItem("access_token", access_token);
-    localStorage.setItem("reset_password", reset_password);
+    // // localStorage.setItem("access_token", access_token);
+    // localStorage.setItem("reset_password", reset_password);
 
-    Cookies.set("access_token", access_token, {
-      expires: 7,
-      secure: true,
-      sameSite: "Strict",
-    });
-    Cookies.set("refresh_token", refresh_token, {
-      expires: 7,
-      secure: true,
-      sameSite: "Strict",
-    });
+    // Cookies.set("access_token", access_token, {
+    //   expires: 7,
+    //   secure: true,
+    //   sameSite: "Strict",
+    // });
+    // Cookies.set("refresh_token", refresh_token, {
+    //   expires: 7,
+    //   secure: true,
+    //   sameSite: "Strict",
+    // });
 
     console.log(response);
 
@@ -88,6 +88,22 @@ export const checkForgotTokenAPI = async (token) => {
 export const checkMagicLinkAPI = async (token) => {
   try {
     const response = await axiosInstance.post("auth/checkMagicLink", token);
+
+    const { access_token, refresh_token} = response.data;
+
+    // localStorage.setItem("access_token", access_token);
+    // localStorage.setItem("reset_password", reset_password);
+
+    Cookies.set("access_token", access_token, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+    });
+    Cookies.set("refresh_token", refresh_token, {
+      expires: 7,
+      secure: true,
+      sameSite: "Strict",
+    });
 
     console.log("token response", response);
     return response.data;
