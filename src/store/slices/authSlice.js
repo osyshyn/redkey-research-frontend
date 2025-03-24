@@ -10,6 +10,7 @@ import {
   forgotPasswordSendEmailAPI,
   changeThemeAPI,
   requestGetAccessAPI,
+  checkMagicLinkAPI
 } from "../../api/authApi";
 
 export const loginUser = createAsyncThunk(
@@ -23,6 +24,21 @@ export const loginUser = createAsyncThunk(
         return rejectWithValue(error.response.data.message || "Login failed");
       }
       return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+export const checkMagicLink = createAsyncThunk(
+  "auth/checkMagicLink",
+  async (token, { rejectWithValue }) => {
+    try {
+      const data = await checkMagicLinkAPI(token);
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error checking magic link"
+      );
     }
   }
 );
@@ -175,6 +191,19 @@ const authSlice = createSlice({
       })
 
       .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(checkMagicLink.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(checkMagicLink.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload.user;
+      })
+      .addCase(checkMagicLink.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

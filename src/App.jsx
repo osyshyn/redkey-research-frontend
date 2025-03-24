@@ -10,6 +10,7 @@ import ForgotPasswordPage from "./pages/passwordRecovery/ForgotPasswordPage";
 import ResetPassword from "./pages/passwordRecovery/ResetPassword";
 import ChangePasswordFirst from "./pages/passwordRecovery/ChangePasswordFirst";
 import HomePage from "./pages/home/HomePage";
+import MagicLoginPage from "./pages/magicLogin/MagicLoginPage";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/set-your-password" element={<ChangePasswordFirst />} />
+          <Route path="/magic-login" element={<MagicLoginPage />} />
 
         </Routes>
       </Router>

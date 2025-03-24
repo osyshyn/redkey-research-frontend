@@ -85,6 +85,17 @@ export const checkForgotTokenAPI = async (token) => {
     throw error;
   }
 };
+export const checkMagicLinkAPI = async (token) => {
+  try {
+    const response = await axiosInstance.post("auth/checkMagicLink", token);
+
+    console.log("token response", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error checking magic link:", error);
+    throw error;
+  }
+};
 
 export const changeFirstOrResetPasswordAPI = async (passwordUserData) => {
   try {
