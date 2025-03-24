@@ -151,9 +151,13 @@ const MagicLoginPage = () => {
     console.log("Processing redirect for user:", user);
 
     if (user.role === 3) {
-      handleAdminRedirect();
+      // handleAdminRedirect();
+      dispatch(setCurrentFirm({ name: "All" }));
+      navigate("/admin/portal");
     } else if (user.role === 2) {
-      handleAdminRedirect();
+      // handleAdminRedirect();  
+      //    dispatch(setCurrentFirm({ name: "All" }));
+    navigate("/admin/portal");
     } else if (user.role === 1) {
       handleUserPortalRedirect();
     }
