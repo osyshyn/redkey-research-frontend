@@ -186,7 +186,7 @@ const Header = ({componentType}) => {
 
   const rolesConfig = {
     1: { path: "/user/portal", options: userResearchDropdownOptions },
-    2: { path: "/admin/portal", options: adminResearchDropdownOptions },
+    2: { path: "/admin/portal", options: adminResearchDropdownOptions,       userManagement: true, },
     3: {
       path: "/admin/portal",
       options: adminResearchDropdownOptions,
