@@ -190,7 +190,7 @@ const MagicLoginPage = () => {
               alt="Notification Icon"
             />
             <p className="notification-text">
-              Authentication Error Please try again or{" "}
+              Authentication error! Please try again or{" "}
               <a href="mailto:info@redkeyresearch.com" className="text-red">
                 contact support
               </a>

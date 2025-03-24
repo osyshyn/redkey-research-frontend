@@ -35,8 +35,8 @@ const DropdownMenu = forwardRef(
           <SettingsIcon className="dropdown-menu-icon" alt="Profile Icon" />
           <span>Profile</span>
         </div>
-        {currentUser?.role === 2 ||
-          (currentUser?.role === 3 && componentType === "admin_portal" && (
+        {(currentUser?.role === 2 || currentUser?.role === 3) &&
+          componentType === "admin_portal" && (
             <div
               className="menu-item"
               onClick={() => {
@@ -46,7 +46,7 @@ const DropdownMenu = forwardRef(
               <PlusIcon className="dropdown-menu-icon" alt="Add Icon" />
               <span>Add/remove research team</span>
             </div>
-          ))}
+          )}
         {currentUser?.role === 1 && (
           <div className="menu-item" onClick={onContactUsClick}>
             <PhoneIcon className="dropdown-menu-icon" alt="Contact us Icon" />
