@@ -22,9 +22,9 @@ const App = () => {
           <Route path="/admin/portal" element={<AdminPortal />} />
           <Route path="/admin/user-management" element={<UserManagement />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          {/* <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/set-your-password" element={<ChangePasswordFirst />} />
+          <Route path="/set-your-password" element={<ChangePasswordFirst />} /> */}
           <Route path="/magic-login" element={<MagicLoginPage />} />
 
         </Routes>

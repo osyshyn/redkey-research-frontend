@@ -117,7 +117,6 @@ const MagicLoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, status, error } = useSelector(selectAuth);
-  // const userResetPassword = localStorage.getItem("reset_password");
 
   useEffect(() => {
     const verifyMagicToken = async () => {
@@ -141,33 +140,9 @@ const MagicLoginPage = () => {
     }
   }, [dispatch, token]);
 
-  // useEffect(() => {
-  //   if (status === "succeeded" && user) {
-  //     handleUserRedirect();
-  //   }
-  // }, [status, user]);
-
-  // const handleUserRedirect = () => {
-  //   console.log("Processing redirect for user:", user);
-
-  //   if (user.role === 3) {
-  //     dispatch(setCurrentFirm({ name: "All" }));
-  //     navigate("/admin/portal");
-  //   } else if (user.role === 2) {
-  //        dispatch(setCurrentFirm({ name: "All" }));
-  //   navigate("/admin/portal");
-  //   } else if (user.role === 1) {
-  //     handleUserPortalRedirect();
-  //   }
-  // };
-
   useEffect(() => {
     if (status === "succeeded" && user) {
-      console.log("UUUUUU", user, userResetPassword);
-
-      if (user.role !== 3) {
-        navigate("/set-your-password");
-      } else if (user.role === 3) {
+      if (user.role === 3) {
         navigate("/admin/portal");
         dispatch(setCurrentFirm({ name: "All" }));
       } else if (user.role === 2) {
@@ -185,21 +160,6 @@ const MagicLoginPage = () => {
       }
     }
   }, [status, user, navigate]);
-
-  // const handleAdminRedirect = () => {
-  //   console.log("ADMIN REDIRECT");
-
-  //   dispatch(setCurrentFirm({ name: "All" }));
-  //   navigate("/admin/portal");
-  // };
-
-  // const handleUserPortalRedirect = () => {
-  //   const activeAccess = user.access.find((access) => access.value === true);
-  //   if (activeAccess) {
-  //     dispatch(setCurrentFirm(activeAccess.firm));
-  //   }
-  //   navigate("/user/portal");
-  // };
 
   const renderContent = () => {
     if (status === "loading") {
