@@ -104,6 +104,16 @@
   }
 }
 
+.mobile-popup-title {
+  font-family: $font-family-satoshi;
+  font-size: 18px;
+  line-height: 1.4;
+  word-break: break-word;
+  margin: 20px 0;
+  align-self: center;
+  text-align: center;
+}
+
 @media screen and (max-width: 768px) {
   .folder-header {
     width: auto;

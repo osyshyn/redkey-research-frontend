@@ -30,12 +30,19 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentFirmItem, setCurrentFirmItem] = useState(null);
   const [firmName, setFirmName] = useState("");
+  const [firmNameError, setFirmNameError] = useState("");
+  const [isFirmSaveDisabled, setIsFirmSaveDisabled] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
       dispatch(getFirms());
     }
   }, [dispatch, isOpen]);
+
+  useEffect(() => {
+    const isFirmValid = firmName.trim().length > 0 && !firmNameError;
+    setIsFirmSaveDisabled(!isFirmValid);
+  }, [firmName, firmNameError]);
 
   const handleOpenCreateModal = () => {
     setIsEditMode(false);
@@ -73,6 +80,19 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
     setIsDeleteModalOpen(false);
     if (currentFirmState.id === firmItemToDelete.id) {
       dispatch(setCurrentFirm({ name: "All" }));
+    }
+  };
+
+  const handleFirmNameChange = (e) => {
+    const value = e.target.value;
+
+    if (/^[a-zA-Z0-9 _.,-]*$/.test(value)) {
+      setFirmName(value);
+      if (value.length > 30) {
+        setFirmNameError("Firm name cannot exceed 30 characters.");
+      } else {
+        setFirmNameError("");
+      }
     }
   };
 
@@ -136,13 +156,16 @@ const FirmsModal = ({ isOpen = false, onClose = () => {} }) => {
               label="Firm Name"
               placeholder="Enter firm name"
               value={firmName}
-              onChange={(e) => setFirmName(e.target.value)}
+              onChange={handleFirmNameChange}
+              error={firmNameError ? true : false}
             />
+            {firmNameError && <div className="error-text">{firmNameError}</div>}
             <div className="modal-actions-button">
               <CustomButton
                 label={isEditMode ? "Save Changes" : "Create"}
                 style="red-shadow"
                 onClick={handleSaveFirm}
+                disabled={isFirmSaveDisabled}
               />
             </div>
           </CustomModal>,

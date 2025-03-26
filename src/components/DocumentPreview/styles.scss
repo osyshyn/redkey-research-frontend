@@ -27,6 +27,15 @@
     cursor: pointer;
     z-index: 2;
   }
+  .view-icon {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    z-index: 2;
+  }
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -114,6 +123,15 @@
   font-size: 18px;
   line-height: 27px;
   color: $text-color-accent;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 74vw;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mobile-document-content {
@@ -150,4 +168,22 @@
   stroke: $secondary-color;
   width: 20px;
   height: 20px;
+}
+
+.fullscreen-header {
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-medium;
+  font-size: 18px;
+  line-height: 27px;
+  color: $text-color-accent;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 74vw;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 20px;
 }

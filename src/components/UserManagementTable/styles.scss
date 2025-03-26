@@ -167,6 +167,13 @@
       flex-direction: column;
       gap: 10px;
 
+      .user-management-title {
+        max-width: 190px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+      }
+
       .user-management-email,
       .user-management-created-by {
         font-family: $font-family-satoshi;

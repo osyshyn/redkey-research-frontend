@@ -255,7 +255,7 @@ const UserManagementTable = ({ tableData, onUpdateUser }) => {
                           <label htmlFor={`checkbox-${index}`}></label>
                         </div>
                         <div className="text-block">
-                          <p>
+                          <p className="user-management-title">
                             {item.first_name} {item.last_name}
                           </p>
                           <p className="user-management-email">{item.email}</p>

@@ -50,6 +50,17 @@
   color: $primary-color;
 }
 
+.error-text {
+  margin-left: 16px;
+  color: $delete-red-color;
+  font-family: $font-family-satoshi;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  line-height: 21px;
+  margin-top: 5px;
+  position: absolute;
+}
+
 
 
 @media screen and (max-width: 768px) {

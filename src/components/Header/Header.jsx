@@ -24,7 +24,7 @@ import logoLightHeader from "../../assets/images/logo-light-big.png";
 
 import "./styles.scss";
 
-const Header = ({componentType}) => {
+const Header = ({ componentType }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isContactUsModalOpen, setIsContactUsModalOpen] = useState(false);
@@ -186,7 +186,10 @@ const Header = ({componentType}) => {
 
   const rolesConfig = {
     1: { path: "/user/portal", options: userResearchDropdownOptions },
-    2: { path: "/admin/portal", options: adminResearchDropdownOptions },
+    2: {
+      path: "/admin/portal",
+      options: adminResearchDropdownOptions,
+    },
     3: {
       path: "/admin/portal",
       options: adminResearchDropdownOptions,
@@ -259,7 +262,7 @@ const Header = ({componentType}) => {
           onContactUsClick={handleContactUsClick}
           onLogoutClick={handleLogoutClick}
           currentUser={user}
-          adminDesktopAddFirmProps={{setIsFirmsModalOpen}}
+          adminDesktopAddFirmProps={{ setIsFirmsModalOpen }}
           componentType={componentType}
         />
       )}
