@@ -185,19 +185,33 @@ const FolderAndResearchModals = ({
     setSelectedFolder(null);
   };
 
-  const handleStockTickerChange = (e) => {
-    const value = e.target.value.replace(/[^A-Z0-9]/g, "");
+  // const handleStockTickerChange = (e) => {
+  //   const value = e.target.value.replace(/[^A-Z0-9]/g, "");
 
-    if (e.target.value !== value) {
-      setFolderStockTickerError(
-        "Only uppercase letters and numbers are allowed."
-      );
+  //   if (e.target.value !== value) {
+  //     setFolderStockTickerError(
+  //       "Only uppercase letters and numbers are allowed."
+  //     );
+  //   } else {
+  //     setFolderStockTickerError("");
+  //   }
+
+  //   setFolderStockTicker(value);
+  // };
+
+  const handleStockTickerChange = (e) => {
+    let value = e.target.value.replace(/[^A-Z0-9]/g, "");
+  
+    if (value.length > 5) {
+      setFolderStockTickerError("Max 5 characters, only letters and numbers.");
     } else {
       setFolderStockTickerError("");
     }
-
+  
     setFolderStockTicker(value);
   };
+  
+  
 
   const handleResearchNameChange = (e) => {
     const value = e.target.value;
