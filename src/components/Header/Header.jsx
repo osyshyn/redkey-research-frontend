@@ -188,7 +188,7 @@ const Header = ({ componentType }) => {
     1: { path: "/user/portal", options: userResearchDropdownOptions },
     2: {
       path: "/admin/portal",
-      options: adminResearchDropdownOptions,   userManagement: true,
+      options: adminResearchDropdownOptions,
     },
     3: {
       path: "/admin/portal",
