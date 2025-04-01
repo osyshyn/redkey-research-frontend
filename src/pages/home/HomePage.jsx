@@ -53,15 +53,45 @@ const HomePage = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
+  // const scrollToSection = (id) => {
+  //   const element = document.getElementById(id);
+  //   if (element) {
+  //     element.scrollIntoView({
+  //       behavior: "smooth",
+  //       block: "start",
+  //     });
+  //     setIsMenuOpen(false);
+  //   }
+  // };
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-      setIsMenuOpen(false); // Закрываем меню после клика
-    }
+    if (!element) return;
+
+    const startPosition = window.pageYOffset;
+    const targetPosition = element.getBoundingClientRect().top + startPosition;
+    const distance = targetPosition - startPosition;
+    const duration = 1500;
+    let startTime = null;
+
+    const easeInQuad = (t) => {
+      return t * t;
+    };
+
+    const animateScroll = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      window.scrollTo(0, startPosition + distance * easeInQuad(progress));
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        setIsMenuOpen(false);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   };
 
   return (
