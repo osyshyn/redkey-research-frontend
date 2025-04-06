@@ -1,29 +1,29 @@
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import { useDispatch } from "react-redux";
-import useDeviceType from "../../hooks/useDeviceType";
-import CustomModal from "../CustomModal/CustomModal";
-import CustomInput from "../CustomInput/CustomInput";
-import CustomButton from "../CustomButton/CustomButton";
-import { changePassword, changeProfile } from "../../store/slices/authSlice";
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import useDeviceType from '../../hooks/useDeviceType';
+import CustomModal from '../CustomModal/CustomModal';
+import CustomInput from '../CustomInput/CustomInput';
+import CustomButton from '../CustomButton/CustomButton';
+import { changePassword, changeProfile } from '../../store/slices/authSlice';
 
-import "./styles.scss";
+import './styles.scss';
 
 const ProfileSettingsModal = ({
   isOpen = false,
   onClose = () => {},
-  initialProfile = { first_name: "", last_name: "", email: "" },
+  initialProfile = { first_name: '', last_name: '', email: '' },
 }) => {
-  const [mode, setMode] = useState("profile");
+  const [mode, setMode] = useState('profile');
   const [profileData, setProfileData] = useState(initialProfile);
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [profileDataError, setProfileDataError] = useState("");
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [profileDataError, setProfileDataError] = useState('');
 
   const currentUserDevice = useDeviceType();
-
-  const modalRoot = document.getElementById("modal-root");
+  const { user } = useSelector((state) => state.auth);
+  const modalRoot = document.getElementById('modal-root');
 
   const dispatch = useDispatch();
 
@@ -31,7 +31,7 @@ const ProfileSettingsModal = ({
     dispatch(changeProfile(profileData))
       .unwrap()
       .then(() => {
-        setProfileDataError("");
+        setProfileDataError('');
         onClose();
       })
       .catch((error) => {
@@ -48,10 +48,10 @@ const ProfileSettingsModal = ({
     dispatch(changePassword(passwordData))
       .unwrap()
       .then(() => {
-        setNewPassword("");
-        setConfirmPassword("");
-        setPasswordError("");
-        setMode("profile");
+        setNewPassword('');
+        setConfirmPassword('');
+        setPasswordError('');
+        setMode('profile');
       })
       .catch((error) => {
         setPasswordError(error);
@@ -66,22 +66,22 @@ const ProfileSettingsModal = ({
             isOpen={isOpen}
             onClose={onClose}
             modalTitle={
-              mode === "profile" ? "Profile Settings" : "Change Password"
+              mode === 'profile' ? 'Profile Settings' : 'Change Password'
             }
           >
-            {mode === "profile" ? (
+            {mode === 'profile' ? (
               // ======== PROFILE SETTINGS =========
               <>
                 <div
                   className={`${
-                    currentUserDevice === "desktop"
-                      ? "profile-first-last-name"
-                      : ""
+                    currentUserDevice === 'desktop'
+                      ? 'profile-first-last-name'
+                      : ''
                   }`}
                 >
                   <CustomInput
-                    label="Name"
-                    placeholder="First name"
+                    label='Name'
+                    placeholder='First name'
                     value={profileData.first_name}
                     onChange={(e) =>
                       setProfileData({
@@ -89,10 +89,11 @@ const ProfileSettingsModal = ({
                         first_name: e.target.value,
                       })
                     }
+                    disabled={user.role === 1 || user.role === 2}
                   />
                   <CustomInput
-                    label="Last Name"
-                    placeholder="Last name"
+                    label='Last Name'
+                    placeholder='Last name'
                     value={profileData.last_name}
                     onChange={(e) =>
                       setProfileData({
@@ -102,62 +103,65 @@ const ProfileSettingsModal = ({
                     }
                     // showLabel="input-hide-label"
                     showLabel={`${
-                      currentUserDevice === "desktop" ? "input-hide-label" : ""
+                      currentUserDevice === 'desktop' ? 'input-hide-label' : ''
                     }`}
+                    disabled={user.role === 1 || user.role === 2}
                   />
                 </div>
                 <CustomInput
-                  label="Email"
-                  placeholder="example@mail.com"
+                  label='Email'
+                  placeholder='example@mail.com'
                   value={profileData.email}
                   onChange={(e) =>
                     setProfileData({ ...profileData, email: e.target.value })
                   }
+                  disabled={user.role === 1 || user.role === 2}
                 />
                 {profileDataError && (
-                  <p className="profile-data-error-message">
+                  <p className='profile-data-error-message'>
                     {profileDataError}
                   </p>
                 )}
                 <p
-                  className="change-password-link"
+                  className='change-password-link'
                   // onClick={() => setMode("changePassword")}
                 >
                   {/* Change Password */}
                 </p>
 
                 <CustomButton
-                  label="Save Changes"
-                  style="red-shadow"
+                  label='Save Changes'
+                  style='red-shadow'
                   onClick={handleSaveProfile}
+                  disabled={user.role === 1 || user.role === 2}
                 />
               </>
             ) : (
               // ======== CHANGE PASSWORD =========
               <>
                 <CustomInput
-                  label="New Password"
-                  placeholder="Enter new password"
-                  type="password"
+                  label='New Password'
+                  placeholder='Enter new password'
+                  type='password'
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   error={passwordError ? true : false}
                 />
                 <CustomInput
-                  label="Re-enter Password"
-                  placeholder="Confirm new password"
-                  type="password"
+                  label='Re-enter Password'
+                  placeholder='Confirm new password'
+                  type='password'
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   error={passwordError ? true : false}
                 />
                 {passwordError && (
-                  <p className="password-error-message">{passwordError}</p>
+                  <p className='password-error-message'>{passwordError}</p>
                 )}
-                <div className="modal-actions-button">
+                <div className='modal-actions-button'>
                   <CustomButton
-                    label="Save New Password"
-                    style="red-shadow"
+                    label='Save New Password'
+                    style='red-shadow'
                     onClick={handleSavePassword}
                   />
                 </div>

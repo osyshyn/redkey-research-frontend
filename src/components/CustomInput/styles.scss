@@ -1,4 +1,4 @@
-@use "../../assets/styles/variables" as *;
+@use '../../assets/styles/variables' as *;
 
 .custom-input {
   display: flex;
@@ -51,6 +51,12 @@
       border-radius: $border-radius-small;
       background: $text-red-button-inner-light-color;
       color: $delete-red-color;
+    }
+
+    &:disabled {
+      border-color: $input-border-gray-darker;
+      color: $disabled;
+      cursor: not-allowed;
     }
   }
 }

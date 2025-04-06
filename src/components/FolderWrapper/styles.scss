@@ -31,6 +31,10 @@
   }
 }
 
+.folder-contents.no-transition {
+  transition: none !important;
+}
+
 @media screen and (max-width: 768px) {
   .folder-wrapper {
     margin: 14px 16px;

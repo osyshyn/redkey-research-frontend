@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import useDeviceType from "../../../hooks/useDeviceType";
-import CustomModal from "../../../components/CustomModal/CustomModal";
-import CustomButton from "../../../components/CustomButton/CustomButton";
-import arrowDown from "../../../assets/icons/arrow-down.svg";
-import arrowUp from "../../../assets/icons/arrow-up.svg";
-import singleDotIcon from "../../../assets/icons/single-dot-icon.svg";
-import moreIcon from "../../../assets/icons/more-icon.svg";
+import React, { useState } from 'react';
+import useDeviceType from '../../../hooks/useDeviceType';
+import CustomModal from '../../../components/CustomModal/CustomModal';
+import CustomButton from '../../../components/CustomButton/CustomButton';
+import arrowDown from '../../../assets/icons/arrow-down.svg';
+import arrowUp from '../../../assets/icons/arrow-up.svg';
+import singleDotIcon from '../../../assets/icons/single-dot-icon.svg';
+import moreIcon from '../../../assets/icons/more-icon.svg';
 
-import "./styles.scss";
+import './styles.scss';
 
 const WORD_WRAP_THRESHOLD = 15;
 
@@ -27,55 +27,55 @@ const FolderHeader = ({
 }) => {
   const [isTitlePopupOpen, setIsTitlePopupOpen] = useState(false);
   const hasVeryLongWord = title
-    .split(" ")
+    .split(' ')
     .some((word) => word.length > WORD_WRAP_THRESHOLD);
 
   const currentUserDevice = useDeviceType();
 
   const handleTitleClick = () => {
-    if (currentUserDevice === "mobile") {
+    if (currentUserDevice === 'mobile') {
       setIsTitlePopupOpen(true);
     }
   };
 
   return (
-    <div className={`folder-header ${isFolderOpen ? "open" : "closed"}`}>
-      <div className="folder-expandable-element">
+    <div className={`folder-header ${isFolderOpen ? 'open' : 'closed'}`}>
+      <div className='folder-expandable-element'>
         <img
           src={isFolderOpen ? arrowDown : arrowUp}
-          alt={isFolderOpen ? "Expand" : "Collapse"}
-          className="arrow-icon"
+          alt={isFolderOpen ? 'Expand' : 'Collapse'}
+          className='arrow-icon'
           onClick={onFolderToggle}
         />
         <p
-          className={`title ${hasVeryLongWord ? "truncate" : "multi-line"}`}
+          className={`title ${hasVeryLongWord ? 'truncate' : 'multi-line'}`}
           title={title}
           onClick={handleTitleClick}
         >
           {title}
         </p>
       </div>
-      {currentUserDevice === "desktop" && (
+      {stockTicker && (
         <>
-          <img src={singleDotIcon} className="single-dot-icon" />
-          <p className="items-amount">
-            {itemsAmount} {itemsAmount.toString() === "1" ? "item" : "items"}
+          <img src={singleDotIcon} className='single-dot-icon' />
+          <p className='items-amount'>{stockTicker}</p>
+        </>
+      )}
+      {currentUserDevice === 'desktop' && (
+        <>
+          <img src={singleDotIcon} className='single-dot-icon' />
+          <p className='items-amount'>
+            {itemsAmount} {itemsAmount.toString() === '1' ? 'item' : 'items'}
           </p>
         </>
       )}
-      {stockTicker && (
+      {currentUserDevice === 'desktop' && (
         <>
-          <img src={singleDotIcon} className="single-dot-icon" />
-          <p className="items-amount">{stockTicker}</p>{" "}
+          <img src={singleDotIcon} className='single-dot-icon' />
+          <p className='items-amount'>{earliestResearchDate}</p>
         </>
       )}
-      {currentUserDevice === "desktop" && (
-        <>
-          <img src={singleDotIcon} className="single-dot-icon" />
-          <p className="items-amount">{earliestResearchDate}</p>
-        </>
-      )}
-      <img src={singleDotIcon} className="single-dot-icon" />
+      <img src={singleDotIcon} className='single-dot-icon' />
       <p
         ref={statusRef}
         className={`status ${currentStatus}`}
@@ -83,31 +83,28 @@ const FolderHeader = ({
       >
         {currentStatus}
       </p>
-      {componentType === "admin_portal" && (
+      {/* {componentType === 'admin_portal' && ( */}
         <img
           ref={folderMoreIconRef}
           src={moreIcon}
-          className="more-icon"
+          className='more-icon'
           onClick={onMoreClick}
         />
-      )}
-
-      {currentUserDevice === "mobile" && (
+      {/* )} */}
+      {currentUserDevice === 'mobile' && (
         <CustomModal
           isOpen={isTitlePopupOpen}
           onClose={() => setIsTitlePopupOpen(false)}
-          modalTitle="Full Title"
+          modalTitle='Full Title'
         >
-    
-            <p className="mobile-popup-title">{title}</p>
-            <div className="modal-actions-button">
-              <CustomButton
-                label="Close"
-                style="red-shadow"
-                onClick={() => setIsTitlePopupOpen(false)}
-              />
-            </div>
-
+          <p className='mobile-popup-title'>{title}</p>
+          <div className='modal-actions-button'>
+            <CustomButton
+              label='Close'
+              style='red-shadow'
+              onClick={() => setIsTitlePopupOpen(false)}
+            />
+          </div>
         </CustomModal>
       )}
     </div>

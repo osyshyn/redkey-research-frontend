@@ -259,6 +259,13 @@ const UserPortal = () => {
                     }
                     status={folder.status}
                     componentType={"user_portal"}
+                    researchData={
+                        folder?.research?.filter(
+                          (researchItem) =>
+                            researchItem?.firm?.id === currentFirm?.id &&
+                            researchItem?.firm?.name === currentFirm?.name
+                        ) || [folder.research[0]]
+                      }
                   >
                     <FolderInnerListUser
                       tableData={

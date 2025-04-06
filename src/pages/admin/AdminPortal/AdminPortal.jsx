@@ -208,7 +208,7 @@ const AdminPortal = () => {
     [dispatch]
   );
 
-  const handleViewClick = (item) => {
+  const handleViewClick = (item) => {   
     setSelectedDocument(item);
     setShowPreview(true);
   };
@@ -356,6 +356,15 @@ const AdminPortal = () => {
                     }
                     status={folder.status}
                     componentType={"admin_portal"}
+                    researchData={
+                        currentFirm?.name === "All"
+                          ? folder?.research
+                          : folder?.research?.filter(
+                              (researchItem) =>
+                                researchItem?.firm?.id === currentFirm?.id &&
+                                researchItem?.firm?.name === currentFirm?.name
+                            ) || [folder.research[0]]
+                      }
                   >
                     <FolderInnerList
                       // tableData={folder.research.filter(

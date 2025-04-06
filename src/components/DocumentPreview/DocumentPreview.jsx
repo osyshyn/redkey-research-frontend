@@ -1,39 +1,52 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import useDeviceType from "../../hooks/useDeviceType";
-import { handleDownload } from "../../utils/downloadHelpers";
-import CustomModal from "../CustomModal/CustomModal";
+import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import { useSelector } from 'react-redux';
+import useDeviceType from '../../hooks/useDeviceType';
+import { handleDownload } from '../../utils/downloadHelpers';
+import CustomModal from '../CustomModal/CustomModal';
 
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
-import DownloadIcon from "../../assets/icons/download-icon.svg?react";
-import closeIcon from "../../assets/icons/close-icon.svg";
-import viewportWideIcon from "../../assets/icons/viewport-wide-icon.svg";
-import backMobileIcon from "../../assets/icons/back-mobile-icon.svg";
+import DownloadIcon from '../../assets/icons/download-icon.svg?react';
+import closeIcon from '../../assets/icons/close-icon.svg';
+import viewportWideIcon from '../../assets/icons/viewport-wide-icon.svg';
+import backMobileIcon from '../../assets/icons/back-mobile-icon.svg';
 
-import "./styles.scss";
+import './styles.scss';
 
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
   const [numPages, setNumPages] = useState(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  console.log("selectedDocument", selectedDocument);
 
   const currentUserDevice = useDeviceType();
+  const currentFirm = useSelector((state) => state.firm.currentFirm);
+
+  console.log('selectedDocument', selectedDocument, currentFirm);
+
+  const prevFirmRef = useRef(currentFirm);
+
+  useEffect(() => {
+    if (prevFirmRef.current && prevFirmRef.current.id !== currentFirm.id) {
+      onClose();
+    }
+    prevFirmRef.current = currentFirm;
+  }, [currentFirm, onClose]);
+
 
   const onLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
   };
 
   useEffect(() => {
-    if (currentUserDevice === "mobile") {
-      document.body.style.overflow = "hidden";
+    if (currentUserDevice === 'mobile') {
+      document.body.style.overflow = 'hidden';
     }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = 'unset';
     };
   }, [currentUserDevice]);
 
@@ -52,33 +65,33 @@ const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
     </Document>
   );
 
-  if (currentUserDevice === "mobile") {
+  if (currentUserDevice === 'mobile') {
     return ReactDOM.createPortal(
-      <div className="modal-overlay">
+      <div className='modal-overlay'>
         <div
-          className="document-preview-mobile"
+          className='document-preview-mobile'
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="mobile-header">
-            <div className="mobile-name-wrapper">
+          <div className='mobile-header'>
+            <div className='mobile-name-wrapper'>
               <img
                 src={backMobileIcon}
-                alt="Back"
-                className="back-arrow"
+                alt='Back'
+                className='back-arrow'
                 onClick={onClose}
               />
-              <h1 className="title">{selectedDocument.title}</h1>
+              <h1 className='title'>{selectedDocument.title}</h1>
             </div>
             <DownloadIcon
-              alt="Download all"
-              className="mobile-view-download-icon"
+              alt='Download all'
+              className='mobile-view-download-icon'
               onClick={() => {
                 handleDownload(selectedDocument);
               }}
             />
           </div>
-          <div className="mobile-document-content">
-            <div className="document-centered">
+          <div className='mobile-document-content'>
+            <div className='document-centered'>
               <Document
                 file={`${import.meta.env.VITE_API_URL}/${
                   selectedDocument.file.path
@@ -93,23 +106,23 @@ const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
           </div>
         </div>
       </div>,
-      document.getElementById("mobile-portal")
+      document.getElementById('mobile-portal')
     );
   }
 
   return (
     <>
-      <div className="document-preview">
+      <div className='document-preview'>
         <img
           src={closeIcon}
-          alt="Close"
-          className="close-icon"
+          alt='Close'
+          className='close-icon'
           onClick={onClose}
         />
         <img
           src={viewportWideIcon}
-          alt="View"
-          className="view-icon"
+          alt='View'
+          className='view-icon'
           onClick={handleFullScreenToggle}
         />
         {/* <Document
@@ -128,12 +141,10 @@ const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
         onClose={handleFullScreenToggle}
         fullScreen={true}
       >
-        <div className="fullscreen-document">
-         
-            <p className="fullscreen-header">{selectedDocument.title}</p>
+        <div className='fullscreen-document'>
+          <p className='fullscreen-header'>{selectedDocument.title}</p>
 
-      
-          <div className="document-content">{renderDocumentContent(0.7)}</div>
+          <div className='document-content'>{renderDocumentContent(0.7)}</div>
         </div>
       </CustomModal>
     </>
