@@ -102,6 +102,16 @@
   }
 }
 
+
+.export-options {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+
 @media screen and (max-width: 768px) {
   .user-management-table-wrapper {
     flex: 1;

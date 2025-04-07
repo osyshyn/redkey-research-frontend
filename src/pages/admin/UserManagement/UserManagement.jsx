@@ -1,33 +1,37 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setUserManagementFilters } from "../../../store/slices/filterSlice";
+import React, { useEffect, useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserManagementFilters } from '../../../store/slices/filterSlice';
 import {
   getUsers,
   updateUser,
-} from "../../../store/slices/userManagementSlice";
-import { createNewUser } from "../../../store/slices/userManagementSlice";
-import { clearUserManagementFilters } from "../../../store/slices/filterSlice";
+} from '../../../store/slices/userManagementSlice';
+import { createNewUser } from '../../../store/slices/userManagementSlice';
+import { clearUserManagementFilters } from '../../../store/slices/filterSlice';
 
-import useDeviceType from "../../../hooks/useDeviceType";
+import useDeviceType from '../../../hooks/useDeviceType';
 
-import Header from "../../../components/Header/Header";
-import UserManagementTable from "../../../components/UserManagementTable/UserManagementTable";
-import Pagination from "../../../components/Pagination/Pagination";
-import ActionBar from "../../../components/ActionBar/ActionBar";
-import Loader from "../../../components/Loader/Loader";
-import MobileModalWrapper from "../../../components/MobileModalWrapper/MobileModalWrapper";
+import CustomButton from '../../../components/CustomButton/CustomButton';
+import CustomModal from '../../../components/CustomModal/CustomModal';
+import Header from '../../../components/Header/Header';
+import UserManagementTable from '../../../components/UserManagementTable/UserManagementTable';
+import Pagination from '../../../components/Pagination/Pagination';
+import ActionBar from '../../../components/ActionBar/ActionBar';
+import Loader from '../../../components/Loader/Loader';
+import MobileModalWrapper from '../../../components/MobileModalWrapper/MobileModalWrapper';
 
-import MobileActionAddIcon from "../../../assets/icons/mobile-action-add-button.svg?react";
-import PlusIcon from "../../../assets/icons/plus-icon.svg?react";
-import FileUploadIcon from "../../../assets/icons/file-upload-icon.svg?react";
-import forgotPasswordNotificationIcon from "../../../assets/icons/red-done-circle-icon.svg";
-import logoBig from "../../../assets/images/logo-big.png";
-import logoLightBig from "../../../assets/images/logo-light-big.png";
+import { getUserTypeName } from '../../../utils/userHelpers';
 
-import "./styles.scss";
+import MobileActionAddIcon from '../../../assets/icons/mobile-action-add-button.svg?react';
+import PlusIcon from '../../../assets/icons/plus-icon.svg?react';
+import FileUploadIcon from '../../../assets/icons/file-upload-icon.svg?react';
+import forgotPasswordNotificationIcon from '../../../assets/icons/red-done-circle-icon.svg';
+import logoBig from '../../../assets/images/logo-big.png';
+import logoLightBig from '../../../assets/images/logo-light-big.png';
+
+import './styles.scss';
 
 const UserManagement = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
 
@@ -38,6 +42,109 @@ const UserManagement = () => {
   const [mobileActionAddData, setMobileActionAddData] = useState({
     options: [],
   });
+
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+
+  const exportToCSV = () => {
+    const csvContent = [
+      [
+        'Name',
+        'Email',
+        'Firm',
+        'Type',
+        'Registration',
+        'Registered By',
+        'Last Login',
+        'Accesses',
+      ],
+      ...searchInFilteredUsers.map((user) => {
+        const accesses =
+          (user.access || [])
+            .filter((a) => a?.value)
+            .map((a) => a?.firm?.name || 'Unknown Firm')
+            .filter(Boolean)
+            .join(', ') || 'None';
+
+        const registrationDate = user.created_at
+          ? new Date(user.created_at).toLocaleDateString()
+          : 'N/A';
+
+        const lastLoginDate = user.last_login
+          ? new Date(user.last_login).toLocaleDateString()
+          : 'Never logged in';
+
+        const registeredBy = user.creator
+          ? `${user.creator.first_name || ''} ${
+              user.creator.last_name || ''
+            }`.trim()
+          : 'System';
+
+        return [
+          `${user.first_name || ''} ${user.last_name || ''}`.trim(),
+          user.email || 'No email',
+          user.company || 'N/A',
+          getUserTypeName(user.role),
+          registrationDate,
+          registeredBy,
+          lastLoginDate,
+          accesses,
+        ];
+      }),
+    ]
+      .map((e) => e.join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'users.csv';
+    link.click();
+  };
+
+  const exportToXLS = () => {
+    import('xlsx').then((XLSX) => {
+      const worksheet = XLSX.utils.json_to_sheet(
+        searchInFilteredUsers.map((user) => {
+          const accesses =
+            (user.access || [])
+              .filter((a) => a?.value)
+              .map((a) => a?.firm?.name || 'Unknown Firm')
+              .filter(Boolean)
+              .join(', ') || 'None';
+
+          const registrationDate = user.created_at
+            ? new Date(user.created_at).toLocaleDateString()
+            : 'N/A';
+
+          const lastLoginDate = user.last_login
+            ? new Date(user.last_login).toLocaleDateString()
+            : 'Never logged in';
+
+          const registeredBy = user.creator
+            ? `${user.creator.first_name || ''} ${
+                user.creator.last_name || ''
+              }`.trim()
+            : 'System';
+
+          return {
+            Name: `${user.first_name || ''} ${user.last_name || ''}`.trim(),
+            Email: user.email || 'No email',
+            Firm: user.company || 'N/A',
+            Type: getUserTypeName(user.role),
+            Registration: registrationDate,
+            'Registered By': registeredBy,
+            'Last Login': lastLoginDate,
+            Accesses: accesses,
+          };
+        })
+      );
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+      XLSX.writeFile(workbook, 'users.xlsx');
+    });
+  };
+
   const dispatch = useDispatch();
   const currentUserDevice = useDeviceType();
 
@@ -48,22 +155,22 @@ const UserManagement = () => {
   const firmsList = useSelector((state) => state.firm.firms);
   const { userManagementFilters } = useSelector((state) => state.filters);
   const { user } = useSelector((state) => state.auth);
-  const currentTheme = document.body.getAttribute("data-theme-mode");
+  const currentTheme = document.body.getAttribute('data-theme-mode');
 
-  console.log("USERS", users);
+  console.log('USERS', users);
 
-  console.log("userManagementFilters", userManagementFilters);
+  console.log('userManagementFilters', userManagementFilters);
 
   const filteredUsers = users.filter((user) => {
     return userManagementFilters.every((filter) => {
       const filterType = filter.type.value;
       const filterValue = filter.value.value;
 
-      if (filterType === "registered_by") {
+      if (filterType === 'registered_by') {
         return user.creator?.id === filterValue.id;
       }
 
-      if (filterType === "accesses") {
+      if (filterType === 'accesses') {
         return user.access?.some(
           (firmObj) =>
             firmObj.firm.id === filterValue.id && firmObj.value === true
@@ -96,12 +203,14 @@ const UserManagement = () => {
     indexOfLastItem
   );
 
+  console.log('US', searchInFilteredUsers);
+
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
 
   const handleSaveNewUser = (userData) => {
-    console.log("TEST CREATE USER");
+    console.log('TEST CREATE USER');
 
     dispatch(clearUserManagementFilters());
     dispatch(createNewUser(userData));
@@ -135,18 +244,23 @@ const UserManagement = () => {
     setMobileActionAddData({
       options: [
         {
-          optionName: "Create new user",
-          icon: <PlusIcon className="mobile-dropdown-menu-icon" />,
+          optionName: 'Create new user',
+          icon: <PlusIcon className='mobile-dropdown-menu-icon' />,
           onOptionClick: () => {
             setIsCreateNewUserModalOpen(true);
           },
         },
         {
-          optionName: "Export report",
-          icon: <FileUploadIcon className="mobile-dropdown-menu-icon" />,
+          optionName: 'Export report',
+          icon: <FileUploadIcon className='mobile-dropdown-menu-icon' />,
+          // onOptionClick: () => {
+          //   const event = new CustomEvent('trigger-pdf-export');
+          //   document.dispatchEvent(event);
+          // },
+
           onOptionClick: () => {
-            const event = new CustomEvent("trigger-pdf-export");
-            document.dispatchEvent(event);
+            setIsMobileModalOpen(false);
+            setIsExportModalOpen(true);
           },
         },
       ],
@@ -157,23 +271,23 @@ const UserManagement = () => {
 
   if (user?.role === 1) {
     return (
-      <div className="user-management-error-container">
+      <div className='user-management-error-container'>
         <img
-          className="logo-big"
+          className='logo-big'
           src={
-            currentTheme === "dark" || currentTheme === null
+            currentTheme === 'dark' || currentTheme === null
               ? logoBig
               : logoLightBig
           }
-          alt="Logo"
+          alt='Logo'
         />
-        <div className="notification">
+        <div className='notification'>
           <img
-            className="notification-icon"
+            className='notification-icon'
             src={forgotPasswordNotificationIcon}
-            alt="Notification Icon"
+            alt='Notification Icon'
           />
-          <p className="notification-text">
+          <p className='notification-text'>
             Unfortunately, you do not have the necessary permissions to access
             this page.
           </p>
@@ -184,10 +298,10 @@ const UserManagement = () => {
 
   return (
     <>
-      <Header componentType={"user_management"} />
+      <Header componentType={'user_management'} />
       <ActionBar
-        title="User management"
-        componentType={"user_management"}
+        title='User management'
+        componentType={'user_management'}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
           onFiltersChange: handleFiltersChange,
@@ -196,23 +310,25 @@ const UserManagement = () => {
         }}
         buttons={[
           {
-            label: "Export report",
-            style: "red-outline",
+            label: 'Export report',
+            style: 'red-outline',
 
-            onClick: () => {
-              const event = new CustomEvent("trigger-pdf-export");
-              document.dispatchEvent(event);
-            },
+            // onClick: () => {
+            //   const event = new CustomEvent("trigger-pdf-export");
+            //   document.dispatchEvent(event);
+            // },
+
+            onClick: () => setIsExportModalOpen(true),
           },
           {
-            label: "New user",
-            style: "red-shadow",
+            label: 'New user',
+            style: 'red-shadow',
             onClick: () => setIsCreateNewUserModalOpen(true),
           },
         ]}
         mobileButton={{
-          label: <MobileActionAddIcon className="action-bar-plus-icon" />,
-          style: "red-shadow",
+          label: <MobileActionAddIcon className='action-bar-plus-icon' />,
+          style: 'red-shadow',
           onClick: handleOpenMobileModal,
         }}
         modalsProps={{
@@ -227,13 +343,13 @@ const UserManagement = () => {
         <>
           {currentUsers.length > 0 ? (
             <>
-              <div className="user-management-table-wrapper">
+              <div className='user-management-table-wrapper'>
                 <UserManagementTable
                   tableData={currentUsers}
                   onUpdateUser={handleUpdateUser}
                 />
                 {currentUsers.length >= 1 &&
-                  currentUserDevice === "desktop" && (
+                  currentUserDevice === 'desktop' && (
                     <Pagination
                       currentPage={currentPage}
                       totalItems={searchInFilteredUsers.length}
@@ -244,8 +360,8 @@ const UserManagement = () => {
                     />
                   )}
               </div>
-              {currentUsers.length >= 1 && currentUserDevice === "mobile" && (
-                <div className="pagination-user-management-container">
+              {currentUsers.length >= 1 && currentUserDevice === 'mobile' && (
+                <div className='pagination-user-management-container'>
                   <Pagination
                     currentPage={currentPage}
                     totalItems={searchInFilteredUsers.length}
@@ -258,22 +374,49 @@ const UserManagement = () => {
               )}
             </>
           ) : (
-            <p className="no-users-message">No users available to display</p>
+            <p className='no-users-message'>No users available to display</p>
           )}
         </>
       )}
 
-      {currentUserDevice === "mobile" && (
+      <CustomModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        modalTitle='Export report'
+      >
+        <div className='export-options'>
+          <CustomButton
+            label='Export to CSV'
+            style='red-shadow'
+            onClick={exportToCSV}
+          />
+          <CustomButton
+            label='Export to Excel (XLS)'
+            style='red-shadow'
+            onClick={exportToXLS}
+          />
+          <CustomButton
+            label='Export to PDF'
+            style='red-shadow'
+            onClick={() => {
+              document.dispatchEvent(new CustomEvent('trigger-pdf-export'));
+              setIsExportModalOpen(false);
+            }}
+          />
+        </div>
+      </CustomModal>
+
+      {currentUserDevice === 'mobile' && (
         <MobileModalWrapper
           isOpen={isMobileModalOpen}
           onClose={() => setIsMobileModalOpen(false)}
         >
-          <div className="mobile-options-list">
+          <div className='mobile-options-list'>
             {mobileActionAddData.options?.map((option) => (
               <div
                 key={option.optionName}
                 className={`mobile-option-item ${
-                  option.optionName === "Delete" ? "delete-option" : ""
+                  option.optionName === 'Delete' ? 'delete-option' : ''
                 }`}
                 onClick={option.onOptionClick}
               >
