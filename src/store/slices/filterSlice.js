@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   researchFilters: [],
@@ -8,26 +8,26 @@ const initialState = {
 };
 
 const filterSlice = createSlice({
-  name: "filters",
+  name: 'filters',
   initialState,
   reducers: {
     setResearchFilters: (state, action) => {
       state.researchFilters = action.payload.map((filter) => {
-        if (filter.type?.value === "initiation_date" && filter.value) {
-          return {
-            ...filter,
-            value: filter.value.map((date) =>
-              date instanceof Date ? date.toISOString() : date
-            ),
-          };
-        }
+        // if (filter.type?.value === "initiation_date" && filter.value) {
+        //   return {
+        //     ...filter,
+        //     value: filter.value.map((date) =>
+        //       date instanceof Date ? date.toISOString() : date
+        //     ),
+        //   };
+        // }
         return filter;
       });
     },
 
     setUserManagementFilters: (state, action) => {
       state.userManagementFilters = action.payload.map((filter) => {
-        if (filter.type?.value === "initiation_date" && filter.value) {
+        if (filter.type?.value === 'initiation_date' && filter.value) {
           return {
             ...filter,
             value: filter.value.map((date) =>

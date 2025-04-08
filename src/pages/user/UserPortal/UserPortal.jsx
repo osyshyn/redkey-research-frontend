@@ -1,23 +1,23 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getFolders } from "../../../store/slices/researchSlice";
-import { setResearchFilters } from "../../../store/slices/filterSlice";
-import { getFirms, setCurrentFirm } from "../../../store/slices/firmSlice";
-import Header from "../../../components/Header/Header";
-import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
-import FolderInnerListUser from "../../../components/FolderInnerListUser/FolderInnerListUser";
-import Pagination from "../../../components/Pagination/Pagination";
-import ActionBar from "../../../components/ActionBar/ActionBar";
-import Loader from "../../../components/Loader/Loader";
-import UserSubscriptionModal from "../../../components/UserSubscriptionModal/UserSubscriptionModal";
-import DocumentPreview from "../../../components/DocumentPreview/DocumentPreview";
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getFolders } from '../../../store/slices/researchSlice';
+import { setResearchFilters } from '../../../store/slices/filterSlice';
+import { getFirms, setCurrentFirm } from '../../../store/slices/firmSlice';
+import Header from '../../../components/Header/Header';
+import FolderWrapper from '../../../components/FolderWrapper/FolderWrapper';
+import FolderInnerListUser from '../../../components/FolderInnerListUser/FolderInnerListUser';
+import Pagination from '../../../components/Pagination/Pagination';
+import ActionBar from '../../../components/ActionBar/ActionBar';
+import Loader from '../../../components/Loader/Loader';
+import UserSubscriptionModal from '../../../components/UserSubscriptionModal/UserSubscriptionModal';
+import DocumentPreview from '../../../components/DocumentPreview/DocumentPreview';
 
-import closeIcon from "../../../assets/icons/close-icon.svg";
+import closeIcon from '../../../assets/icons/close-icon.svg';
 
-import "./styles.scss";
+import './styles.scss';
 
 const UserPortal = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
   const [selectedDocument, setSelectedDocument] = useState(null);
   // const [numPages, setNumPages] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
@@ -33,7 +33,7 @@ const UserPortal = () => {
   const user = useSelector((state) => state.auth.user);
   const currentFirm = useSelector((state) => state.firm.currentFirm);
 
-  console.log("USER", user);
+  console.log('USER', user);
 
   useEffect(() => {
     dispatch(getFirms());
@@ -79,11 +79,11 @@ const UserPortal = () => {
         const filterType = filter.type.value;
         const filterValue = filter.value.value;
 
-        if (filterType === "status") {
+        if (filterType === 'status') {
           return folder.status.toString() === filterValue.toString();
         }
 
-        if (filterType === "companies") {
+        if (filterType === 'companies') {
           return folder.id.toString() === filterValue.toString();
         }
 
@@ -93,7 +93,7 @@ const UserPortal = () => {
     .map((folder) => {
       const filteredResearch = folder.research.filter((research) => {
         return researchFilters.every((filter) => {
-          if (filter.type.value === "initiation_date") {
+          if (filter.type.value === 'initiation_date') {
             const [startDate, endDate] = filter.value.map(
               (dateStr) => new Date(dateStr)
             );
@@ -108,7 +108,7 @@ const UserPortal = () => {
     })
     .filter((folder) => {
       const hasDueDateFilter = researchFilters.some(
-        (filter) => filter.type.value === "initiation_date"
+        (filter) => filter.type.value === 'initiation_date'
       );
       return hasDueDateFilter ? folder.research.length > 0 : true;
     });
@@ -135,7 +135,10 @@ const UserPortal = () => {
         .filter(
           (folder) =>
             folder.research.length > 0 ||
-            folder.name.toLowerCase().includes(searchValue.toLowerCase())
+            folder.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            folder.stock_ticker
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
         )
     : filteredFolders;
 
@@ -147,7 +150,7 @@ const UserPortal = () => {
   );
 
   useEffect(() => {
-    if (foldersStatus === "idle") {
+    if (foldersStatus === 'idle') {
       dispatch(getFolders());
     }
   }, [dispatch, foldersStatus]);
@@ -199,39 +202,39 @@ const UserPortal = () => {
     return (
       <>
         <Header />
-        {foldersStatus === "loading" ? <Loader /> : <UserSubscriptionModal />}
+        {foldersStatus === 'loading' ? <Loader /> : <UserSubscriptionModal />}
       </>
     );
   }
 
   return (
     <>
-      <Header componentType={"user_portal"} />
+      <Header componentType={'user_portal'} />
       <ActionBar
         title={`${
           currentFirm?.name.charAt(0).toUpperCase() + currentFirm?.name.slice(1)
         } Research`}
-        componentType={"user_portal"}
+        componentType={'user_portal'}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
           onFiltersChange: handleFiltersChange,
           // folderOptions: folderOptions,
         }}
       />
-      {foldersStatus === "loading" ? (
+      {foldersStatus === 'loading' ? (
         <Loader />
       ) : folders.length === 0 ? (
-        <div className="folders-and-document-container">
-          <div className="folders-container">
-            <p className="no-folders-message">
+        <div className='folders-and-document-container'>
+          <div className='folders-container'>
+            <p className='no-folders-message'>
               No folders available to display
             </p>
           </div>
         </div>
       ) : (
         <>
-          <div className="folders-and-document-container">
-            <div className="folders-container">
+          <div className='folders-and-document-container'>
+            <div className='folders-container'>
               {currentFolders.length > 0 ? (
                 currentFolders.map((folder, index) => (
                   <FolderWrapper
@@ -254,18 +257,18 @@ const UserPortal = () => {
                                 (item) => new Date(item.publication_date)
                               )
                             )
-                          ).toLocaleDateString("en-US")
-                        : "No researches yet"
+                          ).toLocaleDateString('en-US')
+                        : 'No researches yet'
                     }
                     status={folder.status}
-                    componentType={"user_portal"}
+                    componentType={'user_portal'}
                     researchData={
-                        folder?.research?.filter(
-                          (researchItem) =>
-                            researchItem?.firm?.id === currentFirm?.id &&
-                            researchItem?.firm?.name === currentFirm?.name
-                        ) || [folder.research[0]]
-                      }
+                      folder?.research?.filter(
+                        (researchItem) =>
+                          researchItem?.firm?.id === currentFirm?.id &&
+                          researchItem?.firm?.name === currentFirm?.name
+                      ) || [folder.research[0]]
+                    }
                   >
                     <FolderInnerListUser
                       tableData={
@@ -281,14 +284,14 @@ const UserPortal = () => {
                   </FolderWrapper>
                 ))
               ) : (
-                <p className="no-folders-message">
+                <p className='no-folders-message'>
                   No folders available to display
                 </p>
               )}
             </div>
             {showPreview &&
               selectedDocument &&
-              selectedDocument?.file?.type === "file" && (
+              selectedDocument?.file?.type === 'file' && (
                 <DocumentPreview
                   showPreview={showPreview}
                   selectedDocument={selectedDocument}
@@ -298,7 +301,7 @@ const UserPortal = () => {
           </div>
 
           {currentFolders.length >= 1 && (
-            <div className="pagination-wrapper">
+            <div className='pagination-wrapper'>
               <Pagination
                 currentPage={currentPage}
                 totalItems={searchInFilteredFolders.length}

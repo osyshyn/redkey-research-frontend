@@ -1,4 +1,4 @@
-@use "../../assets/styles/variables" as *;
+@use '../../assets/styles/variables' as *;
 
 .custom-dropdown {
   display: flex;
@@ -101,7 +101,8 @@
     position: absolute;
     top: 100%;
     left: 0;
-    max-height: 200px;
+    // max-height: 200px;
+    max-height: 140px;
     overflow-y: auto;
 
     &::-webkit-scrollbar {

@@ -1,44 +1,44 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   getFolders,
   createFolder,
   createResearch,
-} from "../../../store/slices/researchSlice";
+} from '../../../store/slices/researchSlice';
 import {
   setResearchFilters,
   clearResearchFilters,
-} from "../../../store/slices/filterSlice";
-import { getFirms } from "../../../store/slices/firmSlice";
+} from '../../../store/slices/filterSlice';
+import { getFirms } from '../../../store/slices/firmSlice';
 
-import useDeviceType from "../../../hooks/useDeviceType";
+import useDeviceType from '../../../hooks/useDeviceType';
 
-import Header from "../../../components/Header/Header";
-import FolderWrapper from "../../../components/FolderWrapper/FolderWrapper";
-import FolderInnerList from "../../../components/FolderInnerList/FolderInnerList";
-import Pagination from "../../../components/Pagination/Pagination";
-import ActionBar from "../../../components/ActionBar/ActionBar";
-import Loader from "../../../components/Loader/Loader";
-import DocumentPreview from "../../../components/DocumentPreview/DocumentPreview";
-import MobileModalWrapper from "../../../components/MobileModalWrapper/MobileModalWrapper";
-import FirmsModal from "../../../components/FirmsModal/FirmsModal";
+import Header from '../../../components/Header/Header';
+import FolderWrapper from '../../../components/FolderWrapper/FolderWrapper';
+import FolderInnerList from '../../../components/FolderInnerList/FolderInnerList';
+import Pagination from '../../../components/Pagination/Pagination';
+import ActionBar from '../../../components/ActionBar/ActionBar';
+import Loader from '../../../components/Loader/Loader';
+import DocumentPreview from '../../../components/DocumentPreview/DocumentPreview';
+import MobileModalWrapper from '../../../components/MobileModalWrapper/MobileModalWrapper';
+import FirmsModal from '../../../components/FirmsModal/FirmsModal';
 
-import MobileActionAddIcon from "../../../assets/icons/mobile-action-add-button.svg?react";
-import LoadIcon from "../../../assets/icons/load-icon.svg?react";
-import FolderIcon from "../../../assets/icons/folder-icon.svg?react";
-import PlusIcon from "../../../assets/icons/plus-icon.svg?react";
-import closeIcon from "../../../assets/icons/close-icon.svg";
+import MobileActionAddIcon from '../../../assets/icons/mobile-action-add-button.svg?react';
+import LoadIcon from '../../../assets/icons/load-icon.svg?react';
+import FolderIcon from '../../../assets/icons/folder-icon.svg?react';
+import PlusIcon from '../../../assets/icons/plus-icon.svg?react';
+import closeIcon from '../../../assets/icons/close-icon.svg';
 
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
-import "./styles.scss";
+import './styles.scss';
 
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 const AdminPortal = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
@@ -63,7 +63,7 @@ const AdminPortal = () => {
 
   const currentUserDevice = useDeviceType();
 
-  console.log("FOLDERS", folders, currentFirm);
+  console.log('FOLDERS', folders, currentFirm);
 
   useEffect(() => {
     dispatch(getFirms());
@@ -93,7 +93,7 @@ const AdminPortal = () => {
   });
 
   const foldersFilteredByFirm = sortedFolders.filter((folder) => {
-    if (currentFirm?.name === "All") {
+    if (currentFirm?.name === 'All') {
       return true;
     }
     return folder?.firm?.id === currentFirm?.id;
@@ -105,50 +105,58 @@ const AdminPortal = () => {
         const filterType = filter.type.value;
         const filterValue = filter.value.value;
 
-        if (filterType === "status") {
+        if (filterType === 'status') {
           return folder.status.toString() === filterValue.toString();
         }
 
-        if (filterType === "companies") {
+        if (filterType === 'companies') {
           return folder.id.toString() === filterValue.toString();
         }
 
         return true;
       });
     })
-    .map((folder) => {
-      const filteredResearch = folder.research.filter((research) => {
-        return researchFilters.every((filter) => {
-          if (filter.type.value === "initiation_date") {
-            const [startDate, endDate] = filter.value.map(
-              (dateStr) => new Date(dateStr)
-            );
-            const publicationDate = new Date(research.publication_date);
-            return publicationDate >= startDate && publicationDate <= endDate;
-          }
-          return true;
-        });
-      });
+    // .map((folder) => {
+    //   const filteredResearch = folder.research.filter((research) => {
+    //     return researchFilters.every((filter) => {
+    //       if (filter.type.value === 'initiation_date') {
+    //         const [startDate, endDate] = filter.value.map(
+    //           (dateStr) => new Date(dateStr)
+    //         );
+    //         const publicationDate = new Date(research.publication_date);
+    //         return publicationDate >= startDate && publicationDate <= endDate;
+    //       }
+    //       return true;
+    //     });
+    //   });
 
-      return { ...folder, research: filteredResearch };
+    //   return { ...folder, research: filteredResearch };
+    // })
+    .map((folder) => {
+      const sortFilter = researchFilters.find(
+        (filter) => filter.type.value === 'initiation_date'
+      );
+    
+      if (!sortFilter) return folder;
+    
+      const direction = sortFilter.value.value;
+    
+      const sortedResearch = [...folder.research].sort((a, b) => {
+        const dateA = new Date(a.publication_date);
+        const dateB = new Date(b.publication_date);
+        return direction === 'newest-oldest' ? dateB - dateA : dateA - dateB;
+      });
+    
+      return { ...folder, research: sortedResearch };
     })
     .filter((folder) => {
       const hasDueDateFilter = researchFilters.some(
-        (filter) => filter.type.value === "initiation_date"
+        (filter) => filter.type.value === 'initiation_date'
       );
       return hasDueDateFilter ? folder.research.length > 0 : true;
     });
 
-  // const searchInFilteredFolders = searchValue
-  //   ? filteredFolders
-  //       .map((folder) => ({
-  //         ...folder,
-  //         research: folder.research.filter((item) =>
-  //           item.title.toLowerCase().includes(searchValue.toLowerCase())
-  //         ),
-  //       }))
-  //       .filter((folder) => folder.research.length > 0)
-  //   : filteredFolders;
+
 
   const searchInFilteredFolders = searchValue
     ? filteredFolders
@@ -161,7 +169,10 @@ const AdminPortal = () => {
         .filter(
           (folder) =>
             folder.research.length > 0 ||
-            folder.name.toLowerCase().includes(searchValue.toLowerCase())
+            folder.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            folder.stock_ticker
+              ?.toLowerCase()
+              .includes(searchValue.toLowerCase())
         )
     : filteredFolders;
 
@@ -173,7 +184,7 @@ const AdminPortal = () => {
   );
 
   useEffect(() => {
-    if (foldersStatus === "idle") {
+    if (foldersStatus === 'idle') {
       dispatch(getFolders());
     }
   }, [dispatch, foldersStatus]);
@@ -208,7 +219,7 @@ const AdminPortal = () => {
     [dispatch]
   );
 
-  const handleViewClick = (item) => {   
+  const handleViewClick = (item) => {
     setSelectedDocument(item);
     setShowPreview(true);
   };
@@ -227,24 +238,24 @@ const AdminPortal = () => {
     setMobileActionAddData({
       options: [
         {
-          optionName: "Upload research",
-          icon: <LoadIcon className="mobile-dropdown-menu-icon" />,
+          optionName: 'Upload research',
+          icon: <LoadIcon className='mobile-dropdown-menu-icon' />,
           onOptionClick: () => {
             setIsMobileModalOpen(false);
             setIsUploadResearchModalOpen(true);
           },
         },
         {
-          optionName: "Create folder",
-          icon: <FolderIcon className="mobile-dropdown-menu-icon" />,
+          optionName: 'Create folder',
+          icon: <FolderIcon className='mobile-dropdown-menu-icon' />,
           onOptionClick: () => {
             setIsMobileModalOpen(false);
             setIsCreateFolderModalOpen(true);
           },
         },
         {
-          optionName: "Add/remove research team",
-          icon: <PlusIcon className="mobile-dropdown-menu-icon" />,
+          optionName: 'Add/remove research team',
+          icon: <PlusIcon className='mobile-dropdown-menu-icon' />,
           onOptionClick: () => {
             setIsFirmsModalOpen(true);
           },
@@ -269,17 +280,17 @@ const AdminPortal = () => {
 
   return (
     <>
-      <Header componentType={"admin_portal"} />
+      <Header componentType={'admin_portal'} />
       <ActionBar
         title={
-          currentFirm?.name === "All"
-            ? "All Researches"
+          currentFirm?.name === 'All'
+            ? 'All Researches'
             : `${
                 currentFirm?.name.charAt(0).toUpperCase() +
                 currentFirm?.name.slice(1)
               } Research`
         }
-        componentType={"admin_portal"}
+        componentType={'admin_portal'}
         searchPanelProps={{
           onSearchChange: handleSearchChange,
           onFiltersChange: handleFiltersChange,
@@ -287,19 +298,19 @@ const AdminPortal = () => {
         }}
         buttons={[
           {
-            label: "Create folder",
-            style: "red-outline",
+            label: 'Create folder',
+            style: 'red-outline',
             onClick: () => setIsCreateFolderModalOpen(true),
           },
           {
-            label: "Upload research",
-            style: "red-shadow",
+            label: 'Upload research',
+            style: 'red-shadow',
             onClick: () => setIsUploadResearchModalOpen(true),
           },
         ]}
         mobileButton={{
-          label: <MobileActionAddIcon className="action-bar-plus-icon" />,
-          style: "red-shadow",
+          label: <MobileActionAddIcon className='action-bar-plus-icon' />,
+          style: 'red-shadow',
           onClick: handleOpenMobileModal,
         }}
         modalsProps={{
@@ -312,20 +323,20 @@ const AdminPortal = () => {
           onSaveResearchData: handleSaveResearchData,
         }}
       />
-      {foldersStatus === "loading" ? (
+      {foldersStatus === 'loading' ? (
         <Loader />
       ) : folders.length === 0 ? (
-        <div className="folders-and-document-container">
-          <div className="folders-container">
-            <p className="no-folders-message">
+        <div className='folders-and-document-container'>
+          <div className='folders-container'>
+            <p className='no-folders-message'>
               No folders available to display
             </p>
           </div>
         </div>
       ) : (
         <>
-          <div className="folders-and-document-container">
-            <div className="folders-container">
+          <div className='folders-and-document-container'>
+            <div className='folders-container'>
               {currentFolders.length > 0 ? (
                 currentFolders.map((folder, index) => (
                   <FolderWrapper
@@ -335,7 +346,7 @@ const AdminPortal = () => {
                     folderId={folder.id}
                     // itemsAmount={folder.research.length}
                     itemsAmount={
-                      currentFirm?.name === "All"
+                      currentFirm?.name === 'All'
                         ? folder?.research?.length
                         : folder?.research?.filter(
                             (researchItem) =>
@@ -351,20 +362,20 @@ const AdminPortal = () => {
                                 (item) => new Date(item.publication_date)
                               )
                             )
-                          ).toLocaleDateString("en-US")
-                        : "No researches yet"
+                          ).toLocaleDateString('en-US')
+                        : 'No researches yet'
                     }
                     status={folder.status}
-                    componentType={"admin_portal"}
+                    componentType={'admin_portal'}
                     researchData={
-                        currentFirm?.name === "All"
-                          ? folder?.research
-                          : folder?.research?.filter(
-                              (researchItem) =>
-                                researchItem?.firm?.id === currentFirm?.id &&
-                                researchItem?.firm?.name === currentFirm?.name
-                            ) || [folder.research[0]]
-                      }
+                      currentFirm?.name === 'All'
+                        ? folder?.research
+                        : folder?.research?.filter(
+                            (researchItem) =>
+                              researchItem?.firm?.id === currentFirm?.id &&
+                              researchItem?.firm?.name === currentFirm?.name
+                          ) || [folder.research[0]]
+                    }
                   >
                     <FolderInnerList
                       // tableData={folder.research.filter(
@@ -373,7 +384,7 @@ const AdminPortal = () => {
                       //     researchItem?.firm?.name === currentFirm?.name)
                       // )}
                       tableData={
-                        currentFirm?.name === "All"
+                        currentFirm?.name === 'All'
                           ? folder?.research
                           : folder?.research?.filter(
                               (researchItem) =>
@@ -387,14 +398,14 @@ const AdminPortal = () => {
                   </FolderWrapper>
                 ))
               ) : (
-                <p className="no-folders-message">
+                <p className='no-folders-message'>
                   No folders available to display
                 </p>
               )}
             </div>
             {showPreview &&
               selectedDocument &&
-              selectedDocument?.file?.type === "file" && (
+              selectedDocument?.file?.type === 'file' && (
                 <DocumentPreview
                   showPreview={showPreview}
                   selectedDocument={selectedDocument}
@@ -404,7 +415,7 @@ const AdminPortal = () => {
           </div>
 
           {currentFolders.length >= 1 && (
-            <div className="pagination-wrapper">
+            <div className='pagination-wrapper'>
               <Pagination
                 currentPage={currentPage}
                 totalItems={searchInFilteredFolders.length}
@@ -418,17 +429,17 @@ const AdminPortal = () => {
         </>
       )}
 
-      {currentUserDevice === "mobile" && (
+      {currentUserDevice === 'mobile' && (
         <MobileModalWrapper
           isOpen={isMobileModalOpen}
           onClose={() => setIsMobileModalOpen(false)}
         >
-          <div className="mobile-options-list">
+          <div className='mobile-options-list'>
             {mobileActionAddData.options?.map((option) => (
               <div
                 key={option.optionName}
                 className={`mobile-option-item ${
-                  option.optionName === "Delete" ? "delete-option" : ""
+                  option.optionName === 'Delete' ? 'delete-option' : ''
                 }`}
                 onClick={option.onOptionClick}
               >
