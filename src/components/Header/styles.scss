@@ -1,4 +1,4 @@
-@use "../../assets/styles/variables" as *;
+@use '../../assets/styles/variables' as *;
 
 .header {
   display: flex;
@@ -25,11 +25,11 @@
 .menu-icon {
   width: 24px;
   height: 24px;
-  background: url("../../assets/icons/menu.svg") no-repeat center center;
+  background: url('../../assets/icons/menu.svg') no-repeat center center;
   background-size: contain;
 
   &:hover {
-    background: url("../../assets/icons/menu-active.svg") no-repeat center
+    background: url('../../assets/icons/menu-active.svg') no-repeat center
       center;
     background-size: contain;
     cursor: pointer;
@@ -43,6 +43,50 @@
   left: 50%;
   transform: translateX(-50%);
 }
+.nav-links-horizontal-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 30px;
+  align-items: center;
+}
+
+.nav-scroll-wrapper {
+  display: flex;
+  // align-items: center;
+  // position: relative;
+  // flex-grow: 1;
+  max-width: 60vw;
+  // min-width: 50vw;
+}
+
+.nav-links-horizontal {
+  display: flex;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  gap: 30px;
+  flex-wrap: nowrap;
+  max-width: 60vw;
+
+  &:hover {
+    color: $delete-red-color;
+  }
+
+  .active {
+    color: $delete-red-color;
+  }
+}
+
+.scroll-btn {
+  // position: absolute;
+  z-index: 1;
+  background: $secondary-color;
+  border: none;
+  padding: 0 20px;
+  cursor: pointer;
+  // border-radius: 50%;
+}
 
 .nav-link {
   font-size: 16px;
@@ -53,20 +97,33 @@
   font-weight: $font-weight-normal;
   line-height: 24px;
   padding: 10px 0;
-
+  white-space: nowrap;
   display: flex;
   justify-content: center;
   align-items: center;
 
   &:hover {
-    color: $primary-color;
-    border-bottom: 1px solid $primary-color;
+    color: $delete-red-color;
+    border-bottom: 1px solid $delete-red-color;
   }
 }
 
 .nav-link.active {
   color: $delete-red-color;
   border-bottom: 1px solid $delete-red-color;
+}
+.nav-link.inactive-access {
+  color: $inactive-access;
+  border-bottom: none;
+  &:hover {
+    color: $secondary-color;
+    border-bottom: none;
+  }
+
+  &.active {
+    color: $secondary-color;
+    border-bottom: 1px solid $secondary-color;
+  }
 }
 
 .header-dropdown-icon {

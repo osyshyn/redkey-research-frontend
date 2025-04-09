@@ -22,6 +22,7 @@ import Loader from '../../../components/Loader/Loader';
 import DocumentPreview from '../../../components/DocumentPreview/DocumentPreview';
 import MobileModalWrapper from '../../../components/MobileModalWrapper/MobileModalWrapper';
 import FirmsModal from '../../../components/FirmsModal/FirmsModal';
+import UserSubscriptionModal from '../../../components/UserSubscriptionModal/UserSubscriptionModal';
 
 import MobileActionAddIcon from '../../../assets/icons/mobile-action-add-button.svg?react';
 import LoadIcon from '../../../assets/icons/load-icon.svg?react';
@@ -55,11 +56,14 @@ const AdminPortal = () => {
     options: [],
   });
 
+  const [showAccessDenied, setShowAccessDenied] = useState(false);
+
   const dispatch = useDispatch();
 
   const { folders, foldersStatus } = useSelector((state) => state.research);
   const { researchFilters } = useSelector((state) => state.filters);
   const currentFirm = useSelector((state) => state.firm.currentFirm);
+  const user = useSelector((state) => state.auth.user);
 
   const currentUserDevice = useDeviceType();
 
@@ -68,6 +72,19 @@ const AdminPortal = () => {
   useEffect(() => {
     dispatch(getFirms());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (currentFirm && user?.role === 2) {
+      const hasAccess = user?.access?.some(
+        (access) => access.firm.id === currentFirm.id && access.value === true
+      );
+      if (hasAccess) {
+        setShowAccessDenied(false);
+      } else if (!hasAccess) {
+        setShowAccessDenied(true);
+      }
+    }
+  }, [currentFirm, user]);
 
   const folderOptions = useMemo(
     () =>
@@ -136,17 +153,17 @@ const AdminPortal = () => {
       const sortFilter = researchFilters.find(
         (filter) => filter.type.value === 'initiation_date'
       );
-    
+
       if (!sortFilter) return folder;
-    
+
       const direction = sortFilter.value.value;
-    
+
       const sortedResearch = [...folder.research].sort((a, b) => {
         const dateA = new Date(a.publication_date);
         const dateB = new Date(b.publication_date);
         return direction === 'newest-oldest' ? dateB - dateA : dateA - dateB;
       });
-    
+
       return { ...folder, research: sortedResearch };
     })
     .filter((folder) => {
@@ -155,8 +172,6 @@ const AdminPortal = () => {
       );
       return hasDueDateFilter ? folder.research.length > 0 : true;
     });
-
-
 
   const searchInFilteredFolders = searchValue
     ? filteredFolders
@@ -277,6 +292,15 @@ const AdminPortal = () => {
       setCurrentPage(1);
     }
   }, [searchInFilteredFolders, itemsPerPage, currentPage]);
+
+  if (showAccessDenied) {
+    return (
+      <>
+        <Header />
+        {foldersStatus === 'loading' ? <Loader /> : <UserSubscriptionModal />}
+      </>
+    );
+  }
 
   return (
     <>

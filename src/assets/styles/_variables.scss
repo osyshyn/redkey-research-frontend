@@ -10,9 +10,10 @@
   --text-color-neutral: #b0b0b0;
   --secondary-background: #3d3d3d;
   --highlight-background-hover: #1f1f1f;
+  --inactive-access: #4d4d4d;
 }
 
-[data-theme-mode="light"] {
+[data-theme-mode='light'] {
   --primary-background: #e7e7e7;
   --highlight-background: #f6f6f6;
   --text-color-main: #454545;
@@ -24,6 +25,7 @@
   --text-color-neutral: #4d4d4d;
   --secondary-background: #e7e7e7;
   --highlight-background-hover: #f1f1f1;
+  --inactive-access: #b0b0b0;
 }
 
 // Colors
@@ -39,8 +41,9 @@ $input-border-gray-darker: var(--input-border-gray-darker);
 $text-color-neutral: var(--text-color-neutral);
 $secondary-background: var(--secondary-background);
 $highlight-background-hover: var(--highlight-background-hover);
-$disabled: #6d6d6d;
+$inactive-access: var(--inactive-access);
 
+$disabled: #6d6d6d;
 $background-darker: #4d4d4d;
 $background-dark-light: #5d5d5d;
 $background-lighter: #6d6d6d;
@@ -56,7 +59,7 @@ $white: #ffffff;
 $home-page-light: #f6f6f6;
 
 // Fonts
-$font-family-satoshi: "Satoshi", sans-serif;
+$font-family-satoshi: 'Satoshi', sans-serif;
 $font-weight-normal: 400;
 $font-weight-medium: 500;
 $font-weight-bold: 700;

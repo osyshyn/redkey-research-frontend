@@ -33,37 +33,6 @@ const LoginPage = () => {
     dispatch(clearAuthError());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (status === "succeeded") {
-  //     dispatch(getProfile());
-  //   }
-  // }, [status, dispatch]);
-
-  // useEffect(() => {
-  //   if (status === "succeeded" && user) {
-  //     console.log("UUUUUU", user, userResetPassword);
-
-  //     if (user.role !== 3 && userResetPassword === "true") {
-  //       navigate("/set-your-password");
-  //     } else if (user.role === 3) {
-  //       navigate("/admin/portal");
-  //       dispatch(setCurrentFirm({ name: "All" }));
-  //     } else if (user.role === 2 && userResetPassword === "false") {
-  //       navigate("/admin/portal");
-  //       dispatch(setCurrentFirm({ name: "All" }));
-  //     } else if (user.role === 1 && userResetPassword === "false") {
-  //       const activeAccess = user.access.find(
-  //         (access) => access.value === true
-  //       );
-  //       if (activeAccess) {
-  //         dispatch(setCurrentFirm(activeAccess.firm));
-  //       }
-
-  //       navigate("/user/portal");
-  //     }
-  //   }
-  // }, [status, user, navigate, userResetPassword]);
-
   const handleLogin = async () => {
     setNotificationVisible(false);
     try {

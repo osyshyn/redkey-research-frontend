@@ -79,7 +79,12 @@ const ChangePasswordFirst = () => {
           setPasswords("");
           setPasswordError("");
           if (user.role === 2) {
-            dispatch(setCurrentFirm({ name: "All" }));
+            const activeAccess = user.access.find(
+              (access) => access.value === true
+            );
+            if (activeAccess) {
+              dispatch(setCurrentFirm(activeAccess.firm));
+            }
             navigate("/admin/portal");
           } else if (user.role === 1) {
             const activeAccess = user.access.find(

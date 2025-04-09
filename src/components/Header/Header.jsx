@@ -1,28 +1,30 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import useDeviceType from "../../hooks/useDeviceType";
-import { logoutUser, getProfile } from "../../store/slices/authSlice";
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import useDeviceType from '../../hooks/useDeviceType';
+import { logoutUser, getProfile } from '../../store/slices/authSlice';
 import {
   clearResearchFilters,
   clearUserManagementFilters,
-} from "../../store/slices/filterSlice";
-import { setCurrentFirm } from "../../store/slices/firmSlice";
-import DropdownMenu from "../DropdownMenu/DropdownMenu";
-import ProfileSettingsModal from "../ProfileSettingsModal/ProfileSettingsModal";
-import ContactUsModal from "../ContactUsModal/ContactUsModal";
-import ResearchFilesDropdown from "../ResearchFilesDropdown/ResearchFilesDropdown";
-import MobileDropdownMenu from "../MobileDropdownMenu/MobileDropdownMenu";
-import FirmsModal from "../FirmsModal/FirmsModal";
+} from '../../store/slices/filterSlice';
+import { setCurrentFirm } from '../../store/slices/firmSlice';
+import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import ProfileSettingsModal from '../ProfileSettingsModal/ProfileSettingsModal';
+import ContactUsModal from '../ContactUsModal/ContactUsModal';
+import ResearchFilesDropdown from '../ResearchFilesDropdown/ResearchFilesDropdown';
+import MobileDropdownMenu from '../MobileDropdownMenu/MobileDropdownMenu';
+import FirmsModal from '../FirmsModal/FirmsModal';
 
-import { getThemeName } from "../../utils/userHelpers";
+import { getThemeName } from '../../utils/userHelpers';
 
-import dropdownChevronIconRed from "../../assets/icons/dropdown-chevron-icon-red.svg";
-import dropdownChevronIcon from "../../assets/icons/dropdown-chevron-icon.svg";
-import logoDarkHeader from "../../assets/images/logo-header.png";
-import logoLightHeader from "../../assets/images/logo-light-big.png";
+import dropdownChevronIconRed from '../../assets/icons/dropdown-chevron-icon-red.svg';
+import dropdownChevronIcon from '../../assets/icons/dropdown-chevron-icon.svg';
+import arrowRightIcon from '../../assets/icons/arrow-right-icon.svg';
+import arrowLeftIcon from '../../assets/icons/arrow-left-icon.svg';
+import logoDarkHeader from '../../assets/images/logo-header.png';
+import logoLightHeader from '../../assets/images/logo-light-big.png';
 
-import "./styles.scss";
+import './styles.scss';
 
 const Header = ({ componentType }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,17 +43,26 @@ const Header = ({ componentType }) => {
   const menuIconRef = useRef(null);
   const researchButtonRef = useRef(null);
 
+  const scrollRef = useRef(null);
+
+  const scroll = (amount) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft += amount;
+    }
+  };
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const currentUserDevice = useDeviceType();
 
-  const currentTheme = document.body.getAttribute("data-theme-mode");
+  const currentTheme = document.body.getAttribute('data-theme-mode');
 
   const { user } = useSelector((state) => state.auth);
+  const currentFirm = useSelector((state) => state.firm.currentFirm);
 
   const firmsList = useSelector((state) => state.firm.firms);
-  console.log("getProfile", user, firmsList);
+  console.log('getProfile', user, firmsList);
 
   useEffect(() => {
     if (!user) {
@@ -72,7 +83,7 @@ const Header = ({ componentType }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("selectedTheme");
+    const savedTheme = localStorage.getItem('selectedTheme');
 
     let themeToApply = savedTheme
       ? getThemeName(savedTheme)
@@ -81,11 +92,11 @@ const Header = ({ componentType }) => {
       : null;
 
     if (themeToApply) {
-      document.body.setAttribute("data-theme-mode", themeToApply.toLowerCase());
+      document.body.setAttribute('data-theme-mode', themeToApply.toLowerCase());
     }
 
     if (user?.theme) {
-      localStorage.setItem("selectedTheme", user?.theme);
+      localStorage.setItem('selectedTheme', user?.theme);
     }
   }, [user?.theme]);
 
@@ -111,9 +122,9 @@ const Header = ({ componentType }) => {
   };
 
   useEffect(() => {
-    document.addEventListener("click", closeAllMenus);
+    document.addEventListener('click', closeAllMenus);
     return () => {
-      document.removeEventListener("click", closeAllMenus);
+      document.removeEventListener('click', closeAllMenus);
     };
   }, []);
 
@@ -130,9 +141,9 @@ const Header = ({ componentType }) => {
   const handleLogoutClick = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      navigate("/login");
+      navigate('/login');
     } catch (err) {
-      console.error("Logout error:", err);
+      console.error('Logout error:', err);
     }
   };
 
@@ -142,7 +153,7 @@ const Header = ({ componentType }) => {
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
     setIsMenuOpen(false);
-    navigate("/admin/portal");
+    navigate('/admin/portal');
   };
 
   const handleUserResearchOptionClick = (firmOption) => {
@@ -151,7 +162,7 @@ const Header = ({ componentType }) => {
     dispatch(clearUserManagementFilters());
     setIsResearchDropdownOpen(false);
     setIsMenuOpen(false);
-    navigate("/user/portal");
+    navigate('/user/portal');
   };
 
   const handleResearchClick = (e) => {
@@ -165,13 +176,13 @@ const Header = ({ componentType }) => {
 
   const handleNavigateToUserManagement = () => {
     dispatch(clearResearchFilters());
-    navigate("/admin/user-management");
+    navigate('/admin/user-management');
   };
 
   const adminResearchDropdownOptions = [
     {
-      optionName: "All",
-      onOptionClick: () => handleAdminResearchOptionClick({ name: "All" }),
+      optionName: 'All',
+      onOptionClick: () => handleAdminResearchOptionClick({ name: 'All' }),
     },
     ...firmsList.map((firmOption) => ({
       optionName: firmOption.name,
@@ -185,14 +196,14 @@ const Header = ({ componentType }) => {
   }));
 
   const rolesConfig = {
-    1: { path: "/user/portal", options: userResearchDropdownOptions },
+    1: { path: '/user/portal', options: userResearchDropdownOptions },
     2: {
-      path: "/admin/portal",
-      options: adminResearchDropdownOptions,
-      userManagement: true,
+      path: '/admin/portal',
+      options: userResearchDropdownOptions,
+      // userManagement: true,
     },
     3: {
-      path: "/admin/portal",
+      path: '/admin/portal',
       options: adminResearchDropdownOptions,
       userManagement: true,
     },
@@ -201,20 +212,20 @@ const Header = ({ componentType }) => {
   const roleData = rolesConfig[user?.role];
 
   return (
-    <header className="header">
-      <div className="logo-container">
+    <header className='header'>
+      <div className='logo-container'>
         <img
           src={
-            currentTheme === "dark" || currentTheme === null
+            currentTheme === 'dark' || currentTheme === null
               ? logoDarkHeader
               : logoLightHeader
           }
-          alt="Logo"
-          className="logo"
+          alt='Logo'
+          className='logo'
         />
       </div>
 
-      {roleData && currentUserDevice === "desktop" && (
+      {/* {roleData && currentUserDevice === "desktop" && (
         <nav className="nav-links">
           <span
             className={`nav-link ${
@@ -251,11 +262,101 @@ const Header = ({ componentType }) => {
             </span>
           )}
         </nav>
+      )} */}
+      {roleData && currentUserDevice === 'desktop' && (
+        <nav
+          className={
+            user?.role === 1 || user?.role === 2
+              ? 'nav-links-horizontal-container'
+              : 'nav-links'
+          }
+        >
+          {user?.role === 1 || user?.role === 2 ? (
+            <div className='nav-scroll-wrapper'>
+              {roleData.options.length > 6 && (
+                <button
+                  className='scroll-btn left'
+                  onClick={() => scroll(-150)}
+                >
+                  <img src={arrowLeftIcon} alt='Scroll Left' />
+                </button>
+              )}
+
+              <div className='nav-links-horizontal' ref={scrollRef}>
+                {roleData.options.map(({ optionName, onOptionClick, path }) => (
+                  <span
+                    key={optionName}
+                    className={`nav-link ${
+                      currentFirm.name === optionName ? 'active' : ''
+                    }
+                      ${
+                        user?.access?.some(
+                          (a) => a.firm.name === optionName && a.value === true
+                        )
+                          ? ''
+                          : 'inactive-access'
+                      }
+                    `}
+                    onClick={onOptionClick}
+                  >
+                    {optionName}
+                  </span>
+                ))}
+              </div>
+
+              {roleData.options.length > 6 && (
+                <button
+                  className='scroll-btn right'
+                  onClick={() => scroll(150)}
+                >
+                  <img src={arrowRightIcon} alt='Scroll Right' />
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <span
+                className={`nav-link ${
+                  location.pathname === roleData.path ? 'active' : ''
+                }`}
+                onClick={handleResearchClick}
+                ref={researchButtonRef}
+              >
+                Research files
+                <img
+                  src={
+                    location.pathname === roleData.path
+                      ? dropdownChevronIconRed
+                      : dropdownChevronIcon
+                  }
+                  alt='Dropdown Chevron'
+                  className='header-dropdown-icon'
+                />
+              </span>
+              {isResearchDropdownOpen && (
+                <ResearchFilesDropdown
+                  position={researchDropdownPosition}
+                  options={roleData.options}
+                />
+              )}
+            </>
+          )}
+          {roleData.userManagement && (
+            <span
+              className={`nav-link ${
+                location.pathname === '/admin/user-management' ? 'active' : ''
+              }`}
+              onClick={handleNavigateToUserManagement}
+            >
+              User management
+            </span>
+          )}
+        </nav>
       )}
 
-      <div className="menu-icon" onClick={toggleMenu} ref={menuIconRef}></div>
+      <div className='menu-icon' onClick={toggleMenu} ref={menuIconRef}></div>
 
-      {isMenuOpen && currentUserDevice === "desktop" && (
+      {isMenuOpen && currentUserDevice === 'desktop' && (
         <DropdownMenu
           isOpen={isMenuOpen}
           ref={menuRef}
@@ -268,7 +369,7 @@ const Header = ({ componentType }) => {
         />
       )}
 
-      {isMenuOpen && currentUserDevice === "mobile" && (
+      {isMenuOpen && currentUserDevice === 'mobile' && (
         <MobileDropdownMenu
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
