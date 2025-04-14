@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import useDeviceType from "../../hooks/useDeviceType";
-import SearchAndFilterPanel from "../SearchAndFilterPanel/SearchAndFilterPanel";
-import CustomButton from "../CustomButton/CustomButton";
-import FolderAndResearchModals from "../FolderAndResearchModals/FolderAndResearchModals";
-import NewUserModal from "../NewUserModal/NewUserModal";
-import FirmsModal from "../FirmsModal/FirmsModal";
-import MobileModalWrapper from "../MobileModalWrapper/MobileModalWrapper";
+import React, { useState } from 'react';
+import useDeviceType from '../../hooks/useDeviceType';
+import SearchAndFilterPanel from '../SearchAndFilterPanel/SearchAndFilterPanel';
+import CustomButton from '../CustomButton/CustomButton';
+import FolderAndResearchModals from '../FolderAndResearchModals/FolderAndResearchModals';
+import NewUserModal from '../NewUserModal/NewUserModal';
+import FirmsModal from '../FirmsModal/FirmsModal';
+import MobileModalWrapper from '../MobileModalWrapper/MobileModalWrapper';
 
 // import MobileActionAddIcon from "../../assets/icons/mobile-action-add-button.svg?react";
 // import FileUploadIcon from "../../assets/icons/file-upload-icon.svg?react";
 // import FolderIcon from "../../assets/icons/folder-icon.svg?react";
 
-import "./styles.scss";
+import './styles.scss';
 
 const ActionBar = ({
   title,
-  componentType = "",
+  componentType = '',
   searchPanelProps,
   buttons = [],
   mobileButton = {},
@@ -30,12 +30,12 @@ const ActionBar = ({
   // const { setIsFirmsModalOpen } = adminDesktopAddFirmProps;
 
   const currentUserDevice = useDeviceType();
-  console.log("currentUserDevice", currentUserDevice, buttons);
+  console.log('currentUserDevice', currentUserDevice, buttons);
 
   return (
     <>
-      <div className="action-bar">
-        <div className="action-bar-title">
+      <div className='action-bar'>
+        <div className='action-bar-title'>
           <h1>{title}</h1>
         </div>
         <div className={`action-bar-controls ${componentType}`}>
@@ -44,8 +44,8 @@ const ActionBar = ({
             componentType={componentType}
           />
           {/* desktop buttons */}
-          {currentUserDevice === "desktop" && (
-            <div className="action-bar-buttons">
+          {currentUserDevice === 'desktop' && (
+            <div className='action-bar-buttons'>
               {buttons.map((btn, idx) => (
                 <CustomButton
                   key={idx}
@@ -57,8 +57,9 @@ const ActionBar = ({
             </div>
           )}
           {/* mobile buttons */}
-          {currentUserDevice === "mobile" &&
-            componentType !== "user_portal" && (
+          {currentUserDevice === 'mobile' &&
+            componentType !== 'user_portal' &&
+            componentType !== 'user_sessions' && (
               <CustomButton
                 label={mobileButton.label}
                 style={mobileButton.style}
@@ -66,10 +67,10 @@ const ActionBar = ({
               />
             )}
         </div>
-        {componentType === "admin_portal" && (
+        {componentType === 'admin_portal' && (
           <FolderAndResearchModals {...modalsProps} />
         )}
-        {componentType === "user_management" && (
+        {componentType === 'user_management' && (
           <NewUserModal {...modalsProps} />
         )}
       </div>
@@ -85,17 +86,17 @@ const ActionBar = ({
         </div>
       )} */}
 
-      {currentUserDevice === "mobile" && (
+      {currentUserDevice === 'mobile' && (
         <MobileModalWrapper
           isOpen={isMobileModalOpen}
           onClose={() => setIsMobileModalOpen(false)}
         >
-          <div className="mobile-options-list">
+          <div className='mobile-options-list'>
             {mobileActionAddData.options?.map((option) => (
               <div
                 key={option.optionName}
                 className={`mobile-option-item ${
-                  option.optionName === "Delete" ? "delete-option" : ""
+                  option.optionName === 'Delete' ? 'delete-option' : ''
                 }`}
                 onClick={option.onOptionClick}
               >

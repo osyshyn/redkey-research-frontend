@@ -21,6 +21,7 @@ const MobileDropdownMenu = ({
   onContactUsClick,
   onLogoutClick,
   onUserManagementClick,
+  onSessionsHandleClick,
   currentUser,
   researchOptions,
 }) => {
@@ -97,6 +98,19 @@ const MobileDropdownMenu = ({
                   alt='Report Icon'
                 />
                 <span>Report</span>
+              </div>
+              <div className='mobile-menu-header'>
+                <span>Sessions</span>
+              </div>
+              <div
+                className='mobile-menu-option-item'
+                onClick={onSessionsHandleClick}
+              >
+                <SettingsIcon
+                  className='mobile-dropdown-menu-icon'
+                  alt='Report Icon'
+                />
+                <span>Activity Log</span>
               </div>
             </>
           )}

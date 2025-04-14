@@ -6,6 +6,7 @@ import UserPortal from "./pages/user/UserPortal/UserPortal";
 import AdminPortal from "./pages/admin/AdminPortal/AdminPortal";
 import UserManagement from "./pages/admin/UserManagement/UserManagement";
 import LoginPage from "./pages/login/LoginPage";
+import Sessions from "./pages/admin/Sessions/Sessions";
 // import ForgotPasswordPage from "./pages/passwordRecovery/ForgotPasswordPage";
 // import ResetPassword from "./pages/passwordRecovery/ResetPassword";
 // import ChangePasswordFirst from "./pages/passwordRecovery/ChangePasswordFirst";
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/user/portal" element={<UserPortal />} />
           <Route path="/admin/portal" element={<AdminPortal />} />
           <Route path="/admin/user-management" element={<UserManagement />} />
+          <Route path="/admin/user-sessions" element={<Sessions />} />
           <Route path="/login" element={<LoginPage />} />
           {/* <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPassword />} />

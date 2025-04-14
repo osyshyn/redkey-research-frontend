@@ -179,6 +179,11 @@ const Header = ({ componentType }) => {
     navigate('/admin/user-management');
   };
 
+  const handleNavigateToUserSessions = () => {
+    dispatch(clearResearchFilters());
+    navigate('/admin/user-sessions');
+  };
+
   const adminResearchDropdownOptions = [
     {
       optionName: 'All',
@@ -206,6 +211,7 @@ const Header = ({ componentType }) => {
       path: '/admin/portal',
       options: adminResearchDropdownOptions,
       userManagement: true,
+      userSessions : true
     },
   };
 
@@ -351,6 +357,16 @@ const Header = ({ componentType }) => {
               User management
             </span>
           )}
+          {roleData.userSessions && (
+            <span
+              className={`nav-link ${
+                location.pathname === '/admin/user-sessions' ? 'active' : ''
+              }`}
+              onClick={handleNavigateToUserSessions}
+            >
+              Sessions
+            </span>
+          )}
         </nav>
       )}
 
@@ -377,6 +393,7 @@ const Header = ({ componentType }) => {
           onContactUsClick={handleContactUsClick}
           onLogoutClick={handleLogoutClick}
           onUserManagementClick={handleNavigateToUserManagement}
+          onSessionsHandleClick={handleNavigateToUserSessions}
           currentUser={user}
           researchOptions={
             user?.role === 1

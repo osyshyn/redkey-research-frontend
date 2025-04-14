@@ -1,0 +1,163 @@
+@use '../../../assets/styles/variables' as *;
+
+.session-table-wrapper {
+  flex: 1;
+  background: $primary-background;
+  margin: 10px 32px 40px 32px;
+  padding: 12px;
+  border-radius: $border-radius-medium;
+}
+
+.pdf-export-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .loading-message {
+    font-size: 18px;
+    color: #333;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .download-pdf-button {
+    padding: 12px 24px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background: #bb2d3b;
+    }
+  }
+}
+
+.no-users-message {
+  font-family: $font-family-satoshi;
+  font-size: 18px;
+  font-weight: $font-weight-medium;
+  line-height: 48px;
+  color: $text-color-main;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px auto 0 auto;
+}
+
+.pagination-user-management-container {
+  padding: 0px 20px;
+}
+
+.user-management-error-container {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.logo-big {
+  height: 72px;
+}
+
+.notification {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px 22px;
+  border: 1px solid $input-border;
+  border-radius: 13px;
+  color: white;
+
+  .notification-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 16px;
+  }
+
+  .text-red {
+    color: $bright-red-color;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .notification-text {
+    font-family: $font-family-satoshi;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: $text-color-accent;
+  }
+}
+
+.export-options {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.session-title {
+  font-family: $font-family-satoshi;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 48px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: $text-color-main;
+  padding: 40px 32px 24px 32px;
+  // padding: 0 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .session-table-wrapper {
+    flex: 1;
+    background: $primary-background;
+    margin: 14px 16px;
+    padding: 1px;
+    border-radius: $border-radius-medium;
+  }
+
+  .notification {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 20px 22px;
+    border: 1px solid $input-border;
+    color: white;
+    position: absolute;
+    top: 0;
+    background: $accent-color;
+    // width: 120%;
+
+    .notification-text {
+      font-size: 14px;
+      text-align: start;
+    }
+  }
+  .logo-big {
+    height: 55px;
+  }
+
+  .session-title {
+    margin: 14px 16px;
+    padding: 1px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+}
