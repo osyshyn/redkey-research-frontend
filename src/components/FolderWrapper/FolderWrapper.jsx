@@ -18,7 +18,7 @@ import { getStatusName } from '../../utils/userHelpers';
 import { handleDownloadAll } from '../../utils/downloadHelpers';
 
 import SettingsIconDropdown from '../../assets/icons/settings-icon-dropdown.svg?react';
-import DownloadIconDropdown from '../../assets/icons/download-icon.svg?react';
+// import DownloadIconDropdown from '../../assets/icons/download-icon.svg?react';
 import DeleteIconRed from '../../assets/icons/delete-icon-red.svg?react';
 
 import './styles.scss';
@@ -94,6 +94,13 @@ const FolderWrapper = ({
     setIsFolderOpen((prevState) => !prevState);
   };
 
+  const handleDownloadAllClick = () => {
+    handleDownloadAll(researchData);
+    setActiveDropdown(null);
+    setDropdownPosition(null);
+    setIsMobileMoreModalOpen(false);
+  };
+
   const handleMoreClick = (e) => {
     if (currentUserDevice === 'desktop') {
       const position = e.target.getBoundingClientRect();
@@ -154,45 +161,45 @@ const FolderWrapper = ({
     setCurrentStatus(status);
   }, [status]);
 
-  let folderMoreActionsOptions = [];
+  // let folderMoreActionsOptions = [];
 
-  if (componentType === 'admin_portal') {
-    folderMoreActionsOptions = [
-      {
-        optionName: 'Change status',
-        icon: <SettingsIconDropdown className='dropdown-menu-icon' />,
-        onOptionClick: handleChangeStatusClick,
-      },
-      {
-        optionName: 'Download all researches',
-        icon: <DownloadIconDropdown className='dropdown-menu-icon' />,
-        onOptionClick: () => {
-          handleDownloadAll(researchData);
-          setActiveDropdown(null);
-          setDropdownPosition(null);
-          setIsMobileMoreModalOpen(false);
-        },
-      },
-      {
-        optionName: 'Delete',
-        icon: <DeleteIconRed className='dropdown-menu-icon-red' />,
-        onOptionClick: () => setIsDeleteFolderModalOpen(true),
-      },
-    ];
-  } else if (componentType === 'user_portal') {
-    folderMoreActionsOptions = [
-      {
-        optionName: 'Download all researches',
-        icon: <DownloadIconDropdown className='dropdown-menu-icon' />,
-        onOptionClick: () => {
-          handleDownloadAll(researchData);
-          setActiveDropdown(null);
-          setDropdownPosition(null);
-          setIsMobileMoreModalOpen(false);
-        },
-      },
-    ];
-  }
+  // if (componentType === 'admin_portal') {
+  const folderMoreActionsOptions = [
+    {
+      optionName: 'Change status',
+      icon: <SettingsIconDropdown className='dropdown-menu-icon' />,
+      onOptionClick: handleChangeStatusClick,
+    },
+    // {
+    //   optionName: 'Download all researches',
+    //   icon: <DownloadIconDropdown className='dropdown-menu-icon' />,
+    //   onOptionClick: () => {
+    //     handleDownloadAll(researchData);
+    //     setActiveDropdown(null);
+    //     setDropdownPosition(null);
+    //     setIsMobileMoreModalOpen(false);
+    //   },
+    // },
+    {
+      optionName: 'Delete',
+      icon: <DeleteIconRed className='dropdown-menu-icon-red' />,
+      onOptionClick: () => setIsDeleteFolderModalOpen(true),
+    },
+  ];
+  // } else if (componentType === 'user_portal') {
+  //   folderMoreActionsOptions = [
+  //     {
+  //       optionName: 'Download all researches',
+  //       icon: <DownloadIconDropdown className='dropdown-menu-icon' />,
+  //       onOptionClick: () => {
+  //         handleDownloadAll(researchData);
+  //         setActiveDropdown(null);
+  //         setDropdownPosition(null);
+  //         setIsMobileMoreModalOpen(false);
+  //       },
+  //     },
+  //   ];
+  // }
   return (
     <div className='folder-wrapper'>
       <FolderHeader
@@ -200,6 +207,7 @@ const FolderWrapper = ({
         itemsAmount={itemsAmount}
         currentStatus={getStatusName(currentStatus)}
         onFolderToggle={handleFolderToggle}
+        onDownloadAllClick={handleDownloadAllClick}
         onMoreClick={handleMoreClick}
         isFolderOpen={isFolderOpen}
         folderMoreIconRef={folderMoreIconRef}

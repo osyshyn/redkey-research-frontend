@@ -1,4 +1,4 @@
-@use "../../assets/styles/variables" as *;
+@use '../../assets/styles/variables' as *;
 
 .action-bar {
   display: flex;
@@ -30,6 +30,9 @@
     gap: 14px;
   }
   &.user_management {
+    gap: 14px;
+  }
+  &.user_sessions {
     gap: 14px;
   }
 }

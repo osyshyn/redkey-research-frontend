@@ -9,7 +9,12 @@ import SessionsTable from '../../../components/SessionsTable/SessionsTable';
 import Pagination from '../../../components/Pagination/Pagination';
 import ActionBar from '../../../components/ActionBar/ActionBar';
 import Loader from '../../../components/Loader/Loader';
+import CustomButton from '../../../components/CustomButton/CustomButton';
+import CustomModal from '../../../components/CustomModal/CustomModal';
+import MobileModalWrapper from '../../../components/MobileModalWrapper/MobileModalWrapper';
 
+import FileUploadIcon from '../../../assets/icons/file-upload-icon.svg?react';
+import MobileActionAddIcon from '../../../assets/icons/mobile-action-add-button.svg?react';
 import forgotPasswordNotificationIcon from '../../../assets/icons/red-done-circle-icon.svg';
 import logoBig from '../../../assets/images/logo-big.png';
 import logoLightBig from '../../../assets/images/logo-light-big.png';
@@ -23,6 +28,12 @@ const Sessions = () => {
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [itemsPerPageEndedSessions, setItemsPerPageEndedSessions] =
     useState(50);
+  const [mobileActionAddData, setMobileActionAddData] = useState({
+    options: [],
+  });
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [exportType, setExportType] = useState(null); // 'active' | 'ended'
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   const dispatch = useDispatch();
   const currentUserDevice = useDeviceType();
@@ -33,6 +44,59 @@ const Sessions = () => {
   const currentTheme = document.body.getAttribute('data-theme-mode');
 
   console.log('sessions', sessions);
+
+  const exportToCSV = () => {
+    const sessionsToExport =
+      exportType === 'active' ? activeSessions : endedSessions;
+    const fileNameType = exportType === 'active' ? 'active' : 'ended';
+
+    const csvContent = [
+      ['Email', 'Entry time', 'Browser', 'Location', 'IP Address', 'Status'],
+      ...sessionsToExport.map((session) => [
+        session.email || 'N/A',
+        new Date(session.created_at).toLocaleString(),
+        session.browser || 'N/A',
+        session.location || 'N/A',
+        session.ip || 'N/A',
+        session.status === 1 ? 'Active' : 'Archive',
+      ]),
+    ]
+      .map((e) => e.join(','))
+      .join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${fileNameType}-sessions-log.csv`;
+    link.click();
+  };
+
+  const exportToXLS = () => {
+    const sessionsToExport =
+      exportType === 'active' ? activeSessions : endedSessions;
+    const fileNameType = exportType === 'active' ? 'active' : 'ended';
+
+    import('xlsx').then((XLSX) => {
+      const worksheet = XLSX.utils.json_to_sheet(
+        sessionsToExport.map((session) => ({
+          Email: session.email || 'N/A',
+          'Entry time': new Date(session.created_at).toLocaleString(),
+          Browser: session.browser || 'N/A',
+          Location: session.location || 'N/A',
+          'IP Address': session.ip || 'N/A',
+          Status: session.status === 1 ? 'Active' : 'Archive',
+        }))
+      );
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+      XLSX.writeFile(workbook, `${fileNameType}-sessions-log.xlsx`);
+    });
+  };
+
+  const handleExportButtonClick = (type) => {
+    setExportType(type);
+    setIsExportModalOpen(true);
+  };
 
   const searchInSessions = searchValue
     ? sessions.filter((session) => {
@@ -92,6 +156,34 @@ const Sessions = () => {
     setSearchValue(value);
   };
 
+  const handleOpenMobileModal = () => {
+    // e.stopPropagation();
+
+    setMobileActionAddData({
+      options: [
+        {
+          optionName: 'Export ended',
+          icon: <FileUploadIcon className='mobile-dropdown-menu-icon' />,
+          onOptionClick: () => {
+            setIsMobileModalOpen(false);
+            handleExportButtonClick('ended');
+          },
+        },
+        {
+          optionName: 'Export active',
+          icon: <FileUploadIcon className='mobile-dropdown-menu-icon' />,
+
+          onOptionClick: () => {
+            setIsMobileModalOpen(false);
+            handleExportButtonClick('active');
+          },
+        },
+      ],
+    });
+
+    setIsMobileModalOpen(true);
+  };
+
   if (user?.role === 1 || user?.role === 2) {
     return (
       <div className='user-management-error-container'>
@@ -128,13 +220,32 @@ const Sessions = () => {
         searchPanelProps={{
           onSearchChange: handleSearchChange,
         }}
+        buttons={[
+          {
+            label: 'Export ended',
+            style: 'red-outline',
+
+            onClick: () => handleExportButtonClick('ended'),
+          },
+          {
+            label: 'Export active',
+            style: 'red-shadow',
+            onClick: () => handleExportButtonClick('active'),
+          },
+        ]}
+        mobileButton={{
+          label: <MobileActionAddIcon className='action-bar-plus-icon' />,
+          style: 'red-shadow',
+          onClick: handleOpenMobileModal,
+        }}
       />
       {loading ? (
         <Loader />
       ) : (
-        <>      <h1 className='session-title'>Active Sessions</h1>
+        <>
+          {' '}
+          <h1 className='session-title'>Active Sessions</h1>
           <div className='session-table-wrapper'>
-       
             <SessionsTable tableData={currentActiveSessions} />
 
             {activeSessions.length > 0 && currentUserDevice === 'desktop' && (
@@ -150,7 +261,6 @@ const Sessions = () => {
           </div>
           <h1 className='session-title'>Ended Sessions</h1>
           <div className='session-table-wrapper'>
-    
             <SessionsTable tableData={currentEndedSessions} />
 
             {endedSessions.length > 0 && currentUserDevice === 'desktop' && (
@@ -165,6 +275,48 @@ const Sessions = () => {
             )}
           </div>
         </>
+      )}
+      <CustomModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        modalTitle={`Export ${
+          exportType === 'active' ? 'active' : 'ended'
+        } sessions`}
+      >
+        <div className='export-options'>
+          <CustomButton
+            label='Export to CSV'
+            style='red-shadow'
+            onClick={exportToCSV}
+          />
+          <CustomButton
+            label='Export to Excel (XLS)'
+            style='red-shadow'
+            onClick={exportToXLS}
+          />
+        </div>
+      </CustomModal>
+
+      {currentUserDevice === 'mobile' && (
+        <MobileModalWrapper
+          isOpen={isMobileModalOpen}
+          onClose={() => setIsMobileModalOpen(false)}
+        >
+          <div className='mobile-options-list'>
+            {mobileActionAddData.options?.map((option) => (
+              <div
+                key={option.optionName}
+                className={`mobile-option-item ${
+                  option.optionName === 'Delete' ? 'delete-option' : ''
+                }`}
+                onClick={option.onOptionClick}
+              >
+                {option.icon}
+                <span>{option.optionName}</span>
+              </div>
+            ))}
+          </div>
+        </MobileModalWrapper>
       )}
     </>
   );

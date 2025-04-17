@@ -6,6 +6,7 @@ import arrowDown from '../../../assets/icons/arrow-down.svg';
 import arrowUp from '../../../assets/icons/arrow-up.svg';
 import singleDotIcon from '../../../assets/icons/single-dot-icon.svg';
 import moreIcon from '../../../assets/icons/more-icon.svg';
+import DownloadIconDropdown from '../../../assets/icons/download-icon.svg?react';
 
 import './styles.scss';
 
@@ -16,7 +17,7 @@ const FolderHeader = ({
   itemsAmount,
   currentStatus,
   onFolderToggle,
-  onStatusClick,
+  onDownloadAllClick,
   onMoreClick,
   isFolderOpen,
   statusRef,
@@ -79,18 +80,18 @@ const FolderHeader = ({
       <p
         ref={statusRef}
         className={`status ${currentStatus}`}
-        onClick={onStatusClick}
       >
         {currentStatus}
       </p>
-      {/* {componentType === 'admin_portal' && ( */}
+      <DownloadIconDropdown className='dropdown-menu-icon' onClick={onDownloadAllClick} />
+      {componentType === 'admin_portal' && (
         <img
           ref={folderMoreIconRef}
           src={moreIcon}
           className='more-icon'
           onClick={onMoreClick}
         />
-      {/* )} */}
+      )}
       {currentUserDevice === 'mobile' && (
         <CustomModal
           isOpen={isTitlePopupOpen}

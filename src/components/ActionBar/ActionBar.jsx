@@ -58,8 +58,7 @@ const ActionBar = ({
           )}
           {/* mobile buttons */}
           {currentUserDevice === 'mobile' &&
-            componentType !== 'user_portal' &&
-            componentType !== 'user_sessions' && (
+            componentType !== 'user_portal' && (
               <CustomButton
                 label={mobileButton.label}
                 style={mobileButton.style}

@@ -23,19 +23,19 @@ import PrytaniaResearchIcon from '../../assets/icons/prytania-research-icon.svg?
 import './styles.scss';
 
 const HomePage = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const mobileMenuData = [
-    {
-      optionName: 'Teams',
-      icon: <DefaultResearchIcon className='mobile-home-menu-icon' />,
-      onOptionClick: () => scrollToSection('teams'),
-    },
-    {
-      optionName: 'Contact',
-      icon: <PhoneIcon className='mobile-home-menu-icon' />,
-      onOptionClick: () => scrollToSection('contact'),
-    },
-  ];
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const mobileMenuData = [
+  //   {
+  //     optionName: 'Teams',
+  //     icon: <DefaultResearchIcon className='mobile-home-menu-icon' />,
+  //     onOptionClick: () => scrollToSection('teams'),
+  //   },
+  //   {
+  //     optionName: 'Contact',
+  //     icon: <PhoneIcon className='mobile-home-menu-icon' />,
+  //     onOptionClick: () => scrollToSection('contact'),
+  //   },
+  // ];
 
   const navigate = useNavigate();
   const currentUserDevice = useDeviceType();
@@ -49,9 +49,9 @@ const HomePage = () => {
       "mailto:info@redkeyresearch.com?subject=Research%20Inquiry&body=I'd%20like%20to%20be%20contacted%20about%20Redkey's%20research%20services.";
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  // const toggleMenu = () => {
+  //   setIsMenuOpen((prev) => !prev);
+  // };
 
   // const scrollToSection = (id) => {
   //   const element = document.getElementById(id);
@@ -97,11 +97,11 @@ const HomePage = () => {
   return (
     <>
       <div className='home-page-header'>
-        <img
+        {/* <img
           src={burgerMenuIcon}
           className='burger-menu-icon'
           onClick={toggleMenu}
-        />
+        /> */}
         <img src={redkeyLogoIcon} className='redkey-logo-icon' />
       </div>
       <div className='home-page-container'>
@@ -188,7 +188,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {currentUserDevice === 'desktop' ? (
+      {/* {currentUserDevice === 'desktop' ? (
         isMenuOpen && (
           <div className='main-dropdown-menu'>
             <button className='close-btn' onClick={() => setIsMenuOpen(false)}>
@@ -231,7 +231,7 @@ const HomePage = () => {
             ))}
           </div>
         </MobileModalWrapper>
-      )}
+      )} */}
     </>
   );
 };

@@ -1,4 +1,4 @@
-@use "../../assets/styles/variables" as *;
+@use '../../assets/styles/variables' as *;
 
 .contact-us-under-title-info {
   font-family: $font-family-satoshi;
@@ -16,12 +16,37 @@
   margin: 26px 0;
 }
 
+.email-buttons-wrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
 .contact-us-copy {
   border: 1px solid $input-border-gray-darker;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 16px;
+  padding: 6px 20px;
+  border-radius: $border-radius-small;
+  font-family: $font-family-satoshi;
+  font-weight: $font-weight-normal;
+  font-size: 14px;
+  line-height: 21px;
+  color: $primary-color;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $input-border-gray-darker;
+  }
+}
+.contact-us-email {
+  border: 1px solid $input-border-gray-darker;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 6px 20px;
   border-radius: $border-radius-small;
   font-family: $font-family-satoshi;
@@ -71,4 +96,20 @@
   line-height: 36px;
   color: $text-color-main;
   margin-top: 40px;
+}
+
+@media screen and (max-width: 768px) {
+  .email-buttons-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .contact-us-email {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 375px) {
 }
