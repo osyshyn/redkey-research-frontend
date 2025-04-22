@@ -12,6 +12,7 @@ import Sessions from "./pages/admin/Sessions/Sessions";
 // import ChangePasswordFirst from "./pages/passwordRecovery/ChangePasswordFirst";
 import HomePage from "./pages/home/HomePage";
 import MagicLoginPage from "./pages/magicLogin/MagicLoginPage";
+import PrivacyPolicy from "./pages/privacyPolicy/PrivacyPolicy";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/set-your-password" element={<ChangePasswordFirst />} /> */}
           <Route path="/magic-login" element={<MagicLoginPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
         </Routes>
       </Router>

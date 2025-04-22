@@ -1,0 +1,88 @@
+@use '../../assets/styles/variables' as *;
+
+.privacy-page-header {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.privacy-back-button-icon {
+  position: absolute;
+  left: 20px;
+  top: 38px;
+  height: 25px;
+  width: 25px;
+}
+
+.privacy-back-button-text {
+  position: absolute;
+  left: 48px;
+  top: 40px;
+  color: $background-lighter;
+  &:hover {
+    color: $home-page-light;
+  }
+}
+
+.privacy-back-button-wrapper {
+  cursor: pointer;
+}
+
+.privacy-redkey-logo-icon {
+  width: 170px;
+  margin: auto;
+  height: 130px;
+}
+
+.privacy-policy-container {
+  font-family: $font-family-satoshi;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  line-height: 1.6;
+}
+
+.privacy-policy-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.privacy-policy-container h2 {
+  margin-top: 30px;
+  font-weight: $font-weight-bold;
+  font-size: 24px;
+  color: $home-page-light;
+}
+
+.privacy-policy-container p {
+  margin-bottom: 25px;
+
+  font-weight: $font-weight-normal;
+  font-size: 16px;
+  color: $home-page-light;
+}
+
+.privacy-policy-container a {
+  color: $medium-red-color;
+  text-decoration: none;
+}
+
+.privacy-policy-container a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+  .privacy-page-header {
+    display: flex;
+    justify-content: center;
+  }
+
+  .privacy-redkey-logo-icon {
+    width: 130px;
+    margin: auto;
+    height: 130px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

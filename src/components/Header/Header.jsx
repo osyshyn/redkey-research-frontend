@@ -184,7 +184,7 @@ const Header = ({ componentType }) => {
     navigate('/admin/user-sessions');
   };
 
-  const adminResearchDropdownOptions = [
+  const superAdminResearchDropdownOptions = [
     {
       optionName: 'All',
       onOptionClick: () => handleAdminResearchOptionClick({ name: 'All' }),
@@ -195,6 +195,11 @@ const Header = ({ componentType }) => {
     })),
   ];
 
+  const adminResearchDropdownOptions = firmsList.map((firmOption) => ({
+    optionName: firmOption.name,
+    onOptionClick: () => handleAdminResearchOptionClick(firmOption),
+  }));
+
   const userResearchDropdownOptions = firmsList.map((firmOption) => ({
     optionName: firmOption.name,
     onOptionClick: () => handleUserResearchOptionClick(firmOption),
@@ -204,14 +209,14 @@ const Header = ({ componentType }) => {
     1: { path: '/user/portal', options: userResearchDropdownOptions },
     2: {
       path: '/admin/portal',
-      options: userResearchDropdownOptions,
+      options: adminResearchDropdownOptions,
       // userManagement: true,
     },
     3: {
       path: '/admin/portal',
-      options: adminResearchDropdownOptions,
+      options: superAdminResearchDropdownOptions,
       userManagement: true,
-      userSessions : true
+      userSessions: true,
     },
   };
 
@@ -398,7 +403,9 @@ const Header = ({ componentType }) => {
           researchOptions={
             user?.role === 1
               ? userResearchDropdownOptions
-              : adminResearchDropdownOptions
+              : user?.role === 2
+              ? adminResearchDropdownOptions
+              : superAdminResearchDropdownOptions
           }
         />
       )}

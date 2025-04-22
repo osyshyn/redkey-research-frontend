@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useMemo } from "react";
-import ReactDOM from "react-dom";
-import useDeviceType from "../../hooks/useDeviceType";
-import { useSelector, useDispatch } from "react-redux";
-import { resetCurrentFileId } from "../../store/slices/uploadSlice";
-import CustomModal from "../CustomModal/CustomModal";
-import CustomInput from "../CustomInput/CustomInput";
-import CustomDropdown from "../CustomDropdown/CustomDropdown";
-import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
-import FileUpload from "../FileUpload/FileUpload";
-import CustomButton from "../CustomButton/CustomButton";
-import { reportTypeOptions } from "../../constants/constants";
-import { getReportTypeName } from "../../utils/userHelpers";
+import React, { useState, useEffect, useMemo } from 'react';
+import ReactDOM from 'react-dom';
+import useDeviceType from '../../hooks/useDeviceType';
+import { useSelector, useDispatch } from 'react-redux';
+import { resetCurrentFileId } from '../../store/slices/uploadSlice';
+import CustomModal from '../CustomModal/CustomModal';
+import CustomInput from '../CustomInput/CustomInput';
+import CustomDropdown from '../CustomDropdown/CustomDropdown';
+import CustomDatePicker from '../CustomDatePicker/CustomDatePicker';
+import FileUpload from '../FileUpload/FileUpload';
+import CustomButton from '../CustomButton/CustomButton';
+import { reportTypeOptions } from '../../constants/constants';
+import { getReportTypeName } from '../../utils/userHelpers';
 
 const FolderAndResearchModals = ({
   isCreateFolderModalOpen = false,
@@ -25,8 +25,8 @@ const FolderAndResearchModals = ({
   editingResearch = null,
   // folders = [],
 }) => {
-  const [folderName, setFolderName] = useState("");
-  const [researchTitle, setResearchTitle] = useState("");
+  const [folderName, setFolderName] = useState('');
+  const [researchTitle, setResearchTitle] = useState('');
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [selectedFirm, setSelectedFirm] = useState(null);
   const [selectedFirmFolder, setSelectedFirmFolder] = useState(null);
@@ -37,9 +37,9 @@ const FolderAndResearchModals = ({
   const [isFolderSaveDisabled, setIsFolderSaveDisabled] = useState(true);
   const [isDuplicateWarningOpen, setDuplicateWarningOpen] = useState(false);
 
-  const [folderNameError, setFolderNameError] = useState("");
-  const [folderStockTickerError, setFolderStockTickerError] = useState("");
-  const [researchNameError, setResearchNameError] = useState("");
+  const [folderNameError, setFolderNameError] = useState('');
+  const [folderStockTickerError, setFolderStockTickerError] = useState('');
+  const [researchNameError, setResearchNameError] = useState('');
 
   const [hasFile, setHasFile] = useState(!!editingResearch?.file);
 
@@ -50,17 +50,38 @@ const FolderAndResearchModals = ({
   const firmsList = useSelector((state) => state.firm.firms);
   const { folders } = useSelector((state) => state.research);
   const currentFirm = useSelector((state) => state.firm.currentFirm);
+  const { user } = useSelector((state) => state.auth);
 
-  console.log("currentFileId", currentFileId);
+  console.log('currentFileId', currentFileId);
 
-  const firmsListOptions = useMemo(
-    () =>
-      firmsList.map((firm) => ({
+  // const firmsListOptions = useMemo(
+  //   () =>
+  //     firmsList.map((firm) => ({
+  //       value: firm.id,
+  //       label: firm.name,
+  //     })),
+  //   [firmsList]
+  // );
+
+  const firmsListOptions = useMemo(() => {
+    if (user?.role === 3) {
+      return firmsList.map((firm) => ({
         value: firm.id,
         label: firm.name,
-      })),
-    [firmsList]
-  );
+      }));
+    }
+
+    if (user?.role === 2 && user.access) {
+      return user.access
+        .filter((item) => item.value === true && item.firm)
+        .map((item) => ({
+          value: item.firm.id,
+          label: item.firm.name,
+        }));
+    }
+
+    return [];
+  }, [user, firmsList]);
 
   // const filteredFolderOptions = useMemo(() => {
   //   if (!selectedFirm) return folders;
@@ -91,11 +112,11 @@ const FolderAndResearchModals = ({
     [filteredFolderOptions]
   );
 
-  console.log("filteredFolderOptions", filteredFolderOptions);
+  console.log('filteredFolderOptions', filteredFolderOptions);
 
-  console.log("editingResearch", editingResearch, folderOptions);
+  console.log('editingResearch', editingResearch, folderOptions);
 
-  console.log("reportType", reportType);
+  console.log('reportType', reportType);
 
   useEffect(() => {
     if (!editingResearch && currentFirm) {
@@ -109,7 +130,7 @@ const FolderAndResearchModals = ({
 
   useEffect(() => {
     if (editingResearch) {
-      setResearchTitle(editingResearch.title || "");
+      setResearchTitle(editingResearch.title || '');
       setSelectedFolder(editingResearch.currentFolder || null);
       setSelectedFirm(
         { value: editingResearch.firm.id, label: editingResearch.firm.name } ||
@@ -173,9 +194,9 @@ const FolderAndResearchModals = ({
     if (/^[a-zA-Z0-9 _.,-]*$/.test(value)) {
       setFolderName(value);
       if (value.length > 40) {
-        setFolderNameError("Folder name cannot exceed 40 characters.");
+        setFolderNameError('Folder name cannot exceed 40 characters.');
       } else {
-        setFolderNameError("");
+        setFolderNameError('');
       }
     }
   };
@@ -200,18 +221,16 @@ const FolderAndResearchModals = ({
   // };
 
   const handleStockTickerChange = (e) => {
-    let value = e.target.value.replace(/[^A-Z0-9]/g, "");
-  
+    let value = e.target.value.replace(/[^A-Z0-9]/g, '');
+
     if (value.length > 5) {
-      setFolderStockTickerError("Max 5 characters, only letters and numbers.");
+      setFolderStockTickerError('Max 5 characters, only letters and numbers.');
     } else {
-      setFolderStockTickerError("");
+      setFolderStockTickerError('');
     }
-  
+
     setFolderStockTicker(value);
   };
-  
-  
 
   const handleResearchNameChange = (e) => {
     const value = e.target.value;
@@ -219,9 +238,9 @@ const FolderAndResearchModals = ({
     if (/^[a-zA-Z0-9 _.,-]*$/.test(value)) {
       setResearchTitle(value);
       if (value.length > 80) {
-        setResearchNameError("Research title cannot exceed 80 characters.");
+        setResearchNameError('Research title cannot exceed 80 characters.');
       } else {
-        setResearchNameError("");
+        setResearchNameError('');
       }
     }
   };
@@ -239,15 +258,15 @@ const FolderAndResearchModals = ({
     //   uniqueName = `${newFolderName} (${index++})`;
     // }
     console.log(
-      "folderName, selectedFirmFolder, folderStockTicker",
+      'folderName, selectedFirmFolder, folderStockTicker',
       folderName,
       selectedFirmFolder,
       folderStockTicker
     );
 
     onCreateFolder(folderName, selectedFirmFolder, folderStockTicker);
-    setFolderName("");
-    setFolderStockTicker("");
+    setFolderName('');
+    setFolderStockTicker('');
     setSelectedFirmFolder(null);
     onCloseCreateFolderModal();
     // if (existingFolders.includes(newFolderName)) {
@@ -269,7 +288,7 @@ const FolderAndResearchModals = ({
       fileId: currentFileId || editingResearch?.file?.id,
     };
 
-    console.log("researchData", researchData);
+    console.log('researchData', researchData);
 
     if (editingResearch) {
       onUpdateResearchData({ ...researchData, id: editingResearch.id });
@@ -277,7 +296,7 @@ const FolderAndResearchModals = ({
       onSaveResearchData(researchData);
     }
 
-    setResearchTitle("");
+    setResearchTitle('');
     setSelectedFolder(null);
     setSelectedFirm(null);
     setResearchDate(null);
@@ -287,7 +306,7 @@ const FolderAndResearchModals = ({
     onCloseUploadResearchModal();
   };
 
-  console.log("firmsListOptions", folderOptions, firmsListOptions, folders);
+  console.log('firmsListOptions', folderOptions, firmsListOptions, folders);
 
   // const filteredFirms = folders
   //   .filter((folder) => folder.id === selectedFolder?.value)
@@ -299,7 +318,7 @@ const FolderAndResearchModals = ({
 
   const firmOptions = firmsListOptions;
 
-  const modalRoot = document.getElementById("modal-root");
+  const modalRoot = document.getElementById('modal-root');
 
   return (
     <>
@@ -308,40 +327,40 @@ const FolderAndResearchModals = ({
           <CustomModal
             isOpen={isCreateFolderModalOpen}
             onClose={onCloseCreateFolderModal}
-            modalTitle="Create Folder"
+            modalTitle='Create Folder'
           >
             <CustomInput
-              label="Folder name"
-              placeholder="Enter folder name"
+              label='Folder name'
+              placeholder='Enter folder name'
               value={folderName}
               onChange={handleFolderNameChange}
               error={folderNameError ? true : false}
             />
             {folderNameError && (
-              <div className="error-text">{folderNameError}</div>
+              <div className='error-text'>{folderNameError}</div>
             )}
 
             <CustomDropdown
-              label="Firm"
-              placeholder="Select a firm"
+              label='Firm'
+              placeholder='Select a firm'
               options={firmsListOptions}
               value={selectedFirmFolder}
               onChange={(option) => setSelectedFirmFolder(option)}
             />
             <CustomInput
-              label="Stock ticker"
-              placeholder="Enter stock ticker"
+              label='Stock ticker'
+              placeholder='Enter stock ticker'
               value={folderStockTicker}
               onChange={handleStockTickerChange}
               error={folderStockTickerError ? true : false}
             />
             {folderStockTickerError && (
-              <div className="error-text">{folderStockTickerError}</div>
+              <div className='error-text'>{folderStockTickerError}</div>
             )}
-            <div className="modal-actions-button">
+            <div className='modal-actions-button'>
               <CustomButton
-                label="Create"
-                style="red-shadow"
+                label='Create'
+                style='red-shadow'
                 disabled={isFolderSaveDisabled}
                 onClick={handleCreateFolder}
               />
@@ -355,34 +374,34 @@ const FolderAndResearchModals = ({
           <CustomModal
             isOpen={isUploadResearchModalOpen}
             onClose={onCloseUploadResearchModal}
-            modalTitle={editingResearch ? "Edit Research" : "Upload Research"}
+            modalTitle={editingResearch ? 'Edit Research' : 'Upload Research'}
           >
             <CustomInput
-              label="Title"
-              placeholder="Enter research title"
+              label='Title'
+              placeholder='Enter research title'
               value={researchTitle}
               onChange={handleResearchNameChange}
               error={researchNameError ? true : false}
             />
             {researchNameError && (
-              <div className="error-text">{researchNameError}</div>
+              <div className='error-text'>{researchNameError}</div>
             )}
             <div
               className={`${
-                currentUserDevice === "desktop" ? "upload-company-firm" : ""
+                currentUserDevice === 'desktop' ? 'upload-company-firm' : ''
               }`}
             >
               <CustomDropdown
-                label="Firm"
-                placeholder="Select a firm"
+                label='Firm'
+                placeholder='Select a firm'
                 options={firmOptions}
                 value={selectedFirm}
                 // onChange={(option) => setSelectedFirm(option)}
                 onChange={(option) => handleSelectFirm(option)}
               />
               <CustomDropdown
-                label="Company"
-                placeholder="Select a company"
+                label='Company'
+                placeholder='Select a company'
                 options={folderOptions}
                 value={selectedFolder}
                 onChange={(option) => setSelectedFolder(option)}
@@ -391,18 +410,18 @@ const FolderAndResearchModals = ({
             </div>
             <div
               className={`${
-                currentUserDevice === "desktop" ? "upload-modal-type-date" : ""
+                currentUserDevice === 'desktop' ? 'upload-modal-type-date' : ''
               }`}
             >
               <CustomDatePicker
-                label="Publication date"
-                placeholder="Select a date"
+                label='Publication date'
+                placeholder='Select a date'
                 value={researchDate}
                 onChange={(date) => setResearchDate(date)}
               />
               <CustomDropdown
-                label="Report type"
-                placeholder="Select report type"
+                label='Report type'
+                placeholder='Select report type'
                 options={reportTypeOptions}
                 value={reportType}
                 onChange={(option) => setReportType(option)}
@@ -413,10 +432,10 @@ const FolderAndResearchModals = ({
               onFileChange={setHasFile}
             />
 
-            <div className="modal-actions-button">
+            <div className='modal-actions-button'>
               <CustomButton
-                label="Save"
-                style="red-shadow"
+                label='Save'
+                style='red-shadow'
                 onClick={handleSaveResearch}
                 disabled={isSaveDisabled}
               />

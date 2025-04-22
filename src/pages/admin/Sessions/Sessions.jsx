@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getSessions } from '../../../store/slices/sessionSlice';
+import { getSessions, getMedia } from '../../../store/slices/sessionSlice';
 
 import useDeviceType from '../../../hooks/useDeviceType';
 import Header from '../../../components/Header/Header';
 import SessionsTable from '../../../components/SessionsTable/SessionsTable';
+import ResearchReportTable from '../../../components/SessionsTable/ResearchReportTable/ResearchReportTable';
 import Pagination from '../../../components/Pagination/Pagination';
 import ActionBar from '../../../components/ActionBar/ActionBar';
 import Loader from '../../../components/Loader/Loader';
@@ -25,8 +26,11 @@ const Sessions = () => {
   const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageEndedSessions, setCurrentPageEndedSessions] = useState(1);
+  const [currentPageResearchReport, setCurrentPageResearchReport] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [itemsPerPageEndedSessions, setItemsPerPageEndedSessions] =
+    useState(50);
+  const [itemsPerPageResearchReport, setItemsPerPageResearchReport] =
     useState(50);
   const [mobileActionAddData, setMobileActionAddData] = useState({
     options: [],
@@ -38,12 +42,14 @@ const Sessions = () => {
   const dispatch = useDispatch();
   const currentUserDevice = useDeviceType();
 
-  const { sessions, loading, error } = useSelector((state) => state.session);
+  const { sessions, mediaItems, loading, error } = useSelector(
+    (state) => state.session
+  );
 
   const { user } = useSelector((state) => state.auth);
   const currentTheme = document.body.getAttribute('data-theme-mode');
 
-  console.log('sessions', sessions);
+  console.log('sessions', sessions, mediaItems);
 
   const exportToCSV = () => {
     const sessionsToExport =
@@ -132,8 +138,18 @@ const Sessions = () => {
     indexOfLastEnded
   );
 
+  const indexOfLastResearchReport =
+    currentPageResearchReport * itemsPerPageResearchReport;
+  const indexOfFirstResearchReport =
+    indexOfLastResearchReport - itemsPerPageResearchReport;
+  const currentResearchReports = mediaItems.slice(
+    indexOfFirstResearchReport,
+    indexOfLastResearchReport
+  );
+
   useEffect(() => {
     dispatch(getSessions());
+    dispatch(getMedia());
   }, [dispatch]);
 
   const handlePageChange = (newPage) => {
@@ -141,6 +157,9 @@ const Sessions = () => {
   };
   const handlePageChangeEndedSessions = (newPage) => {
     setCurrentPageEndedSessions(newPage);
+  };
+  const handlePageChangeResearchReport = (newPage) => {
+    setCurrentPageResearchReport(newPage);
   };
 
   const handleItemsPerPageChange = (newSize) => {
@@ -150,6 +169,10 @@ const Sessions = () => {
   const handleItemsPerPageChangeEndedSessions = (newSize) => {
     setItemsPerPageEndedSessions(newSize);
     setCurrentPageEndedSessions(1);
+  };
+  const handleItemsPerPageChangeResearchReport = (newSize) => {
+    setItemsPerPageResearchReport(newSize);
+    setCurrentPageResearchReport(1);
   };
 
   const handleSearchChange = (value) => {
@@ -270,6 +293,21 @@ const Sessions = () => {
                 itemsPerPage={itemsPerPageEndedSessions}
                 onPageChange={handlePageChangeEndedSessions}
                 onItemsPerPageChange={handleItemsPerPageChangeEndedSessions}
+                itemsPerPageOptions={[25, 50, 100]}
+              />
+            )}
+          </div>
+          <h1 className='session-title'>Research Reports</h1>
+          <div className='session-table-wrapper'>
+            <ResearchReportTable tableData={currentResearchReports} />
+
+            {endedSessions.length > 0 && currentUserDevice === 'desktop' && (
+              <Pagination
+                currentPage={currentPageResearchReport}
+                totalItems={mediaItems.length}
+                itemsPerPage={itemsPerPageResearchReport}
+                onPageChange={handlePageChangeResearchReport}
+                onItemsPerPageChange={handleItemsPerPageChangeResearchReport}
                 itemsPerPageOptions={[25, 50, 100]}
               />
             )}

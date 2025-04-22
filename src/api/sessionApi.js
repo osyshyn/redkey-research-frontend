@@ -10,7 +10,6 @@ export const getSessionsAPI = async () => {
   }
 };
 
-
 export const changeSessionStatusAPI = async (sessionId, sessionNewStatus) => {
   try {
     const response = await axiosInstance.post('admin/changeSessionStatus', {
@@ -20,6 +19,16 @@ export const changeSessionStatusAPI = async (sessionId, sessionNewStatus) => {
     return response;
   } catch (error) {
     console.error('Error changing session status:', error);
+    throw error;
+  }
+};
+
+export const getMediaAPI = async () => {
+  try {
+    const response = await axiosInstance.get('admin/getMedia');
+    return response;
+  } catch (error) {
+    console.error('Error getting media:', error);
     throw error;
   }
 };

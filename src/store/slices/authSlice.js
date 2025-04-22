@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   loginAPI,
   logoutAPI,
@@ -10,41 +10,97 @@ import {
   forgotPasswordSendEmailAPI,
   changeThemeAPI,
   requestGetAccessAPI,
-  checkMagicLinkAPI
-} from "../../api/authApi";
+  checkMagicLinkAPI,
+} from '../../api/authApi';
+
+// fingerprint
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+
+let cachedFingerprint = null;
+
+const generateFingerprint = async () => {
+  if (!cachedFingerprint) {
+    try {
+      const fp = await FingerprintJS.load();
+      const result = await fp.get();
+      cachedFingerprint = result.visitorId;
+    } catch (error) {
+      console.error('Fingerprint generation failed:', error);
+      cachedFingerprint = 'error';
+    }
+  }
+  return cachedFingerprint;
+};
+
+// export const loginUser = createAsyncThunk(
+//   "auth/loginUser",
+//   async (credentials, { rejectWithValue }) => {
+//     try {
+//       const data = await loginAPI(credentials);
+//       return data;
+//     } catch (error) {
+//       if (error.response && error.response.data) {
+//         return rejectWithValue(error.response.data.message || "Login failed");
+//       }
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
+
+// export const checkMagicLink = createAsyncThunk(
+//   "auth/checkMagicLink",
+//   async (token, { rejectWithValue }) => {
+//     try {
+//       const data = await checkMagicLinkAPI(token);
+//       return data;
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response?.data?.message || "Error checking magic link"
+//       );
+//     }
+//   }
+// );
 
 export const loginUser = createAsyncThunk(
-  "auth/loginUser",
+  'auth/loginUser',
   async (credentials, { rejectWithValue }) => {
     try {
-      const data = await loginAPI(credentials);
+      const fingerprint = await generateFingerprint();
+      if (fingerprint === 'error') {
+        throw new Error('Fingerprint generation failed');
+      }
+
+      const data = await loginAPI({ ...credentials, fingerprint });
       return data;
     } catch (error) {
       if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data.message || "Login failed");
+        return rejectWithValue(error.response.data.message || 'Login failed');
       }
       return rejectWithValue(error.message);
     }
   }
 );
-
-
 export const checkMagicLink = createAsyncThunk(
-  "auth/checkMagicLink",
+  'auth/checkMagicLink',
   async (token, { rejectWithValue }) => {
     try {
-      const data = await checkMagicLinkAPI(token);
+      const fingerprint = await generateFingerprint();
+      if (fingerprint === 'error') {
+        throw new Error('Fingerprint generation failed');
+      }
+
+      const data = await checkMagicLinkAPI(token, { fingerprint });
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error checking magic link"
+        error.response?.data?.message || 'Error checking magic link'
       );
     }
   }
 );
 
 export const logoutUser = createAsyncThunk(
-  "auth/logoutUser",
+  'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
       await logoutAPI();
@@ -55,104 +111,104 @@ export const logoutUser = createAsyncThunk(
 );
 
 export const changePassword = createAsyncThunk(
-  "auth/changePassword",
+  'auth/changePassword',
   async (passwords, { rejectWithValue }) => {
     try {
       const data = await changePasswordAPI(passwords);
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error changing password"
+        error.response?.data?.message || 'Error changing password'
       );
     }
   }
 );
 export const changeResetPassword = createAsyncThunk(
-  "auth/changePassword",
+  'auth/changePassword',
   async (passwordData, { rejectWithValue }) => {
     try {
       const data = await changeResetPasswordAPI(passwordData);
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error changing password"
+        error.response?.data?.message || 'Error changing password'
       );
     }
   }
 );
 
 export const changeFirstOrResetPassword = createAsyncThunk(
-  "auth/changeFirstOrResetPassword",
+  'auth/changeFirstOrResetPassword',
   async (passwordUserData, { rejectWithValue }) => {
     try {
       const data = await changeFirstOrResetPasswordAPI(passwordUserData);
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error changing/resetting password"
+        error.response?.data?.message || 'Error changing/resetting password'
       );
     }
   }
 );
 
 export const getProfile = createAsyncThunk(
-  "auth/getProfile",
+  'auth/getProfile',
   async (_, { rejectWithValue }) => {
     try {
       const data = await getProfileAPI();
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error getting profile data"
+        error.response?.data?.message || 'Error getting profile data'
       );
     }
   }
 );
 
 export const changeProfile = createAsyncThunk(
-  "auth/changeProfile",
+  'auth/changeProfile',
   async (profileData, { rejectWithValue }) => {
     try {
       const data = await changeProfileAPI(profileData);
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error changing profile"
+        error.response?.data?.message || 'Error changing profile'
       );
     }
   }
 );
 
 export const forgotPasswordSendEmail = createAsyncThunk(
-  "auth/forgotPasswordSendEmail",
+  'auth/forgotPasswordSendEmail',
   async (userEmail, { rejectWithValue }) => {
     try {
       const data = await forgotPasswordSendEmailAPI(userEmail);
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error sending password reset email"
+        error.response?.data?.message || 'Error sending password reset email'
       );
     }
   }
 );
 
 export const changeTheme = createAsyncThunk(
-  "auth/changeTheme",
+  'auth/changeTheme',
   async (themeNum, { rejectWithValue }) => {
     try {
       const data = await changeThemeAPI(themeNum);
       return data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Error changing theme"
+        error.response?.data?.message || 'Error changing theme'
       );
     }
   }
 );
 
 export const requestGetAccess = createAsyncThunk(
-  "auth/requestGetAccess",
+  'auth/requestGetAccess',
   async (accessFirmInfo, { rejectWithValue }) => {
     try {
       const data = await requestGetAccessAPI(accessFirmInfo);
@@ -160,17 +216,17 @@ export const requestGetAccess = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message ||
-          "Error getting access to the firm. Please try again."
+          'Error getting access to the firm. Please try again.'
       );
     }
   }
 );
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
     user: null,
-    status: "idle",
+    status: 'idle',
     error: null,
   },
   reducers: {
@@ -181,139 +237,140 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
 
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
         state.user = action.payload.user;
       })
 
       .addCase(loginUser.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(checkMagicLink.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
       .addCase(checkMagicLink.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
         state.user = action.payload.user;
       })
       .addCase(checkMagicLink.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(logoutUser.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
       })
 
       .addCase(logoutUser.fulfilled, (state) => {
-        state.status = "idle";
+        state.status = 'idle';
         state.user = null;
         state.error = null;
+        cachedFingerprint = null;
       })
 
       .addCase(logoutUser.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(changePassword.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
 
       .addCase(changePassword.fulfilled, (state) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
       })
 
       .addCase(changePassword.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(changeFirstOrResetPassword.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
       .addCase(changeFirstOrResetPassword.fulfilled, (state) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
       })
       .addCase(changeFirstOrResetPassword.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(getProfile.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
 
       .addCase(getProfile.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
         state.user = action.payload;
-        console.log("state.user", state.user);
+        console.log('state.user', state.user);
       })
 
       .addCase(getProfile.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(changeProfile.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
 
       .addCase(changeProfile.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
         // state.user = action.payload;
         state.user = { ...state.user, ...action.payload };
       })
 
       .addCase(changeProfile.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(forgotPasswordSendEmail.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
       .addCase(forgotPasswordSendEmail.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
       })
       .addCase(forgotPasswordSendEmail.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(changeTheme.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
       })
       .addCase(changeTheme.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
         state.user.theme = action.payload.theme;
       })
       .addCase(changeTheme.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(requestGetAccess.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
         state.error = null;
       })
       .addCase(requestGetAccess.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = 'succeeded';
       })
       .addCase(requestGetAccess.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.payload;
       });
   },

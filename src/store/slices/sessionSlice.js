@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getSessionsAPI, changeSessionStatusAPI } from '../../api/sessionApi';
+import {
+  getSessionsAPI,
+  changeSessionStatusAPI,
+  getMediaAPI,
+} from '../../api/sessionApi';
 
 export const getSessions = createAsyncThunk(
   'session/getSessions',
@@ -28,12 +32,27 @@ export const changeSessionStatus = createAsyncThunk(
   }
 );
 
+export const getMedia = createAsyncThunk(
+  'session/getMedia',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getMediaAPI();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const sessionsSlice = createSlice({
   name: 'session',
   initialState: {
+    mediaItems: [],
     sessions: [],
     loading: false,
     error: null,
+    mediaLoading: false,
+    mediaError: null,
   },
   reducers: {
     resetError(state) {
@@ -70,6 +89,18 @@ const sessionsSlice = createSlice({
         }
       })
       .addCase(changeSessionStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getMedia.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMedia.fulfilled, (state, action) => {
+        state.loading = false;
+        state.mediaItems = action.payload;
+      })
+      .addCase(getMedia.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

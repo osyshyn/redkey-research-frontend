@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useDeviceType from '../../hooks/useDeviceType';
 
 import MobileModalWrapper from '../../components/MobileModalWrapper/MobileModalWrapper';
@@ -13,6 +13,7 @@ import teamLafitteIcon from '../../assets/homepage-icons/Team_Lafitte.svg';
 import teamPrytaniaIcon from '../../assets/homepage-icons/Team_Prytania.svg';
 import teamPacificIcon from '../../assets/homepage-icons/Teams_Pacific.svg';
 
+import BookIcon from '../../assets/icons/book-icon.svg?react';
 import DefaultResearchIcon from '../../assets/icons/default-research-icon.svg?react';
 import MailIcon from '../../assets/icons/mail-icon.svg?react';
 import PhoneIcon from '../../assets/icons/phone-icon.svg?react';
@@ -39,6 +40,10 @@ const HomePage = () => {
 
   const navigate = useNavigate();
   const currentUserDevice = useDeviceType();
+  const pathname = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -183,6 +188,16 @@ const HomePage = () => {
           <div className='contact-info'>
             <p>Email: info@redkeyresearch.com</p>
             <p>Phone: 646-631-0560</p>
+          </div>
+          <p className='teams-info-main-title' id='contact'>
+            Privacy Policy
+          </p>
+          <div
+            className='contact-info privacy'
+            onClick={() => navigate('/privacy-policy')}
+          >
+            <BookIcon className='mobile-home-menu-icon' />
+            <p>View Privacy Policy</p>
           </div>
           <footer className='footer-home-page'>© 2025 Redkey Research</footer>
         </div>
