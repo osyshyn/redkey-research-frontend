@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFilterModal } from '../../store/slices/filterSlice';
+import { toggleFilterModal , toggleSortModal} from '../../store/slices/filterSlice';
 
 import FilterModal from './FilterModal/FilterModal';
+import SortModal from './SortModal/SortModal';
 
 import searchIcon from '../../assets/icons/search-icon.svg';
 import filterIcon from '../../assets/icons/filter-icon.svg';
+import arrowsSortIcon from '../../assets/icons/arrows-sort.svg';
 import closeIcon from '../../assets/icons/close-icon.svg';
 
 import './styles.scss';
@@ -26,6 +28,8 @@ const SearchAndFilterPanel = ({
   const {
     isFilterModalOpen,
     researchFilters,
+    isSortModalOpen,
+    researchSort,
     isUserManagementFilterModalOpen,
     userManagementFilters,
   } = useSelector((state) => state.filters);
@@ -40,6 +44,18 @@ const SearchAndFilterPanel = ({
 
   const handleFilterSave = (filters) => {
     dispatch(toggleFilterModal(false));
+    onFiltersChange(filters);
+  };
+  const handleSortClick = () => {
+    dispatch(toggleSortModal(true));
+  };
+
+  const handleSortClose = () => {
+    dispatch(toggleSortModal(false));
+  };
+
+  const handleSortSave = (filters) => {
+    dispatch(toggleSortModal(false));
     onFiltersChange(filters);
   };
 
@@ -97,6 +113,14 @@ const SearchAndFilterPanel = ({
           </div>
         </button>
       )}
+      {componentType !== 'user_sessions' &&
+        componentType !== 'user_management' && (
+          <button className='filter-button' onClick={handleSortClick}>
+            <div className='filter-icon'>
+              <img src={arrowsSortIcon} alt='sort icon' />
+            </div>
+          </button>
+        )}
 
       {isFilterModalOpen && (
         <FilterModal
@@ -107,6 +131,15 @@ const SearchAndFilterPanel = ({
           users={users}
           firmsList={firmsList}
           initialFilters={initialFilters}
+          componentType={componentType}
+        />
+      )}
+      {isSortModalOpen && (
+        <SortModal
+          isOpen={isSortModalOpen}
+          onClose={handleSortClose}
+          onApply={handleSortSave}
+          initialFilters={researchSort}
           componentType={componentType}
         />
       )}

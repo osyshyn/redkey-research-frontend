@@ -1,0 +1,158 @@
+@use "../../../assets/styles/variables" as *;
+
+.filter-modal-clear-all {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  top: -21px;
+}
+
+.clear-all {
+  font-family: $font-family-satoshi;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  line-height: 16px;
+  color: $secondary-color;
+  cursor: pointer;
+}
+
+.filter-modal-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.quick-filters {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quick-filters-title {
+  font-family: $font-family-satoshi;
+  font-size: 12px;
+  font-weight: $font-weight-normal;
+  line-height: 16px;
+  color: $background-lighter;
+}
+
+.quick-filters-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  gap: 6px;
+  min-width: 42px;
+  height: 34px;
+  background: $highlight-background;
+  border: 1px solid $secondary-background;
+  border-radius: 990px;
+
+  font-family: $font-family-satoshi;
+  font-size: 12px;
+  font-weight: $font-weight-normal;
+  line-height: 16px;
+  color: $white;
+  cursor: pointer;
+}
+
+.all-filters {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.all-filters-title {
+  font-family: $font-family-satoshi;
+  font-size: 12px;
+  font-weight: $font-weight-normal;
+  line-height: 16px;
+  color: $background-lighter;
+}
+
+.all-filters-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-option {
+  display: grid;
+  grid-template-columns: 40% 55% 5%;
+  gap: 10px;
+  align-items: center;
+}
+
+.delete-filter-option-icon {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.add-filter-button {
+  font-family: $font-family-satoshi;
+  font-size: 14px;
+  font-weight: $font-weight-medium;
+  line-height: 16px;
+  color: $secondary-color;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.filter-modal-footer {
+  width: 97%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+}
+
+.apply-filters-button:hover {
+  background-color: $secondary-background;
+}
+
+.close-modal-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: $white;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .filter-modal-clear-all {
+    margin-top: 24px;
+    top: 0;
+  }
+
+  .clear-all {
+    font-size: 12px;
+  }
+
+  .filter-option {
+    grid-template-columns: 45% 45% 5%;
+  }
+
+  .add-filter-button {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+}

@@ -59,12 +59,7 @@ export const dropdownFolderOptions = [
     icon: 'status-filter',
     label: 'Status',
     value: 'status',
-  },
-  {
-    icon: 'calendar-filter',
-    label: 'Initiation date',
-    value: 'initiation_date',
-  },
+  }
 ];
 
 export const dropdownUserManagementOptions = [

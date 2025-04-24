@@ -8,6 +8,8 @@ import {
 import {
   setResearchFilters,
   clearResearchFilters,
+  setFolderSort,
+  setResearchSort,
 } from '../../../store/slices/filterSlice';
 import { getFirms } from '../../../store/slices/firmSlice';
 
@@ -61,7 +63,9 @@ const AdminPortal = () => {
   const dispatch = useDispatch();
 
   const { folders, foldersStatus } = useSelector((state) => state.research);
-  const { researchFilters } = useSelector((state) => state.filters);
+  const { researchFilters, folderSort, researchSort } = useSelector(
+    (state) => state.filters
+  );
   const currentFirm = useSelector((state) => state.firm.currentFirm);
   const user = useSelector((state) => state.auth.user);
 
@@ -102,12 +106,42 @@ const AdminPortal = () => {
     [dispatch]
   );
 
-  const sortedFolders = [...folders].sort((a, b) => {
-    const statusOrder = { 1: 0, 4: 1, 3: 2, 2: 3 };
-    const orderA = statusOrder[a.status] ?? Infinity;
-    const orderB = statusOrder[b.status] ?? Infinity;
-    return orderA - orderB;
-  });
+  // const sortedFolders = [...folders].sort((a, b) => {
+  //   const statusOrder = { 1: 0, 4: 1, 3: 2, 2: 3 };
+  //   const orderA = statusOrder[a.status] ?? Infinity;
+  //   const orderB = statusOrder[b.status] ?? Infinity;
+  //   return orderA - orderB;
+  // });
+
+  const sortedFolders = useMemo(() => {
+    const foldersCopy = [...folders];
+
+    foldersCopy.sort((a, b) => {
+      const statusOrder = { 1: 0, 4: 1, 3: 2, 2: 3 };
+      return statusOrder[a.status] - statusOrder[b.status];
+    });
+
+    if (researchSort?.type === 'initiation_date') {
+      foldersCopy.sort((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+        return researchSort.direction === 'newest'
+          ? dateB - dateA
+          : dateA - dateB;
+      });
+    }
+    if (researchSort?.type === 'publication_date') {
+      foldersCopy.sort((a, b) => {
+        const dateA = new Date(a.latest_research_date);
+        const dateB = new Date(b.latest_research_date);
+        return researchSort.direction === 'newest'
+          ? dateB - dateA
+          : dateA - dateB;
+      });
+    }
+
+    return foldersCopy;
+  }, [folders, researchSort]);
 
   const foldersFilteredByFirm = sortedFolders.filter((folder) => {
     if (currentFirm?.name === 'All') {
@@ -133,22 +167,7 @@ const AdminPortal = () => {
         return true;
       });
     })
-    // .map((folder) => {
-    //   const filteredResearch = folder.research.filter((research) => {
-    //     return researchFilters.every((filter) => {
-    //       if (filter.type.value === 'initiation_date') {
-    //         const [startDate, endDate] = filter.value.map(
-    //           (dateStr) => new Date(dateStr)
-    //         );
-    //         const publicationDate = new Date(research.publication_date);
-    //         return publicationDate >= startDate && publicationDate <= endDate;
-    //       }
-    //       return true;
-    //     });
-    //   });
 
-    //   return { ...folder, research: filteredResearch };
-    // })
     .map((folder) => {
       const sortFilter = researchFilters.find(
         (filter) => filter.type.value === 'initiation_date'
@@ -222,6 +241,14 @@ const AdminPortal = () => {
     setCurrentPage(1);
   };
 
+  const handleSortChange = (sortConfig) => {
+    if (sortConfig.type === 'initiation_date') {
+      dispatch(setFolderSort(sortConfig));
+    } else {
+      dispatch(setResearchSort(sortConfig));
+    }
+    setCurrentPage(1);
+  };
   const handleCreateFolder = useCallback(
     (folderName, selectedFirmFolder, folderStockTicker) => {
       if (folderName.trim()) {
@@ -318,6 +345,7 @@ const AdminPortal = () => {
         searchPanelProps={{
           onSearchChange: handleSearchChange,
           onFiltersChange: handleFiltersChange,
+          onSortChange: handleSortChange,
           // folderOptions: folderOptions,
         }}
         buttons={[

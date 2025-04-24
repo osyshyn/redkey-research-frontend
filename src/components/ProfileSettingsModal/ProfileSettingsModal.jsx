@@ -9,6 +9,7 @@ import { changePassword, changeProfile } from '../../store/slices/authSlice';
 import DefaultResearchIcon from '../../assets/icons/default-research-icon.svg?react';
 import MailIcon from '../../assets/icons/mail-icon.svg?react';
 import UsersIcon from '../../assets/icons/users-icon.svg?react';
+import StatusFilterIcon from '../../assets/icons/status-filter-icon.svg?react';
 
 import './styles.scss';
 
@@ -149,6 +150,13 @@ const ProfileSettingsModal = ({
                   </div>
                   <div className='profile-data-section'>
                     <p className='profile-data-label'>Firm Name</p>
+                    <div className='profile-data-info-wrapper'>
+                      <StatusFilterIcon className='mobile-home-menu-icon' />
+                      <p className='profile-data-text'>{user?.company}</p>
+                    </div>
+                  </div>
+                  <div className='profile-data-section'>
+                    <p className='profile-data-label'>Subscriptions</p>
                     {user?.access?.map((item, index) => {
                       if (item.value) {
                         return (

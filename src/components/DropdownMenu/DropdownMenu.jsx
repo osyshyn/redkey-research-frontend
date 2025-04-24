@@ -47,7 +47,7 @@ const DropdownMenu = forwardRef(
               <span>Add/remove research team</span>
             </div>
           )}
-        {currentUser?.role === 3 && (
+        {currentUser?.role === 1 && (
           <div className="menu-item" onClick={onContactUsClick}>
             <PhoneIcon className="dropdown-menu-icon" alt="Contact us Icon" />
             <span>Contact us</span>

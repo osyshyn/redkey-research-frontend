@@ -102,7 +102,7 @@ const FilterModal = ({
   );
 
   const addFilter = () => {
-    if (additionalFilters.length < 3) {
+    if (additionalFilters.length < 2) {
       setAdditionalFilters([...additionalFilters, { type: null, value: null }]);
     }
   };
@@ -140,7 +140,6 @@ const FilterModal = ({
   const handleFilterValueChange = (index, value) => {
     const newFilters = [...additionalFilters];
     
-    // Для сортировки сохраняем всю опцию целиком
     newFilters[index].value = value;
     
     setAdditionalFilters(newFilters);
@@ -266,7 +265,7 @@ const FilterModal = ({
             </div>
           ))}
 
-          {additionalFilters.length < 3 && (
+          {additionalFilters.length < 2 && (
             <p className='add-filter-button' onClick={addFilter}>
               + Add filter
             </p>

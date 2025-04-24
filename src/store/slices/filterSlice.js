@@ -2,8 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   researchFilters: [],
+  folderSort: { type: null, direction: null },
+  researchSort: { type: null, direction: null },
   userManagementFilters: [],
   isFilterModalOpen: false,
+  isSortModalOpen: false,
   isUserManagementFilterModalOpen: false,
 };
 
@@ -23,6 +26,13 @@ const filterSlice = createSlice({
         // }
         return filter;
       });
+    },
+
+    setResearchSort: (state, action) => {
+      state.researchSort = action.payload;
+    },
+    setFolderSort: (state, action) => {
+      state.folderSort = action.payload;
     },
 
     setUserManagementFilters: (state, action) => {
@@ -47,8 +57,18 @@ const filterSlice = createSlice({
       state.userManagementFilters = [];
     },
 
+    clearFolderSort: (state) => {
+      state.folderSort = { type: null, direction: null };
+    },
+    clearResearchSort: (state) => {
+      state.researchSort = { type: null, direction: null };
+    },
+
     toggleFilterModal: (state, action) => {
       state.isFilterModalOpen = action.payload ?? !state.isFilterModalOpen;
+    },
+    toggleSortModal: (state, action) => {
+      state.isSortModalOpen = action.payload ?? !state.isSortModalOpen;
     },
 
     toggleUserManagementFilterModal: (state, action) => {
@@ -60,10 +80,15 @@ const filterSlice = createSlice({
 
 export const {
   setResearchFilters,
+  setResearchSort,
+  setFolderSort,
   clearResearchFilters,
   toggleFilterModal,
+  toggleSortModal,
   setUserManagementFilters,
   clearUserManagementFilters,
+  clearFolderSort,
+  clearResearchSort,
   toggleUserManagementFilterModal,
 } = filterSlice.actions;
 
