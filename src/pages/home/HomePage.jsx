@@ -189,17 +189,21 @@ const HomePage = () => {
             <p>Email: info@redkeyresearch.com</p>
             <p>Phone: 646-631-0560</p>
           </div>
-          <p className='teams-info-main-title' id='contact'>
-            Privacy Policy
-          </p>
-          <div
+          {/* <div
             className='contact-info privacy'
             onClick={() => navigate('/privacy-policy')}
           >
-            <BookIcon className='mobile-home-menu-icon' />
-            <p>View Privacy Policy</p>
-          </div>
-          <footer className='footer-home-page'>© 2025 Redkey Research</footer>
+            <p>Privacy Policy</p>
+          </div> */}
+          <footer className='footer-home-page'>
+            © 2025 Redkey Research
+            <div
+              className='contact-info privacy'
+              onClick={() => navigate('/privacy-policy')}
+            >
+              <p>Privacy Policy</p>
+            </div>
+          </footer>
         </div>
       </div>
 

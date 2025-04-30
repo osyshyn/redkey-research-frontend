@@ -137,7 +137,9 @@
   font-size: 12px;
   margin-top: 50px;
   color: $home-page-light;
-  margin-bottom: 30px
+  margin-bottom: 30px;
+  display: flex;
+  gap: 30px;
 }
 
 .header-container {
@@ -246,12 +248,16 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 6px;
+
     cursor: pointer;
-    text-decoration: underline;
     text-decoration-color: white;
     text-underline-offset: 3px;
     transition: all 0.3s ease;
+
+    font-family: $font-family-satoshi;
+    font-weight: $font-weight-medium;
+    font-size: 12px;
+    color: $home-page-light;
   }
 }
 
