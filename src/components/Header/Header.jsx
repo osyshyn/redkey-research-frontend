@@ -147,6 +147,10 @@ const Header = ({ componentType }) => {
     }
   };
 
+  const handleLogoClick = () => {
+    navigate('/');
+  }
+
   const handleAdminResearchOptionClick = (firmOption) => {
     // localStorage.setItem("currentFirm", JSON.stringify(firmOption));
     dispatch(setCurrentFirm(firmOption));
@@ -233,6 +237,7 @@ const Header = ({ componentType }) => {
           }
           alt='Logo'
           className='logo'
+          onClick={handleLogoClick}
         />
       </div>
 

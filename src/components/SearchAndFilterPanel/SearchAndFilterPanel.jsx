@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFilterModal , toggleSortModal} from '../../store/slices/filterSlice';
+import {
+  toggleFilterModal,
+  toggleSortModal,
+} from '../../store/slices/filterSlice';
 
 import FilterModal from './FilterModal/FilterModal';
 import SortModal from './SortModal/SortModal';
@@ -24,6 +28,7 @@ const SearchAndFilterPanel = ({
   const [isSearchSubmitted, setIsSearchSubmitted] = useState(false);
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const {
     isFilterModalOpen,
@@ -33,6 +38,10 @@ const SearchAndFilterPanel = ({
     isUserManagementFilterModalOpen,
     userManagementFilters,
   } = useSelector((state) => state.filters);
+
+
+  console.log('location.pathname', location.pathname);
+  
 
   const handleFilterClick = () => {
     dispatch(toggleFilterModal(true));
@@ -79,7 +88,12 @@ const SearchAndFilterPanel = ({
       : researchFilters;
 
   return (
-    <div className='search-and-filter-panel'>
+    <div className={`search-and-filter-panel ${
+      location.pathname === '/admin/portal' ||
+      location.pathname === '/user/portal'
+        ? 'flex-column-mobile'
+        : ''
+    }`}>
       <form onSubmit={handleSearchSubmit} autoComplete='off'>
         <div className='search-input-container'>
           <input
@@ -106,21 +120,30 @@ const SearchAndFilterPanel = ({
         </div>
       </form>
 
-      {componentType !== 'user_sessions' && (
-        <button className='filter-button' onClick={handleFilterClick}>
-          <div className='filter-icon'>
-            <img src={filterIcon} alt='filter icon' />
-          </div>
-        </button>
-      )}
-      {componentType !== 'user_sessions' &&
-        componentType !== 'user_management' && (
-          <button className='filter-button' onClick={handleSortClick}>
+      <div
+        className={
+          location.pathname === '/admin/portal' ||
+          location.pathname === '/user/portal'
+            ? 'filter-buttons-container'
+            : ''
+        }
+      >
+        {componentType !== 'user_sessions' && (
+          <button className='filter-button' onClick={handleFilterClick}>
             <div className='filter-icon'>
-              <img src={arrowsSortIcon} alt='sort icon' />
+              <img src={filterIcon} alt='filter icon' />
             </div>
           </button>
         )}
+        {componentType !== 'user_sessions' &&
+          componentType !== 'user_management' && (
+            <button className='filter-button' onClick={handleSortClick}>
+              <div className='filter-icon'>
+                <img src={arrowsSortIcon} alt='sort icon' />
+              </div>
+            </button>
+          )}
+      </div>
 
       {isFilterModalOpen && (
         <FilterModal

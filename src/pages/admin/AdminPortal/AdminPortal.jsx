@@ -295,13 +295,25 @@ const AdminPortal = () => {
             setIsCreateFolderModalOpen(true);
           },
         },
-        {
-          optionName: 'Add/remove research team',
-          icon: <PlusIcon className='mobile-dropdown-menu-icon' />,
-          onOptionClick: () => {
-            setIsFirmsModalOpen(true);
-          },
-        },
+        // {
+        //   optionName: 'Add/remove research team',
+        //   icon: <PlusIcon className='mobile-dropdown-menu-icon' />,
+        //   onOptionClick: () => {
+        //     setIsFirmsModalOpen(true);
+        //   },
+        // },
+
+        ...(user?.role === 3
+          ? [
+              {
+                optionName: 'Add/remove research team',
+                icon: <PlusIcon className='mobile-dropdown-menu-icon' />,
+                onOptionClick: () => {
+                  setIsFirmsModalOpen(true);
+                },
+              },
+            ]
+          : []),
       ],
     });
 

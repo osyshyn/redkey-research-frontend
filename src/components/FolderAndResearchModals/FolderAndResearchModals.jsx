@@ -188,6 +188,19 @@ const FolderAndResearchModals = ({
     folderStockTickerError,
   ]);
 
+  useEffect(() => {
+    if (!isUploadResearchModalOpen) {
+      setResearchTitle('');
+      setSelectedFolder(null);
+      setSelectedFirm(null);
+      setResearchDate(null);
+      setReportType(null);
+      setResearchNameError('');
+      setHasFile(false);
+      dispatch(resetCurrentFileId());
+    }
+  }, [isUploadResearchModalOpen]);
+
   const handleFolderNameChange = (e) => {
     const value = e.target.value;
 

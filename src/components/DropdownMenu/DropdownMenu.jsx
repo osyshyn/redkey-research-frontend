@@ -35,7 +35,7 @@ const DropdownMenu = forwardRef(
           <SettingsIcon className="dropdown-menu-icon" alt="Profile Icon" />
           <span>Profile</span>
         </div>
-        {(currentUser?.role === 2 || currentUser?.role === 3) &&
+        {currentUser?.role === 3 &&
           componentType === "admin_portal" && (
             <div
               className="menu-item"
