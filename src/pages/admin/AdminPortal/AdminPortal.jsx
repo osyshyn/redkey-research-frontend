@@ -117,7 +117,7 @@ const AdminPortal = () => {
     const foldersCopy = [...folders];
 
     foldersCopy.sort((a, b) => {
-      const statusOrder = { 1: 0, 4: 1, 3: 2, 2: 3 };
+      const statusOrder = { 1: 0, 4: 1, 2: 2, 3: 3 };
       return statusOrder[a.status] - statusOrder[b.status];
     });
 

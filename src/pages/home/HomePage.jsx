@@ -186,8 +186,8 @@ const HomePage = () => {
             Inquiries
           </p>
           <div className='contact-info'>
-            <p>Email: info@redkeyresearch.com</p>
-            <p>Phone: 646-631-0560</p>
+            <p>info@redkeyresearch.com</p>
+            <p>646-631-0560</p>
           </div>
           {/* <div
             className='contact-info privacy'

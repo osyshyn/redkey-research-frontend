@@ -69,7 +69,7 @@ const ProfileSettingsModal = ({
             isOpen={isOpen}
             onClose={onClose}
             modalTitle={
-              mode === 'profile' ? 'Profile Settings' : 'Change Password'
+              mode === 'profile' ? 'Profile' : 'Change Password'
             }
           >
             {mode === 'profile' ? (
