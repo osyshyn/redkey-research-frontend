@@ -1,7 +1,10 @@
-export const handleDownload = (item) => {
+import { createDownloadRecord } from '../store/slices/downloadSlice';
+
+
+export const handleDownload = (item, dispatch) => {
   const fileUrl = `${import.meta.env.VITE_API_URL}/${item.file.path}`;
 
-  console.log('item', item);
+  console.log('DOWNLOAD ITEM', item);
 
   if (!fileUrl) {
     console.error('PDF file URL not found');
@@ -20,42 +23,14 @@ export const handleDownload = (item) => {
       link.href = URL.createObjectURL(blob);
       link.download = item.title + '.pdf';
       link.click();
+      dispatch(createDownloadRecord(item.file.id));
     })
     .catch((error) => {
       console.error(error);
     });
 };
 
-// export const handleDownloadAll = (items, clearSelectedItems) => {
-//   items.forEach((item) => {
-//     const fileUrl = `${import.meta.env.VITE_API_URL}/${item.file.path}`;
-
-//     if (fileUrl) {
-//       fetch(fileUrl)
-//         .then((response) => {
-//           if (!response.ok) {
-//             throw new Error("File download failed");
-//           }
-//           return response.blob();
-//         })
-//         .then((blob) => {
-//           const link = document.createElement("a");
-//           link.href = URL.createObjectURL(blob);
-//           link.download = item.title + ".pdf";
-//           link.click();
-//         })
-//         .catch((error) => {
-//           console.error(error);
-//         });
-//     } else {
-//       console.error(`File for ${item.title} not found`);
-//     }
-//   });
-
-//   clearSelectedItems();
-// };
-
-export const handleDownloadAll = (items, clearSelectedItems) => {
+export const handleDownloadAll = (items, clearSelectedItems, dispatch) => {
   if (!Array.isArray(items)) return;
 
   items.forEach((item) => {
@@ -74,6 +49,7 @@ export const handleDownloadAll = (items, clearSelectedItems) => {
           link.href = URL.createObjectURL(blob);
           link.download = item.title + '.pdf';
           link.click();
+          dispatch(createDownloadRecord(item.file.id));
         })
         .catch((error) => {
           console.error(error);

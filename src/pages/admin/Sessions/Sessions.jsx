@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getSessions, getMedia } from '../../../store/slices/sessionSlice';
+import { getDownloads } from '../../../store/slices/downloadSlice';
 
 import useDeviceType from '../../../hooks/useDeviceType';
 import Header from '../../../components/Header/Header';
 import SessionsTable from '../../../components/SessionsTable/SessionsTable';
-import ResearchReportTable from '../../../components/SessionsTable/ResearchReportTable/ResearchReportTable';
+import ResearchUploadReportTable from '../../../components/SessionsTable/ResearchUploadReportTable/ResearchUploadReportTable';
+import ResearchDownloadReportTable from '../../../components/SessionsTable/ResearchDownloadReportTable/ResearchDownloadReportTable';
 import Pagination from '../../../components/Pagination/Pagination';
 import ActionBar from '../../../components/ActionBar/ActionBar';
 import Loader from '../../../components/Loader/Loader';
@@ -26,12 +28,23 @@ const Sessions = () => {
   const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageEndedSessions, setCurrentPageEndedSessions] = useState(1);
-  const [currentPageResearchReport, setCurrentPageResearchReport] = useState(1);
+  const [currentPageResearchUploadReport, setCurrentPageResearchUploadReport] =
+    useState(1);
+  const [
+    currentPageResearchDownloadReport,
+    setCurrentPageResearchDownloadReport,
+  ] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [itemsPerPageEndedSessions, setItemsPerPageEndedSessions] =
     useState(50);
-  const [itemsPerPageResearchReport, setItemsPerPageResearchReport] =
-    useState(50);
+  const [
+    itemsPerPageResearchUploadReport,
+    setItemsPerPageResearchUploadReport,
+  ] = useState(50);
+  const [
+    itemsPerPageResearchDownloadReport,
+    setItemsPerPageResearchDownloadReport,
+  ] = useState(50);
   const [mobileActionAddData, setMobileActionAddData] = useState({
     options: [],
   });
@@ -45,11 +58,12 @@ const Sessions = () => {
   const { sessions, mediaItems, loading, error } = useSelector(
     (state) => state.session
   );
+  const { records } = useSelector((state) => state.download);
 
   const { user } = useSelector((state) => state.auth);
   const currentTheme = document.body.getAttribute('data-theme-mode');
 
-  console.log('sessions', sessions, mediaItems);
+  console.log('sessions', sessions, mediaItems, records);
 
   const exportToCSV = () => {
     const sessionsToExport =
@@ -138,18 +152,27 @@ const Sessions = () => {
     indexOfLastEnded
   );
 
-  const indexOfLastResearchReport =
-    currentPageResearchReport * itemsPerPageResearchReport;
-  const indexOfFirstResearchReport =
-    indexOfLastResearchReport - itemsPerPageResearchReport;
-  const currentResearchReports = mediaItems.slice(
-    indexOfFirstResearchReport,
-    indexOfLastResearchReport
+  const indexOfLastResearchUploadReport =
+    currentPageResearchUploadReport * itemsPerPageResearchUploadReport;
+  const indexOfFirstResearchUploadReport =
+    indexOfLastResearchUploadReport - itemsPerPageResearchUploadReport;
+  const currentResearchUploadReports = mediaItems.slice().reverse().slice(
+    indexOfFirstResearchUploadReport,
+    indexOfLastResearchUploadReport
+  );
+  const indexOfLastResearchDownloadReport =
+    currentPageResearchDownloadReport * itemsPerPageResearchDownloadReport;
+  const indexOfFirstResearchDownloadReport =
+    indexOfLastResearchDownloadReport - itemsPerPageResearchDownloadReport;
+  const currentResearchDownloadReports = records.slice().reverse().slice(
+    indexOfFirstResearchDownloadReport,
+    indexOfLastResearchDownloadReport
   );
 
   useEffect(() => {
     dispatch(getSessions());
     dispatch(getMedia());
+    dispatch(getDownloads());
   }, [dispatch]);
 
   const handlePageChange = (newPage) => {
@@ -158,8 +181,11 @@ const Sessions = () => {
   const handlePageChangeEndedSessions = (newPage) => {
     setCurrentPageEndedSessions(newPage);
   };
-  const handlePageChangeResearchReport = (newPage) => {
-    setCurrentPageResearchReport(newPage);
+  const handlePageChangeResearchUploadReport = (newPage) => {
+    setCurrentPageResearchUploadReport(newPage);
+  };
+  const handlePageChangeResearchDownloadReport = (newPage) => {
+    setCurrentPageResearchDownloadReport(newPage);
   };
 
   const handleItemsPerPageChange = (newSize) => {
@@ -170,9 +196,13 @@ const Sessions = () => {
     setItemsPerPageEndedSessions(newSize);
     setCurrentPageEndedSessions(1);
   };
-  const handleItemsPerPageChangeResearchReport = (newSize) => {
-    setItemsPerPageResearchReport(newSize);
-    setCurrentPageResearchReport(1);
+  const handleItemsPerPageChangeResearchUploadReport = (newSize) => {
+    setItemsPerPageResearchUploadReport(newSize);
+    setCurrentPageResearchUploadReport(1);
+  };
+  const handleItemsPerPageChangeResearchDownloadReport = (newSize) => {
+    setItemsPerPageResearchDownloadReport(newSize);
+    setCurrentPageResearchDownloadReport(1);
   };
 
   const handleSearchChange = (value) => {
@@ -297,17 +327,40 @@ const Sessions = () => {
               />
             )}
           </div>
-          <h1 className='session-title'>Research Reports</h1>
+          <h1 className='session-title'>Research Upload Reports</h1>
           <div className='session-table-wrapper'>
-            <ResearchReportTable tableData={currentResearchReports} />
+            <ResearchUploadReportTable
+              tableData={currentResearchUploadReports}
+            />
 
             {endedSessions.length > 0 && currentUserDevice === 'desktop' && (
               <Pagination
-                currentPage={currentPageResearchReport}
+                currentPage={currentPageResearchUploadReport}
                 totalItems={mediaItems.length}
-                itemsPerPage={itemsPerPageResearchReport}
-                onPageChange={handlePageChangeResearchReport}
-                onItemsPerPageChange={handleItemsPerPageChangeResearchReport}
+                itemsPerPage={itemsPerPageResearchUploadReport}
+                onPageChange={handlePageChangeResearchUploadReport}
+                onItemsPerPageChange={
+                  handleItemsPerPageChangeResearchUploadReport
+                }
+                itemsPerPageOptions={[25, 50, 100]}
+              />
+            )}
+          </div>
+          <h1 className='session-title'>Research Download Reports</h1>
+          <div className='session-table-wrapper'>
+            <ResearchDownloadReportTable
+              tableData={currentResearchDownloadReports}
+            />
+
+            {endedSessions.length > 0 && currentUserDevice === 'desktop' && (
+              <Pagination
+                currentPage={currentPageResearchDownloadReport}
+                totalItems={records.length}
+                itemsPerPage={itemsPerPageResearchDownloadReport}
+                onPageChange={handlePageChangeResearchDownloadReport}
+                onItemsPerPageChange={
+                  handleItemsPerPageChangeResearchDownloadReport
+                }
                 itemsPerPageOptions={[25, 50, 100]}
               />
             )}

@@ -6,6 +6,7 @@ import filterReducer from './slices/filterSlice';
 import userManagementReducer from './slices/userManagementSlice';
 import firmsReducer from './slices/firmSlice';
 import sessionReducer from './slices/sessionSlice';
+import downloadReducer from './slices/downloadSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     userManagement: userManagementReducer,
     firm: firmsReducer,
     session: sessionReducer,
+    download: downloadReducer,
   },
 });

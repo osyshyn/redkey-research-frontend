@@ -95,7 +95,7 @@ const FolderWrapper = ({
   };
 
   const handleDownloadAllClick = () => {
-    handleDownloadAll(researchData);
+    handleDownloadAll(researchData, null, dispatch);
     setActiveDropdown(null);
     setDropdownPosition(null);
     setIsMobileMoreModalOpen(false);

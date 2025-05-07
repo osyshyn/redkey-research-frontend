@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
 import useDeviceType from '../../hooks/useDeviceType';
@@ -25,6 +26,8 @@ const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
   const currentUserDevice = useDeviceType();
   const currentFirm = useSelector((state) => state.firm.currentFirm);
 
+  const dispatch = useDispatch();
+
   console.log('selectedDocument', selectedDocument, currentFirm);
 
   const prevFirmRef = useRef(currentFirm);
@@ -35,7 +38,6 @@ const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
     }
     prevFirmRef.current = currentFirm;
   }, [currentFirm, onClose]);
-
 
   const onLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -86,7 +88,7 @@ const DocumentPreview = ({ showPreview, selectedDocument, onClose }) => {
               alt='Download all'
               className='mobile-view-download-icon'
               onClick={() => {
-                handleDownload(selectedDocument);
+                handleDownload(selectedDocument, dispatch);
               }}
             />
           </div>

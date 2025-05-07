@@ -4,7 +4,7 @@ import useDeviceType from '../../../hooks/useDeviceType';
 
 import './styles.scss';
 
-const ResearchReportTable = ({ tableData }) => {
+const ResearchUploadReportTable = ({ tableData }) => {
   const parentContainerRef = useRef(null);
 
   const currentUserDevice = useDeviceType();
@@ -16,7 +16,7 @@ const ResearchReportTable = ({ tableData }) => {
       {currentUserDevice === 'mobile' && (
         <div className='mobile-user-management-table-header-wrapper'>
           <p className='mobile-user-management-table-header'>
-            Research report data
+            Research upload report data
           </p>
           {/* <p className='mobile-user-management-table-header'>Uploaded by</p> */}
         </div>
@@ -103,4 +103,4 @@ const ResearchReportTable = ({ tableData }) => {
   );
 };
 
-export default ResearchReportTable;
+export default ResearchUploadReportTable;
