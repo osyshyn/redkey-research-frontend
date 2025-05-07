@@ -11,6 +11,7 @@ import DownloadIcon from '../../assets/icons/download-icon.svg?react';
 import ViewIcon from '../../assets/icons/view-icon.svg?react';
 import closeIcon from '../../assets/icons/close-icon.svg';
 import moreIcon from '../../assets/icons/more-icon.svg';
+import arrowsSortIcon from '../../assets/icons/arrows-sort.svg';
 
 import './styles.scss';
 
@@ -20,6 +21,9 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
   const [mobileMoreIconData, setMobileMoreIconData] = useState({
     options: [],
   });
+
+  const [isDateAsc, setIsDateAsc] = useState(true);
+  const [sortedData, setSortedData] = useState([...tableData]);
 
   const currentUserDevice = useDeviceType();
   const dispatch = useDispatch();
@@ -68,16 +72,33 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
     setSelectedItems([]);
   };
 
+  const handleDateSort = () => {
+    const sorted = [...sortedData].sort((a, b) => {
+      const dateA = new Date(a.publication_date);
+      const dateB = new Date(b.publication_date);
+      return isDateAsc ? dateA - dateB : dateB - dateA;
+    });
+    setIsDateAsc((prev) => !prev);
+    setSortedData(sorted);
+  };
+
   return (
     <>
-      {tableData.length > 0 ? (
+      {sortedData.length > 0 ? (
         <div className='folder-inner-list'>
           <table className='folder-table'>
             {selectedItems.length === 0 && currentUserDevice === 'desktop' && (
               <thead>
                 <tr>
                   <th className='folder-table-header'>Research</th>
-                  <th className='folder-table-header'>Date</th>
+                  <th className='folder-table-header' onClick={handleDateSort}>
+                    Date
+                    <img
+                      src={arrowsSortIcon}
+                      alt='sort icon'
+                      className='sort-icon'
+                    />
+                  </th>
                   <th className='folder-table-header'></th>
                 </tr>
               </thead>
@@ -105,7 +126,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
                         className='research-button download-all'
                         onClick={() =>
                           handleDownloadAll(
-                            selectedItems.map((index) => tableData[index]),
+                            selectedItems.map((index) => sortedData[index]),
                             clearSelectedItems,
                             dispatch
                           )
@@ -124,7 +145,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
 
               {/* Desktop*/}
               {currentUserDevice === 'desktop' &&
-                tableData.map((item, index) => (
+                sortedData.map((item, index) => (
                   <tr
                     key={index}
                     className={`table-data-body-row ${
@@ -178,7 +199,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
 
               {/* Mobile */}
               {currentUserDevice === 'mobile' &&
-                tableData.map((item, index) => (
+                sortedData.map((item, index) => (
                   <tr
                     key={index}
                     className={`table-data-body-row ${
@@ -264,7 +285,7 @@ const FolderInnerListUser = ({ tableData, handleViewClick }) => {
               className='mobile-research-button download-all'
               onClick={() =>
                 handleDownloadAll(
-                  selectedItems.map((index) => tableData[index]),
+                  selectedItems.map((index) => sortedData[index]),
                   clearSelectedItems,
                   dispatch
                 )

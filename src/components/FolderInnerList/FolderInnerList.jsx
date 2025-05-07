@@ -232,7 +232,7 @@ const FolderInnerList = ({ tableData, currentFolder, handleViewClick }) => {
                   <th className='folder-table-header'>Research</th>
                   <th className='folder-table-header'>Type</th>
                   <th className='folder-table-header'>Responsible</th>
-                  <th className='folder-table-header with-icon'   onClick={handleDateSort}>
+                  <th className='folder-table-header'   onClick={handleDateSort}>
                     Date
                       <img src={arrowsSortIcon} alt='sort icon' className='sort-icon' />
                   </th>

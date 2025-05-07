@@ -80,7 +80,9 @@ const UserPortal = () => {
 
     foldersCopy.sort((a, b) => {
       const statusOrder = { 1: 0, 4: 1, 2: 2, 3: 3 };
-      return statusOrder[a.status] - statusOrder[b.status];
+      const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+      if (statusDiff !== 0) return statusDiff;
+      return new Date(b.created_at) - new Date(a.created_at); 
     });
 
     if (researchSort?.type === 'initiation_date') {

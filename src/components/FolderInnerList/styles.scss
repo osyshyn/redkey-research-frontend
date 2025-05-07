@@ -72,16 +72,12 @@
     padding: 16.5px 20px;
     text-align: left;
 
-    &.with-icon {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-
-      .sort-icon {
-        width: 16px;
-        height: 16px;
-      }
+    .sort-icon {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: 17px;
+      left: 52px;
     }
   }
 
