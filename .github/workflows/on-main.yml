@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  AWS_S3_BUCKET: redkey-research-default-fe-website
-  CLOUDFRONT_DISTRIBUTION_ID: E1BKKGQEU18DMS
+  AWS_S3_BUCKET: redkey-research-website
+  CLOUDFRONT_DISTRIBUTION_ID: E3SSA78NVTLDVC
   VITE_API_URL: https://redkey-api.fcform.shop
 
 jobs:
