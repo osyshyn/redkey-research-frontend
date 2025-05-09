@@ -8,7 +8,7 @@ on:
 env:
   AWS_S3_BUCKET: redkey-research-website 
   CLOUDFRONT_DISTRIBUTION_ID: E3SSA78NVTLDVC
-  VITE_API_URL: https://redkey-api.fcform.shop
+  VITE_API_URL: https://app-api.redkeyresearch.com
 
 jobs:
   build-app:
